@@ -29,7 +29,7 @@ class RevPi(Plugin, DebianPlugin):
             "/var/log/apache2/error.log",
             "/var/log/kern.log",
             "/var/log/daemon.log",
-            "/var/www/pictory/projects/_config.rsc",
+            "/etc/revpi/config.rsc",
             "/boot/cmdline.txt",
             "/boot/config.txt",
             "/etc/revpi/image-release",
