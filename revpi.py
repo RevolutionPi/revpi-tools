@@ -21,7 +21,7 @@ class RevPi(Plugin, DebianPlugin):
 
     requires_root = True # with False, only the copy works
     profiles = ('system',)
-    plugin_name = "revpi"    
+    plugin_name = "revpi"
 
     def setup(self):
         self.add_copy_spec([
@@ -36,7 +36,7 @@ class RevPi(Plugin, DebianPlugin):
             "/etc/dhcpcd.conf",
             "/etc/network/interfaces",
             "/etc/resolv.conf",
-            ]) 
+            ])
 
         self.add_cmd_output([
             "df -h",
