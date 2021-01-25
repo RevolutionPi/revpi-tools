@@ -1,0 +1,61 @@
+#!/bin/bash
+
+
+ret=1
+force=0
+
+while getopts ":fh" OPTION ; do
+	case ${OPTION} in
+	f)
+		force=1
+		;;
+	h) 
+		ret=0
+		;&
+	*)
+		echo "Usage: revpi-sos [OPTION...]"
+		echo "  -f	execute without confirmation"
+		echo "  -h	give this help list" 
+		exit $ret
+		;;
+	esac
+		
+done
+
+if [ "$force" != "1" ]
+then
+	read -p "The report will be generated under folder /tmp in a .tar.xz file, which
+can be extracted with command: tar -Jxvf xxx.tar.xz in linux or 7zip in Windows.
+And then some inspection can be done before it is sent to support@kunbus.com.
+Are you going to continue (N/y)?" -n 1 t_ant
+
+	if [ "$t_ant" != "y" ] && [ "$t_ant" != "Y" ] 
+	then
+		echo
+		exit 0 
+	fi 
+	echo
+fi
+
+echo "report generating..."
+SOSFILE=$(sudo sosreport -o revpi --batch | grep "/tmp/sosreport")
+echo
+echo "Your report has been generated and saved in:"
+echo $SOSFILE
+echo
+
+if [ "$force" != "1" ]
+then
+	read -p "To make the report have better accessibility, the ownership of the report
+can be changed to the current user.
+Are you going to proceed(N/y)?" -n 1 t_ant
+	if [ "$t_ant" != "y" ] && [ "$t_ant" != "Y" ] 
+	then
+		echo
+		exit 0 
+	fi 
+	echo
+fi
+
+sudo chown $USER $SOSFILE
+echo "The ownership of" $SOSFILE "has been changed to user:"$USER

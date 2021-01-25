@@ -1,0 +1,26 @@
+How to use the watchdog on the RevPi Connect to also powercycle the relay
+
+The FTDI EEPROM is patched as follows during factory end-of-line test
+(and a reboot is performed afterwards for the change to take effect): 
+devnum=$(cat /sys/bus/usb/devices/1-1.5.2/devnum)
+sudo /home/pi/connect/patch_eeprom d:1/$devnum 0x14=0xaa 0x15=0x00
+
+
+Now enable or disable the relay on a watchdog reset like this:
+sudo /home/pi/connect/enable_relay_watchdog.py
+sudo /home/pi/connect/disable_relay_watchdog.py
+
+If you want the relay to be switched you have to enable it each time the RevPi 
+is booted. Invoke the Python script enable_relay_watchdog.py from /etc/rc.local
+or a systemd service to do this.
+
+Be aware that /dev/ttyRS485 will briefly disappear when enabling or disabling
+the watchdog.
+
+
+revpi-connect-watchdog.sh is an example script showing how the watchdog timer 
+can be restarted. It checks whether the Internet connection is operational by 
+pinging the Google name server '8.8.8.8'. piTest is used to toggle the
+watchdog bit in RevPiLED. Please note that this is only an example. 
+You should integrate triggering into your application to check whether your
+application works correctly.

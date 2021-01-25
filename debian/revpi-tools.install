@@ -1,0 +1,13 @@
+#!/usr/bin/dh-exec
+50-revpi.rules			/lib/udev/rules.d
+pileft.service			/lib/systemd/system
+piright.service			/lib/systemd/system
+pibridge-shutdown		/usr/sbin
+README				/home/pi/connect
+patch_eeprom			/home/pi/connect
+patch_eeprom.c			/home/pi/connect
+enable_relay_watchdog.py	/home/pi/connect
+disable_relay_watchdog.py	/home/pi/connect
+revpi-connect-watchdog.sh	/home/pi/connect
+revpi-sos			/usr/bin
+revpi.py			/usr/share/sosreport/sos/plugins

@@ -1,0 +1,7 @@
+[Unit]
+Description=PiBridge carrier check (pileft)
+Documentation=man:pibridge-shutdown(8)
+After=dhcpcd.service
+
+[Service]
+ExecStart=/usr/sbin/pibridge-shutdown pileft

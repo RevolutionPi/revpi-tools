@@ -1,0 +1,33 @@
+PROGRAM="/bin/grep -F 'kunbus,revpi-core'    /sys/firmware/devicetree/base/compatible", GOTO="revpi_core"
+PROGRAM="/bin/grep -F 'kunbus,revpi-connect' /sys/firmware/devicetree/base/compatible", GOTO="revpi_connect"
+PROGRAM="/bin/grep -F 'kunbus,revpi-compact' /sys/firmware/devicetree/base/compatible", GOTO="revpi_compact"
+PROGRAM="/bin/grep -F 'kunbus,revpi-flat'    /sys/firmware/devicetree/base/compatible", GOTO="revpi_flat"
+GOTO="revpi_end"
+
+LABEL="revpi_core"
+ACTION=="add", DEVPATH=="*/spi0.0/net/pieth*", NAME="pileft", ENV{SYSTEMD_WANTS}="pileft.service"
+ACTION=="add", DEVPATH=="*/spi0.1/net/pieth*", NAME="piright", ENV{SYSTEMD_WANTS}="piright.service"
+GOTO="revpi_end"
+
+LABEL="revpi_connect"
+ACTION=="add", DEVPATH=="*/usb1/1-1/1-1.5/1-1.5.2/*", SYMLINK+="ttyRS485"
+ACTION=="add", DEVPATH=="*/usb1/1-1/1-1.5/1-1.5.3/*", SYMLINK+="ttyConBridge"
+ACTION=="add", DEVPATH=="*/spi0.1/net/pieth*", NAME="pileft"
+GOTO="revpi_end"
+
+LABEL="revpi_compact"
+ACTION=="add", ENV{OF_COMPATIBLE_0}=="fairchild,74hc595", SYMLINK+="gpiochip_dout"
+ACTION=="add", ENV{OF_COMPATIBLE_0}=="maxim,max31913", SYMLINK+="gpiochip_din"
+ACTION=="add", DEVPATH=="*/spi0.2/net/pieth*", NAME="eth1"
+ACTION=="add", DEVPATH=="*/ttyAMA0", SYMLINK+="ttyRS485"
+ACTION=="add", DEVPATH=="*/i2c-1/1-0050/1-00500", RUN+="/bin/chgrp pi /sys%p/nvmem", RUN+="/bin/chmod g+rw /sys%p/nvmem"
+ACTION=="add", DEVPATH=="/devices/platform/leds/leds/*", RUN+="/bin/chgrp pi /sys%p/brightness", RUN+="/bin/chmod g+rw /sys%p/brightness"
+ACTION=="add", DEVPATH=="*/spi2.0/iio:device*", RUN+="/bin/chgrp pi /sys%p/out_voltage0_raw /sys%p/out_voltage1_raw /sys%p/out_voltage_powerdown /sys%p/out_voltage_powerdown_mode", RUN+="/bin/chmod g+rw /sys%p/out_voltage0_raw /sys%p/out_voltage1_raw /sys%p/out_voltage_powerdown /sys%p/out_voltage_powerdown_mode"
+GOTO="revpi_end"
+
+LABEL="revpi_flat"
+ACTION=="add", DEVPATH=="*/ttyAMA0", SYMLINK+="ttyRS485-0"
+ACTION=="add", DEVPATH=="*/ttyS0", SYMLINK+="ttyRS485-1"
+GOTO="revpi_end"
+
+LABEL="revpi_end"

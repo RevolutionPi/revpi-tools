@@ -1,0 +1,26 @@
+Source: revpi-tools
+Section: contrib/electronics
+Priority: extra
+Standards-Version: 3.9.8
+Build-Depends: debhelper (>=9), dh-exec, libftdi1-dev
+Maintainer: Kunbus <admin@kunbus.de>
+Homepage: https://revolution.kunbus.com/
+
+Package: revpi-tools
+Architecture: armhf
+Depends: sosreport, python3-ftdi1, ${misc:Depends}
+Description: Revolution Pi tools
+ Assorted tools and support files for Revolution Pi products:
+ .
+  * udev rules to create symlinks for GPIO chips on the RevPi Compact,
+    to create symlinks for serial ports on the RevPi Compact and Connect
+    and to rename Ethernet ports on the RevPi Compact, Connect and Core
+  * systemd services to check the carrier state of both PiBridge Ethernet
+    ports on the RevPi Core and shut them down if no carrier is detected,
+    thereby saving CPU time to poll the interrupt
+  * scripts to enable/disable the relay watchdog on the RevPi Connect
+  * sosreport plugin to collect Revolution Pi related system information
+    which can be submitted to Kunbus as part of a support request
+ .
+ Revolution Pi is a set of IoT products based on the Raspberry Pi and
+ geared towards industrial usage.
