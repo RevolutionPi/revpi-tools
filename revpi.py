@@ -36,6 +36,9 @@ class RevPi(Plugin, DebianPlugin):
             "/etc/dhcpcd.conf",
             "/etc/network/interfaces",
             "/etc/resolv.conf",
+            "/etc/CODESYSControl.cfg",
+            "/etc/CODESYSControl_User.cfg",
+            "/tmp/codesyscontrol.log"
             ])
 
         self.add_cmd_output([
