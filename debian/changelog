@@ -1,3 +1,16 @@
+revpi-tools (1.0.13-1) stable; urgency=medium
+
+  [ Zhi Han ]
+  * trim the whitespaces in revpi.py
+  * sos: change the path of config.rsc
+  * add log and config files for codesys
+  * Change the maintainer info to KUNBUS GmbH
+
+  [ Philipp Rosenberger ]
+  * Add a script to fix the stretch-backports pkgs
+
+ -- Lino Sanfilippo <l.sanfilippo@kunbus.com>  Mon, 22 Mar 2021 15:24:15 +0100
+
 revpi-tools (1.0.12-1) stable; urgency=medium
 
   * Add the function to enable user to change the ownership of
