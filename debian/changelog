@@ -1,3 +1,10 @@
+revpi-tools (1.0.14-1) stable; urgency=medium
+
+  [ Frank Pavlic ]
+  * Node-RED fix package versions after Upgrade
+
+ -- Lino Sanfilippo <l.sanfilippo@kunbus.com>  Thu, 25 Mar 2021 14:43:56 +0100
+
 revpi-tools (1.0.13-1) stable; urgency=medium
 
   [ Zhi Han ]
