@@ -10,8 +10,8 @@ ACTION=="add", DEVPATH=="*/spi0.1/net/*eth*", NAME="piright", ENV{SYSTEMD_WANTS}
 GOTO="revpi_end"
 
 LABEL="revpi_connect"
-ACTION=="add", DEVPATH=="*/usb1/1-1/1-1.5/1-1.5.2/*", SYMLINK+="ttyRS485"
-ACTION=="add", DEVPATH=="*/usb1/1-1/1-1.5/1-1.5.3/*", SYMLINK+="ttyConBridge"
+ACTION=="add", DEVPATH=="*/usb1/1-1/1-1.5/1-1.5.2/*", SUBSYSTEM=="tty", SYMLINK+="ttyRS485"
+ACTION=="add", DEVPATH=="*/usb1/1-1/1-1.5/1-1.5.3/*", SUBSYSTEM=="tty", SYMLINK+="ttyConBridge"
 ACTION=="add", DEVPATH=="*/spi0.1/net/*eth*", NAME="pileft"
 GOTO="revpi_end"
 
