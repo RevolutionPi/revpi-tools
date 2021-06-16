@@ -1,3 +1,14 @@
+revpi-tools (1.0.15-1) stable; urgency=medium
+
+  [ Philipp Rosenberger ]
+  * 50-revpi.rules: Match on *eth* rather then pieth*
+  * FIX: ttyRS485 and ttyConBridge on kernels > 4.20
+
+  [ Frank Pavlic ]
+  * Fix PiCtory configuration after Upgrade
+
+ -- Lino Sanfilippo <l.sanfilippo@kunbus.com>  Wed, 16 Jun 2021 17:19:10 +0200
+
 revpi-tools (1.0.14-1) stable; urgency=medium
 
   [ Frank Pavlic ]
