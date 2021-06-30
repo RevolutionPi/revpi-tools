@@ -1,5 +1,6 @@
 revpi-tools (1.0.15-2) stable; urgency=medium
 
+  [ Frank Pavlic ]
   * install revpi_buster_fix_pictory.sh to /usr/sbin
 
  -- Frank Pavlic <f.pavlic@kunbus.com>  Wed, 30 Jun 2021 07:27:15 +0200
