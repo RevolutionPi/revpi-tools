@@ -12,4 +12,5 @@ revpi-connect-watchdog.sh	/home/pi/connect
 revpi-sos			/usr/bin
 revpi.py			/usr/share/sosreport/sos/plugins
 revpi_buster_fixup_pkgs.py	/usr/sbin
+revpi_buster_fix_pictory.sh	/usr/sbin
 revpi_buster_upgrade_fix_nodered.sh	/usr/sbin
