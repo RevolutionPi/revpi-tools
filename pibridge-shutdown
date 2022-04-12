@@ -12,10 +12,10 @@ if [ "$irq" != " 80000000" ] ; then
 fi
 
 # It takes a few seconds for the carrier to come up.
-/sbin/ifconfig "$interface" up
+ip link set dev "$interface" up
 /bin/sleep 5
 carrier="$(cat "/sys/class/net/$interface/carrier" 2>/dev/null)"
 if [ "$carrier" = 0 ] ; then
 	/sbin/dhcpcd --exit "$interface"
-	/sbin/ifconfig "$interface" down
+	ip link set dev "$interface" down
 fi
