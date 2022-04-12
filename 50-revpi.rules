@@ -6,8 +6,8 @@ RESULT=="kunbus,revpi-flat", GOTO="revpi_flat"
 GOTO="revpi_end"
 
 LABEL="revpi_core"
-ACTION=="add", DEVPATH=="*/spi0.0/net/*eth*", NAME="pileft", ENV{SYSTEMD_WANTS}="pileft.service"
-ACTION=="add", DEVPATH=="*/spi0.1/net/*eth*", NAME="piright", ENV{SYSTEMD_WANTS}="piright.service"
+ACTION=="add", DEVPATH=="*/spi0.0/net/*eth*", NAME="pileft", ENV{SYSTEMD_WANTS}="pileft-quirks.service"
+ACTION=="add", DEVPATH=="*/spi0.1/net/*eth*", NAME="piright", ENV{SYSTEMD_WANTS}="piright-quirks.service"
 GOTO="revpi_end"
 
 LABEL="revpi_connect"

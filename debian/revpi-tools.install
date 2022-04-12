@@ -1,7 +1,7 @@
 #!/usr/bin/dh-exec
 50-revpi.rules			/lib/udev/rules.d
-pileft.service			/lib/systemd/system
-piright.service			/lib/systemd/system
+pileft-quirks.service		/lib/systemd/system
+piright-quirks.service		/lib/systemd/system
 pibridge-shutdown		/usr/sbin
 README				/home/pi/connect
 patch_eeprom			/home/pi/connect

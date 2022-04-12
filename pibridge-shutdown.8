@@ -4,7 +4,7 @@
 .\" First parameter, NAME, should be all caps
 .\" Second parameter, SECTION, should be 1-8, maybe w/ subsection
 .\" other parameters are allowed: see man(7), man(1)
-.TH pibridge-shutdown 8 "February 27 2019"
+.TH pibridge-shutdown 8 "April 12 2022"
 .\" Please adjust this date whenever revising the manpage.
 .\"
 .\" Some roff macros, for reference:
@@ -34,9 +34,10 @@ not be shut down on this product. \fBpibridge-shutdown\fP identifies affected
 products by checking whether a valid interrupt is defined in the DeviceTree.
 
 .B pibridge-shutdown
-is invoked by the systemd units pileft.service and piright.service, which in
-turn are "wanted by" the systemd units pileft.device and piright.device via
-appropriate udev rules in /lib/udev/rules.d/50-revpi.rules.
+is invoked by the systemd units pileft-quirks.service and
+piright-quirks.service, which in turn are "wanted by" the systemd units
+pileft.device and piright.device via appropriate udev rules in
+/lib/udev/rules.d/50-revpi.rules.
 .SH SEE ALSO
 For more information on Revolution Pi visit
 .IR https://revolutionpi.kunbus.com
