@@ -2,7 +2,7 @@ PROGRAM="/bin/grep -Fz -m 1 'kunbus,revpi-' /sys/firmware/devicetree/base/compat
 RESULT=="kunbus,revpi-core", GOTO="revpi_core"
 RESULT=="kunbus,revpi-core-2022", GOTO="revpi_core"
 RESULT=="kunbus,revpi-core-s-2022", GOTO="revpi_core"
-RESULT=="kunbus,revpi-core-se", GOTO="revpi_end"
+RESULT=="kunbus,revpi-core-se-2022", GOTO="revpi_end"
 RESULT=="kunbus,revpi-connect", GOTO="revpi_connect"
 RESULT=="kunbus,revpi-connect-se", GOTO="revpi_connect"
 RESULT=="kunbus,revpi-compact", GOTO="revpi_compact"
