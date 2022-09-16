@@ -34,6 +34,7 @@ GOTO="revpi_end"
 LABEL="revpi_flat"
 ACTION=="add", DEVPATH=="*/ttyAMA0", SYMLINK+="ttyRS485-0"
 ACTION=="add", DEVPATH=="*/ttyS0", SYMLINK+="ttyRS485-1"
+ACTION=="add", TAG+="systemd", ENV{SYSTEMD_WANTS}="hdmi-disable.service"
 GOTO="revpi_end"
 
 LABEL="revpi_end"
