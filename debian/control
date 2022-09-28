@@ -7,7 +7,7 @@ Maintainer: KUNBUS GmbH <support@kunbus.com>
 Homepage: https://revolutionpi.com
 
 Package: revpi-tools
-Architecture: armhf
+Architecture: any
 Depends: sosreport, python3-ftdi1, iproute2, ${misc:Depends}
 Description: Revolution Pi tools
  Assorted tools and support files for Revolution Pi products:
