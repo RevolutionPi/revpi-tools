@@ -59,6 +59,7 @@ class RevPi(Plugin, DebianPlugin):
             "apt-cache show raspberrypi-kernel",
             "netstat -ln",
             "vcgencmd version",
+            "revpi-device-info",
             ])
 
         pass
