@@ -6,8 +6,9 @@ add_subdirectory(examples-watchdog)
 add_subdirectory(udev)
 add_subdirectory(systemd)
 add_subdirectory(revpi-sos)
+add_subdirectory(fixup)
 
-install(PROGRAMS pibridge-shutdown	revpi_buster_upgrade_fix_nodered.sh	revpi_buster_fix_pictory.sh revpi_buster_fixup_pkgs.py
+install(PROGRAMS pibridge-shutdown
   DESTINATION /usr/sbin
 )
 
