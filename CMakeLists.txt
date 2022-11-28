@@ -7,8 +7,5 @@ add_subdirectory(udev)
 add_subdirectory(systemd)
 add_subdirectory(revpi-sos)
 add_subdirectory(fixup)
-
-install(PROGRAMS pibridge-shutdown
-  DESTINATION /usr/sbin
-)
+add_subdirectory(tools)
 
