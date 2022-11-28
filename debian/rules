@@ -17,12 +17,6 @@
 %:
 	dh $@
 
-override_dh_auto_build:
-	cc -O2 -o patch_eeprom patch_eeprom.c -lftdi1
-
-override_dh_auto_clean:
-	rm -f patch_eeprom
-
 override_dh_fixperms:
 	dh_fixperms $@
 	chown -R 1000:1000 debian/revpi-tools/home/pi
