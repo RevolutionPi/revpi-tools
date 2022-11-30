@@ -8,7 +8,10 @@ Homepage: https://revolutionpi.com
 
 Package: revpi-tools
 Architecture: any
-Depends: sosreport, python3-ftdi1, iproute2, python3-revpi-device-info, ${misc:Depends}
+Depends: sosreport, python3-ftdi1, iproute2, python3-revpi-device-info, ${misc:Depends},
+iproute1,
+ethtools,
+parted
 Description: Revolution Pi tools
  Assorted tools and support files for Revolution Pi products:
  .
