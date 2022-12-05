@@ -1,4 +1,9 @@
 #!/bin/bash
+#
+# SPDX-License-Identifier: GPL-2.0
+#
+# Copyright 2021 KUNBUS GmbH
+#
 
 [ ! $(id -u) -eq 0 ] && echo "Please run script with root rights!" && exit 0
 

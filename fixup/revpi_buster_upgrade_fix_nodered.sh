@@ -1,4 +1,9 @@
 #!/bin/bash
+#
+# SPDX-License-Identifier: GPL-2.0
+#
+# Copyright 2021 KUNBUS GmbH
+#
 
 echo "############################################################################"
 echo "After upgrading from Debian Stretch to Buster some packages of a Node-RED"

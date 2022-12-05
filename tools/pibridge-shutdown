@@ -1,5 +1,11 @@
 #!/bin/sh
 
+#
+# SPDX-License-Identifier: GPL-2.0
+#
+# Copyright: 2019 KUNBUS GmbH
+#
+
 interface="$1"
 
 # The RevPi Core is the only product with a disconnected ks8851 interrupt pin.
