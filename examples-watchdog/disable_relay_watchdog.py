@@ -1,4 +1,10 @@
 #!/usr/bin/env python3
+#
+# SPDX-License-Identifier: MIT
+#
+# Copyright: 2019 KUNBUS GmbH
+#
+
 # disable relay watchdog on RevPi Connect
 
 import ftdi1 as ftdi
