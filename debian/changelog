@@ -1,3 +1,39 @@
+revpi-tools (2.0.0-1) buster; urgency=medium
+
+  [ Zhi Han ]
+  * Add support for Core (2022)
+  * Add support for Core S (2022)
+  * Change match string for Core SE (2022)
+  * Power off display for Flat in udev
+
+  [ Nicolai Buchwitz ]
+  * Fix missing systemd tag
+  * Change deb architecture to any
+
+  [ Zhi Han ]
+  * sos: Add revpi device information (from HAT EEPROM)
+  * Add dependency to python3-revpi-device-info
+  * Delete needless debhelper log
+  * Convert debianized installation to cmake
+  * Move example code to examples-watchdog/
+  * Move udev rules to directory udev/
+  * Move systemd files to systemd/
+  * Move sosreport files to revpi-sos/
+  * Move fixup scripts to fixup/
+  * Move pibridge-shutdown to tools/
+  * Delete debianization files from master
+  * Import hdmi-disable service from piserial (813df45)
+  * Import ks8851 tools from piserial (62e65cd)
+  * Import factory-reset tools from piserial (9117a7e)
+  * Import lan95xx tools from piserial (9159ffc)
+
+  [ Philipp Rosenberger ]
+  * Make examples available under MIT license
+  * Add GPL-2.0 as license for most components of this repository
+  * Re-add debianization
+
+ -- Philipp Rosenberger <p.rosenberger@kunbus.com>  Tue, 06 Dec 2022 08:50:17 +0100
+
 revpi-tools (1.0.16-1) stable; urgency=medium
 
   * Make the device matching in udev rules more robust
