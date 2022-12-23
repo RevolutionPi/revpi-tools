@@ -1,3 +1,10 @@
+revpi-tools (2.0.1-1) buster; urgency=medium
+
+  [ Nicolai Buchwitz ]
+  * Fix broken function names to repair X login
+
+ -- Sven Sager <s.sager@kunbus.com>  Fri, 23 Dec 2022 16:16:02 +0100
+
 revpi-tools (2.0.0-1) buster; urgency=medium
 
   [ Zhi Han ]
