@@ -11,7 +11,7 @@
 . /usr/share/revpi/revpi-functions
 
 full_devicetype_list="compact|connect|core|flat|connect-se"	# all suported devices
-if has-hat-eeprom; then
+if has_hat_eeprom; then
 	# The device is equipped with HAT EEPROM
 	with_hat_eeprom=true
 
@@ -39,7 +39,7 @@ else
 	fi
 
 	if [ "$ovl" = "core" ]; then
-		if cm1-detection; then
+		if cm1_detection; then
 			echo "Compute Module 1 has been detected, core-cm1-overlay will be used"
 			echo "automatically."
 			ovl="core-cm1"

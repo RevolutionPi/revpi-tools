@@ -17,7 +17,7 @@ export NEWT_COLORS='root=,black entry=white,black'
 
 while [ ! -r /home/pi/.revpi-factory-reset ] ; do
 	clear
-	if has-hat-eeprom; then
+	if has_hat_eeprom; then
 		# The device is equipped with HAT EEPROM
 		whiptail --nocancel --title "INFO" --msgbox "The device configuration was detected automatically. Manual configuration is therefore not necessary." 0 0
 
@@ -25,7 +25,7 @@ while [ ! -r /home/pi/.revpi-factory-reset ] ; do
 		return
 	fi
 	msg="Please select the Product Type:"
-	if cm1-detection; then
+	if cm1_detection; then
 		ovl=$(whiptail --notags --title "PRODUCT TYPE" --menu "$msg" 0 0 0 \
 			core "RevPi Core (autodetected)" \
 			3>&1 1>&2 2>&3)
