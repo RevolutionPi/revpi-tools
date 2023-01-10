@@ -1,3 +1,9 @@
+revpi-tools (2.0.1-2) UNRELEASED; urgency=medium
+
+  * Fix an upgrade issue when using apt-get upgrade
+
+ -- Philipp Rosenberger <p.rosenberger@kunbus.com>  Tue, 10 Jan 2023 18:31:59 +0100
+
 revpi-tools (2.0.1-1) buster; urgency=medium
 
   [ Nicolai Buchwitz ]
