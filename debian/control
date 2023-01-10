@@ -24,12 +24,12 @@ Depends:
   parted,
   piserial (>= 3.0.0),
   python3-ftdi1,
-  python3-revpi-device-info,
   sosreport,
   sudo,
   ${misc:Depends},
   ${python3:Depends},
   ${shlibs:Depends}
+Suggests: python3-revpi-device-info
 Breaks: piserial (<< 3.0.0)
 Description: Revolution Pi tools
  Assorted tools and support files for Revolution Pi products:
