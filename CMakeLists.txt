@@ -11,4 +11,3 @@ add_subdirectory(revpi-sos)
 add_subdirectory(fixup)
 add_subdirectory(tools)
 add_subdirectory(revpi-factory-reset)
-
