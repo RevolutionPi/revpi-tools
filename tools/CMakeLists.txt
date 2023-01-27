@@ -1,17 +1,17 @@
 install(PROGRAMS pibridge-shutdown
-  DESTINATION /usr/sbin
+  DESTINATION ${CMAKE_INSTALL_SBINDIR}/
 )
 
 install(FILES pibridge-shutdown.8
-  DESTINATION share/man/man8
+  DESTINATION ${CMAKE_INSTALL_MANDIR}/man8/
 )
 
 install(PROGRAMS ks8851-set-mac lan95xx-set-mac
-  DESTINATION sbin
+  DESTINATION ${CMAKE_INSTALL_SBINDIR}/
 )
 
 install(FILES ks8851-set-mac.8
-  DESTINATION share/man/man8
+  DESTINATION ${CMAKE_INSTALL_MANDIR}/man8/
 )
 
 add_custom_target(lan9514.bin ALL

@@ -1,13 +1,15 @@
 install(FILES revpi-functions
-  DESTINATION /usr/share/revpi)
+  DESTINATION ${CMAKE_INSTALL_DATADIR}/revpi/
+)
 
 install(PROGRAMS revpi-factory-reset
-  DESTINATION sbin
+  DESTINATION ${CMAKE_INSTALL_SBINDIR}/
 )
 
 install(FILES revpi-factory-reset.sh
-  DESTINATION /etc/profile.d)
+  DESTINATION ${CMAKE_INSTALL_SYSCONFDIR}/profile.d/
+)
 
 install(FILES revpi-factory-reset.8
-  DESTINATION share/man/man8
+  DESTINATION ${CMAKE_INSTALL_MANDIR}/man8/
 )

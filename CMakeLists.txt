@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.13)
 
 project(revpi-tools)
 
+include(GNUInstallDirs)
+
 add_subdirectory(examples-watchdog)
 add_subdirectory(udev)
 add_subdirectory(systemd)
