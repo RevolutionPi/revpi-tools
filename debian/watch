@@ -1,4 +1,0 @@
-version=4
-
-https://github.com/RevolutionPi/@PACKAGE@/tags \
-/RevolutionPi/@PACKAGE@/archive/refs/tags/(.*)\.tar\.gz

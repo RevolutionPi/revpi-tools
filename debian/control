@@ -2,6 +2,10 @@ Source: revpi-tools
 Section: electronics
 Priority: optional
 Maintainer: KUNBUS GmbH <support@kunbus.com>
+Rules-Requires-Root: binary-targets
+Homepage: https://revolutionpi.com/
+Vcs-Browser: https://github.com/RevolutionPi/revpi-tools
+Vcs-Git: https://github.com/RevolutionPi/revpi-tools.git
 Build-Depends:
   cmake,
   debhelper-compat (= 12),
@@ -10,8 +14,6 @@ Build-Depends:
   python3-all,
   xxd
 Standards-Version: 4.3.0
-Homepage: https://github.com/RevolutionPi/revpi-tools
-Rules-Requires-Root: binary-targets
 
 Package: revpi-tools
 Architecture: any
