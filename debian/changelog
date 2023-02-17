@@ -1,4 +1,4 @@
-revpi-tools (2.0.1-2) buster; urgency=medium
+revpi-tools (2.0.1-1+revpi11+1) bullseye; urgency=medium
 
   * Fix an upgrade issue when using apt-get upgrade
 
