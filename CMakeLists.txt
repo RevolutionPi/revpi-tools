@@ -4,6 +4,7 @@ project(revpi-tools)
 
 include(GNUInstallDirs)
 
+add_subdirectory(avahi-service)
 add_subdirectory(examples-watchdog)
 add_subdirectory(udev)
 add_subdirectory(systemd)
