@@ -2,7 +2,7 @@
 #
 # SPDX-License-Identifier: GPL-2.0
 #
-# Copyright: 2017-2022 KUNBUS GmbH
+# Copyright: 2017-2023 KUNBUS GmbH
 #
 # reset dtoverlay, password of user pi, machine-id, hostname, FQDN and
 # MAC address of a RevPi to factory defaults
