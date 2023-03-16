@@ -6,6 +6,7 @@ include(GNUInstallDirs)
 
 add_subdirectory(avahi-services)
 add_subdirectory(examples-watchdog)
+add_subdirectory(firstboot)
 add_subdirectory(fixup)
 add_subdirectory(revpi-factory-reset)
 add_subdirectory(revpi-sos)
