@@ -31,7 +31,7 @@ Depends:
   ${misc:Depends},
   ${python3:Depends},
   ${shlibs:Depends}
-Suggests: python3-revpi-device-info
+Suggests: python3-revpi-device-info, avahi-daemon
 Breaks: piserial (<< 3.0.0)
 Description: Revolution Pi tools
  Assorted tools and support files for Revolution Pi products:
