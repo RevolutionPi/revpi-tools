@@ -30,7 +30,7 @@ Depends:
   ${misc:Depends},
   ${python3:Depends},
   ${shlibs:Depends}
-Suggests: revpi-sos-report
+Suggests: revpi-sos-report, avahi-daemon
 Breaks: piserial (<< 3.0.0)
 Description: Revolution Pi tools
  Assorted tools and support files for Revolution Pi products:
