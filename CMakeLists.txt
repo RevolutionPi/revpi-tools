@@ -4,6 +4,7 @@ project(revpi-tools)
 
 include(GNUInstallDirs)
 
+add_subdirectory(avahi-services)
 add_subdirectory(examples-watchdog)
 add_subdirectory(fixup)
 add_subdirectory(revpi-factory-reset)
