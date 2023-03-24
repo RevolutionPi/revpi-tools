@@ -9,6 +9,7 @@ ConditionFirstBoot=yes
 [Service]
 Type=oneshot
 RemainAfterExit=yes
+ExecStartPost=/usr/bin/systemd-machine-id-setup
 ExecStart=/usr/share/revpi/firstboot/resize-fs.sh
 
 [Install]

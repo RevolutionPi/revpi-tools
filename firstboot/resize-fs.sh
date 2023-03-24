@@ -12,5 +12,3 @@ if [ "$last_part_size" -lt "$last_part_max" ] ; then
 	/sbin/partprobe "/dev/$dev"
 	/sbin/resize2fs "/dev/$last_part"
 fi
-
-systemd-machine-id-setup
