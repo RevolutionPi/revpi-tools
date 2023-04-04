@@ -1,0 +1,119 @@
+.\"                                      Hey, EMACS: -*- nroff -*-
+.\" (C) Copyright 2016-2023 KUNBUS GmbH
+.\"
+.\" First parameter, NAME, should be all caps
+.\" Second parameter, SECTION, should be 1-8, maybe w/ subsection
+.\" other parameters are allowed: see man(7), man(1)
+.TH revpi-config 1 "April 4 2023"
+.\" Please adjust this date whenever revising the manpage.
+.\"
+.\" Some roff macros, for reference:
+.\" .nh        disable hyphenation
+.\" .hy        enable hyphenation
+.\" .ad l      left justify
+.\" .ad b      justify to both left and right margins
+.\" .nf        disable filling
+.\" .fi        enable filling
+.\" .br        insert line break
+.\" .sp <n>    insert n+1 empty lines
+.\" for manpage-specific macros, see man(7)
+.SH NAME
+revpi-config \- enable and disable features on a RevPi
+.SH SYNOPSIS
+.B revpi-config enable | disable | status | available | availstat <feature>
+.SH DESCRIPTION
+.B revpi-config
+allows enabling and disabling specific settings in /boot/config.txt as well as
+systemd services on a RevPi.  It also allows querying the status (whether
+enabled) and availability (whether installed) of each feature and will convey
+the result on standard output (1 or 0).
+
+The availability and status of a feature can also be queried simultaneously
+using the
+.B availstat
+command. The return value is 2 if the feature is not available, 1 if the feature
+is available and enabled and 0 if the feature is available but not enabled.
+
+Revolution Pi is a set of IoT products based on the Raspberry Pi and geared
+towards industrial usage.
+.SH SUPPORTED FEATURES
+.TP
+.B gui
+Boot to the graphical desktop versus the text console.  (Default is the
+text console.)
+.TP
+.B downclock-cpu <frequency>
+Downclock the ARM CPU to the specified value to achieve more predictable
+latencies.  The ARM CPU will downclock further, if the core temperature
+exceeds 80 degrees Celsius.  The frequency should therefore be chosen to
+always keep the ARM CPU below this temperature under the expected load.
+Only available on a RevPi with CM3.  (Default is dynamic frequency scaling
+depending on the core temperature:  1200 MHz if the temperature is below
+80 degrees; between 600 and 1200 MHz if the temperature exceeds 80 degrees
+but is still below 85 degrees; between 300 and 600 MHz if the temperature
+exceeds 85 degrees.)
+.TP
+.B perf-governor
+Keep the CPU at the maximum allowed frequency even if it's idling.
+This is achieved by switching to the "performance" cpufreq governor.
+It avoids frequency changes which would otherwise introduce jitter
+and generally improves responsiveness.  It is thus the recommended
+setting for realtime environments.  Only available on a RevPi with CM3.
+.TP
+.B revpi-con-can
+Enable CON CAN device tree overlay for the RevPi Connect.
+(Default is disabled.)
+.TP
+.B var-log.mount
+Store logs on a tmpfs-backed directory to reduce eMMC wear and free up
+disk space.  Requires a reboot!  Logs will always be empty after a reboot,
+so the ability to debug crashes is lost.  The total size of the directory
+is capped at 50 MByte.  It is recommended to disable swap as well because
+tmpfs is swappable.  (Default is to not use a tmpfs but store logs directly
+on the eMMC.)
+.TP
+.B dphys-swapfile
+Use swap.  Disabling it reduces eMMC wear and frees up disk space.
+(Default is disabled.)
+.TP
+.B teamviewer-revpi
+Start TeamViewer remote access service.  (Default is disabled.)
+.TP
+.B pimodbus-master
+Start Revolution Pi Modbus master.  (Default is disabled.)
+.TP
+.B pimodbus-slave
+Start Revolution Pi Modbus slave.  (Default is disabled.)
+.TP
+.B systemd-timesyncd
+Start NTP daemon.  If there is no Internet connectivity, no GPS/DCF77
+receiver and no NTP server on the LAN, it is recommendable to disable it.
+This avoids continuous polling of the *.debian.pool.ntp.org servers and
+error messages caused by their unreachability.  (Default is enabled.)
+.TP
+.B ssh
+Start SSH daemon.  By disabling it, remote login is prevented and the
+attack surface thus reduced.  (Default is enabled.)
+.TP
+.B logi-rts
+Start logi.RTS PLC runtime system.  (Default is disabled.)
+.TP
+.B nodered
+Start Node-RED runtime system.  (Default is disabled.)
+.TP
+.B noderedrevpinodes-server
+Start daemon to bridge between Node-RED and piControl.  (Default is disabled.)
+.TP
+.B revpipyload
+Start daemon to load and monitor a RevPiModIO application, serve the
+piControl process image to RevPiNetIO, serve a configuration GUI and
+publish IO values via MQTT.  (Default is disabled.)
+.TP
+.B bluetooth
+Enable built-in Bluetooth interface using rfkill(8).  (Default is enabled.)
+.TP
+.B ieee80211
+Enable built-in WLAN interface using rfkill(8).  (Default is enabled.)
+.SH SEE ALSO
+For more information on Revolution Pi visit
+.IR https://revolutionpi.com
