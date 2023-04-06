@@ -3,7 +3,7 @@ How to use the watchdog on the RevPi Connect to also powercycle the relay
 The FTDI EEPROM is patched as follows during factory end-of-line test
 (and a reboot is performed afterwards for the change to take effect): 
 devnum=$(cat /sys/bus/usb/devices/1-1.5.2/devnum)
-sudo /home/pi/connect/patch_eeprom d:1/$devnum 0x14=0xaa 0x15=0x00
+sudo /usr/lib/revpi-tools/patch_eeprom d:1/$devnum 0x14=0xaa 0x15=0x00
 
 
 Now enable or disable the relay on a watchdog reset like this:

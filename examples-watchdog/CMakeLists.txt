@@ -4,7 +4,7 @@ target_link_libraries(patch_eeprom ftdi1)
 include(GNUInstallDirs)
 
 install(TARGETS patch_eeprom
-  DESTINATION /home/pi/connect/
+  DESTINATION ${CMAKE_INSTALL_LIBDIR}/revpi-tools/
 )
 
 install(FILES README patch_eeprom.c enable_relay_watchdog.py disable_relay_watchdog.py revpi-connect-watchdog.sh
