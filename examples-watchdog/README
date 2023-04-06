@@ -7,8 +7,8 @@ sudo /home/pi/connect/patch_eeprom d:1/$devnum 0x14=0xaa 0x15=0x00
 
 
 Now enable or disable the relay on a watchdog reset like this:
-sudo /home/pi/connect/enable_relay_watchdog.py
-sudo /home/pi/connect/disable_relay_watchdog.py
+sudo /usr/share/doc/revpi-tools/enable_relay_watchdog.py
+sudo /usr/share/doc/revpi-tools/disable_relay_watchdog.py
 
 If you want the relay to be switched you have to enable it each time the RevPi 
 is booted. Invoke the Python script enable_relay_watchdog.py from /etc/rc.local
