@@ -1,11 +1,11 @@
 install(PROGRAMS revpi-sos
-  DESTINATION /usr/bin
+  DESTINATION ${CMAKE_INSTALL_BINDIR}/
 )
 
 install(FILES revpi.py
-  DESTINATION /usr/share/sosreport/sos/plugins
+  DESTINATION ${CMAKE_INSTALL_DATADIR}/sosreport/sos/plugins/
 )
 
 install(FILES revpi-sos.1
-  DESTINATION share/man/man1
+  DESTINATION ${CMAKE_INSTALL_MANDIR}/man1/
 )
