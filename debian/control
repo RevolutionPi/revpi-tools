@@ -26,7 +26,6 @@ Depends:
   parted,
   piserial (>= 3.0.0),
   python3-ftdi1,
-  sosreport,
   sudo,
   ${misc:Depends},
   ${python3:Depends},
