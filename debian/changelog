@@ -1,3 +1,24 @@
+revpi-tools (2.0.2-1+revpi10+1) buster; urgency=medium
+
+  [ Philipp Rosenberger ]
+  * Use GNUInstallDirs cmake-module to define install location
+  * Build lan9514.bin in the build directory
+  * Remove useless newlines at the file ends
+  * Move license files to the LICENSES dir
+
+  [ Sven Sager ]
+  * Update debian files for debian buster
+  * Set upstream-branch value in gbp.conf to 2.x
+
+  [ Ramiro Gsponer ]
+  * Fix license copyright
+  * Reorder added subdirectories alphabetically
+  * Add revpi-ssh.service
+  * Update CMakeLists for avahi-services
+  * Update control file with dependency for avahi service
+
+ -- Sven Sager <s.sager@kunbus.com>  Fri, 07 Apr 2023 22:41:44 +0200
+
 revpi-tools (2.0.1-2) buster; urgency=medium
 
   * Fix an upgrade issue when using apt-get upgrade
