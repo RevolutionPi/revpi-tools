@@ -4,11 +4,11 @@ Upstream-Contact: KUNBUS GmbH <support@kunbus.com>
 Source: https://github.com/RevolutionPi/revpi-tools
 
 Files:     *
-Copyright: 2016-2022 Kunbus GmbH
+Copyright: 2016-2023 KUNBUS GmbH
 License:   GPL-2+
 
 Files:     examples-watchdog/*
-Copyright: 2019-2022 KUNBUS GmbH
+Copyright: 2019-2023 KUNBUS GmbH
 License:   MIT
 
 Files:     debian/*
