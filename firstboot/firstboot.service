@@ -1,0 +1,16 @@
+[Unit]
+Description=First Boot Wizard
+DefaultDependencies=no
+Conflicts=shutdown.target
+After=systemd-remount-fs.service
+ConditionPathIsReadWrite=/etc
+ConditionFirstBoot=yes
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStartPost=/usr/bin/systemd-machine-id-setup
+ExecStart=/usr/share/revpi/firstboot/resize-fs.sh
+
+[Install]
+WantedBy=sysinit.target
