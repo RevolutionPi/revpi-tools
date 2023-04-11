@@ -1,3 +1,54 @@
+revpi-tools (3.0.0-1+revpi11+1) bullseye; urgency=medium
+
+  [ Philipp Rosenberger ]
+  * Use GNUInstallDirs cmake-module to define install location
+  * Build lan9514.bin in the build directory
+  * Remove useless newlines at the file ends
+  * Move license files to the LICENSES dir
+
+  [ Ramiro Gsponer ]
+  * Fix license copyright
+  * Reorder added subdirectories alphabetically
+  * Add revpi-ssh.service
+  * Update CMakeLists for avahi-services
+  * Delete resize root partition from revpi-factory-reset
+  * Add bash script for firstboot with resize root partition
+  * Add unit file for firstboot.service
+  * Update CMakeLists for firstboot.service
+  * Update license copyright
+
+  [ Frank Erdrich ]
+  * Add Connect 4 to udev rules.
+
+  [ Sven Sager ]
+  * Change call of systemd-machine-id-setup
+
+  [ Ramiro Gsponer ]
+  * Import revpi-config files from webstatus
+  * Update CMakeLists for revpi-config
+
+  [ Holger Jorra ]
+  * Move watchdog example away from home folder
+  * Move EEPROM patch away from home folder
+  * Remove C++ dependency from project
+
+  [ Nicolai Buchwitz ]
+  * Remove buster fixups
+  * Remove dependency to sosreport
+  * Suggest revpi-sos-report
+  * Remove revpi-sos
+
+  [ Ramiro Gsponer ]
+  * Set upstream-branch value in gbp.conf to master
+  * Update control file with dependency for avahi service
+  * Add conflict with old webstatus version
+
+  [ Sven Sager ]
+  * Removes override_dh_fixperms from control file
+  * Updates the year in the copyright file
+
+ -- Sven Sager <s.sager@kunbus.com>  Tue, 11 Apr 2023 20:22:49 +0200
+
 revpi-tools (2.0.1-1+revpi11+1) bullseye; urgency=medium
 
   * Fix an upgrade issue when using apt-get upgrade
