@@ -2,7 +2,7 @@
 #
 # SPDX-License-Identifier: GPL-2.0
 #
-# Copyright: 2021-2023 KUNBUS GmbH
+# Copyright: 2023 KUNBUS GmbH
 #
 
 iface="$1"
@@ -13,4 +13,4 @@ if [ "$#" != 2 ]; then
     exit 1
 fi
 
-exec /usr/sbin/revpi-set-mac "${iface}" ks8851 "${mac}"
+exec /usr/sbin/revpi-set-mac "${iface}" lan7800 "${mac}"

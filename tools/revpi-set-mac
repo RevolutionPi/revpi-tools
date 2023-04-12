@@ -23,11 +23,16 @@ if [ "$#" != 3 ] ||
     echo 1>&2 "Usage: $(basename "$0") <eth interface> <device type> <mac address>"
     echo 1>&2 ""
     echo 1>&2 "Supported devices types are:"
-    echo 1>&2 "  lan9514"
+    echo 1>&2 "  lan7800 lan9514"
     exit 1
 fi
 
 case $dev_type in
+    lan7800)
+        magic='0x78A5'
+        size=512
+        eeprom_file='/usr/share/revpi/lan7800.bin'
+        ;;
     lan9514)
         magic='0x9500'
         size=256
@@ -50,5 +55,5 @@ fi
 # write MAC Address
 for idx in {1..6}
 do
-    ethtool -E "${iface}" magic "${magic}" offset "${idx}" length 1 value 0x"${BASH_REMATCH[idx]}"
+    ethtool -E "${iface}" magic "${magic}" offset 0 length 1 value 0x"${BASH_REMATCH[idx]}"
 done
