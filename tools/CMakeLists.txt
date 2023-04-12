@@ -17,10 +17,10 @@ install(FILES ks8851-set-mac.8
 set(XXD /usr/bin/xxd)
 add_custom_target(
   lan9514.bin ALL
-  COMMAND ${XXD} -r ${CMAKE_SOURCE_DIR}/tools/lan9514.hex ${PROJECT_BINARY_DIR}/lan9514.bin
+  COMMAND ${XXD} -r ${CMAKE_SOURCE_DIR}/tools/lan9514.hex ${PROJECT_BINARY_DIR}/tools/lan9514.bin
   DEPENDS ${XXD} ${CMAKE_SOURCE_DIR}/tools/lan9514.hex
 )
 
-install(FILES ${PROJECT_BINARY_DIR}/lan9514.bin
+install(FILES ${PROJECT_BINARY_DIR}/tools/lan9514.bin
   DESTINATION ${CMAKE_INSTALL_DATADIR}/revpi
 )
