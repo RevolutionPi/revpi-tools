@@ -19,9 +19,9 @@ fi
 
 # ks8851.c currently only supports writing a single byte
 # note the byte order in the datasheet is bogus
-/sbin/ethtool -E "$iface" magic 0x8851 offset 7 value 0x${BASH_REMATCH[1]}
-/sbin/ethtool -E "$iface" magic 0x8851 offset 6 value 0x${BASH_REMATCH[2]}
-/sbin/ethtool -E "$iface" magic 0x8851 offset 5 value 0x${BASH_REMATCH[3]}
-/sbin/ethtool -E "$iface" magic 0x8851 offset 4 value 0x${BASH_REMATCH[4]}
-/sbin/ethtool -E "$iface" magic 0x8851 offset 3 value 0x${BASH_REMATCH[5]}
-/sbin/ethtool -E "$iface" magic 0x8851 offset 2 value 0x${BASH_REMATCH[6]}
+/sbin/ethtool -E "$iface" magic 0x8851 offset 7 length 1 value 0x${BASH_REMATCH[1]}
+/sbin/ethtool -E "$iface" magic 0x8851 offset 6 length 1 value 0x${BASH_REMATCH[2]}
+/sbin/ethtool -E "$iface" magic 0x8851 offset 5 length 1 value 0x${BASH_REMATCH[3]}
+/sbin/ethtool -E "$iface" magic 0x8851 offset 4 length 1 value 0x${BASH_REMATCH[4]}
+/sbin/ethtool -E "$iface" magic 0x8851 offset 3 length 1 value 0x${BASH_REMATCH[5]}
+/sbin/ethtool -E "$iface" magic 0x8851 offset 2 length 1 value 0x${BASH_REMATCH[6]}
