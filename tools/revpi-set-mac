@@ -1,0 +1,54 @@
+#!/bin/bash
+#
+# SPDX-License-Identifier: GPL-2.0
+#
+# Copyright: 2023 KUNBUS GmbH
+#
+
+set -e
+
+iface="$1"
+dev_type="$2"
+mac="$3"
+
+# downcase
+mac="${mac,,}"
+# remove dashes
+mac="${mac//-/}"
+# remove colons
+mac="${mac//:/}"
+
+if [ "$#" != 3 ] ||
+  ! [[ "$mac" =~ ^([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$ ]] ; then
+    echo 1>&2 "Usage: $(basename "$0") <eth interface> <device type> <mac address>"
+    echo 1>&2 ""
+    echo 1>&2 "Supported devices types are:"
+    echo 1>&2 "  lan9514"
+    exit 1
+fi
+
+case $dev_type in
+    lan9514)
+        magic='0x9500'
+        size=256
+        eeprom_file='/usr/share/revpi/lan9514.bin'
+        ;;
+    *)
+        1>&2 echo "Unsupported device type: '$dev_type'"
+        exit 1
+        ;;
+esac
+
+# write golden image to EEPROM
+if [ -f "${eeprom_file}" ]; then
+    ethtool -E "${iface}" magic "${magic}" offset 0 length "${size}" < "${eeprom_file}"
+else
+    echo 1>&2 "ERROR: Golden image not found: '${eeprom_file}'"
+    exit 1
+fi
+
+# write MAC Address
+for idx in {1..6}
+do
+    ethtool -E "${iface}" magic "${magic}" offset "${idx}" length 1 value 0x"${BASH_REMATCH[idx]}"
+done

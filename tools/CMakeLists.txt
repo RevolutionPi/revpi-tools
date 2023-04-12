@@ -6,7 +6,7 @@ install(FILES pibridge-shutdown.8
   DESTINATION ${CMAKE_INSTALL_MANDIR}/man8/
 )
 
-install(PROGRAMS ks8851-set-mac lan95xx-set-mac
+install(PROGRAMS ks8851-set-mac lan95xx-set-mac revpi-set-mac
   DESTINATION ${CMAKE_INSTALL_SBINDIR}/
 )
 
