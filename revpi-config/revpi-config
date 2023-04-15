@@ -223,17 +223,19 @@ do_service() {
 # do_wireless <verb> <type> (where type is "bluetooth" or "ieee80211")
 do_wireless() {
 	shopt -s nullglob
-	if grep -q "revpi-flat" "/proc/device-tree/compatible"; then
+	if grep -q -E "(revpi-flat|revpi-connect4)" "/proc/device-tree/compatible"; then
 		if [ "$2" = "ieee80211" ] ; then
 			#built-in devices are recognizable by having a devicetree node
-			IDX=(/sys/class/"$2"/*/device/of_node)
-			if [ "$IDX" ] ; then
-				IDX="${IDX%%/device/of_node}"	# strip trailing /device/of_node
+			IDX=(/sys/class/"$2"/*)
+			if grep -q -F 'DRIVER=brcmfmac' "$IDX"/device/uevent; then
 				IDX=("$IDX"/rfkill*)		# search for rfkill directory
 				IDX="${IDX##*/rfkill}"		# strip everything except index
 			fi
 		else
-			[ ! -c /dev/ttyUSB0 ] && return 0
+			if grep -q "revpi-flat" "/proc/device-tree/compatible"; then
+				[ ! -c /dev/ttyUSB0 ] && return 0
+			fi
+
 			IDX=(/sys/class/bluetooth/hci0)
 			[ -L "$IDX" ] || hciattach /dev/ttyUSB0 any
 			# check if device available
