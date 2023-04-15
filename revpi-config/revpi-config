@@ -49,8 +49,8 @@ is_cm3() {
 }
 
 is_revpi_connect() {
-	/bin/grep -F -q 'kunbus,revpi-connect' /sys/firmware/devicetree/base/compatible &&
-		! /bin/grep -F -q 'kunbus,revpi-connect4' /sys/firmware/devicetree/base/compatible
+	/bin/grep -F -q 'kunbus,revpi-connect' /proc/device-tree/compatible &&
+		! /bin/grep -F -q 'kunbus,revpi-connect4' /proc/device-tree/compatible
 }
 
 # do_governor <verb> <governor>
