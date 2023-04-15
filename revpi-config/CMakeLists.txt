@@ -1,5 +1,5 @@
 install(FILES revpi-config
-  DESTINATION ${CMAKE_INSTALL_SBINDIR}/
+  DESTINATION ${CMAKE_INSTALL_BINDIR}/
 )
 
 install(FILES revpi-config.1
