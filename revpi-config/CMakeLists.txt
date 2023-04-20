@@ -1,4 +1,4 @@
-install(FILES revpi-config
+install(PROGRAMS revpi-config
   DESTINATION ${CMAKE_INSTALL_BINDIR}/
 )
 
