@@ -1,3 +1,10 @@
+revpi-tools (3.0.1-1+revpi11+1) bullseye; urgency=medium
+
+  * fix: Set execute permission to script files
+  * fix: use PROGRAM instead of FILE in CMakeLists.txt for scripts
+
+ -- Sven Sager <s.sager@kunbus.com>  Sat, 22 Apr 2023 16:56:50 +0200
+
 revpi-tools (3.0.0-1+revpi11+1) bullseye; urgency=medium
 
   [ Philipp Rosenberger ]
