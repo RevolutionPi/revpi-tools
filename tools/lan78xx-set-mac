@@ -1,0 +1,25 @@
+#!/bin/bash
+#
+# SPDX-License-Identifier: GPL-2.0
+#
+# Copyright: 2023 KUNBUS GmbH
+#
+
+set -e
+
+# shellcheck source=set-mac-functions
+source /usr/share/revpi/set-mac-functions
+
+interface="$1"
+mac="$2"
+
+magic="0x78A5"
+eeprom_file='/usr/share/revpi/lan7800.bin'
+eeprom_file_size=512
+
+check_args_usage "$@"
+
+check_mac "$mac"
+set_mac_lanXXXX "$interface" "$mac" "$magic"
+
+write_eeprom "$interface" "$magic" "$eeprom_file" "$eeprom_file_size"

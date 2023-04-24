@@ -10,7 +10,7 @@ install(FILES set-mac-functions
   DESTINATION ${CMAKE_INSTALL_DATADIR}/revpi/
 )
 
-install(PROGRAMS ks8851-set-mac lan95xx-set-mac
+install(PROGRAMS ks8851-set-mac lan95xx-set-mac lan78xx-set-mac
   DESTINATION ${CMAKE_INSTALL_SBINDIR}/
 )
 
@@ -25,6 +25,12 @@ add_custom_target(
   DEPENDS ${XXD} ${CMAKE_SOURCE_DIR}/tools/lan9514.hex
 )
 
-install(FILES ${PROJECT_BINARY_DIR}/tools/lan9514.bin
+add_custom_target(
+  lan7800.bin ALL
+  COMMAND ${XXD} -r ${CMAKE_SOURCE_DIR}/tools/lan7800.hex ${PROJECT_BINARY_DIR}/tools/lan7800.bin
+  DEPENDS ${XXD} ${CMAKE_SOURCE_DIR}/tools/lan7800.hex
+)
+
+install(FILES ${PROJECT_BINARY_DIR}/tools/lan9514.bin ${PROJECT_BINARY_DIR}/tools/lan7800.bin
   DESTINATION ${CMAKE_INSTALL_DATADIR}/revpi
 )
