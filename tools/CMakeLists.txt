@@ -10,7 +10,7 @@ install(FILES set-mac-functions
   DESTINATION ${CMAKE_INSTALL_DATADIR}/revpi/
 )
 
-install(PROGRAMS ks8851-set-mac lan95xx-set-mac lan78xx-set-mac
+install(PROGRAMS revpi-set-mac ks8851-set-mac lan95xx-set-mac lan78xx-set-mac
   DESTINATION ${CMAKE_INSTALL_SBINDIR}/
 )
 

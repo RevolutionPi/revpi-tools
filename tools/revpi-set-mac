@@ -1,0 +1,36 @@
+#!/bin/bash
+#
+# SPDX-License-Identifier: GPL-2.0
+#
+# Copyright: 2023 KUNBUS GmbH
+#
+
+set -e
+
+interface="$1"
+dev_type="$2"
+mac="$3"
+
+if [ "$#" != 3 ]; then
+    echo 1>&2 "Usage: $(basename "$0") <eth interface> <device type> <mac address>"
+    echo 1>&2 ""
+    echo 1>&2 "Supported devices types are:"
+    echo 1>&2 "  ks8851 lan9514 lan7800"
+    exit 1
+fi
+
+case $dev_type in
+ks8851)
+    exec /usr/sbin/ks8851-set-mac "$interface" "$mac"
+    ;;
+lan9514)
+    exec /usr/sbin/lan95xx-set-mac "$interface" "$mac"
+    ;;
+lan7800)
+    exec /usr/sbin/lan78xx-set-mac "$interface" "$mac"
+    ;;
+*)
+    echo 1>&2 "Unsupported device type: '$dev_type'"
+    exit 1
+    ;;
+esac
