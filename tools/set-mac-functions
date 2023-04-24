@@ -1,0 +1,93 @@
+#!/bin/bash
+#
+# SPDX-License-Identifier: GPL-2.0
+#
+# Copyright: 2022 KUNBUS GmbH
+#
+
+function error_exit() {
+    local message=$1
+    local rc=${2:-1}
+
+    echo 1>&2 "ERROR: ${message}"
+    exit "${rc}"
+}
+
+function check_args_usage() {
+    if [ "$#" != 2 ]; then
+        error_exit "Usage: $(basename "$0") <eth interface> <mac address>"
+    fi
+}
+
+function is_valid_mac() {
+    [[ "$1" =~ ^([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$ ]]
+}
+
+function strip_mac() {
+    local mac=$1
+
+    # downcase
+    mac="${mac,,}"
+    # remove dashes
+    mac="${mac//-/}"
+    # remove colons
+    mac="${mac//:/}"
+
+    echo "$mac"
+}
+
+function check_mac() {
+    local mac=$1
+
+    # sanitize mac address
+    mac=$(strip_mac "$1")
+
+    if ! is_valid_mac "$mac"; then
+        error_exit "Invalid mac address format: ${mac}"
+    fi
+}
+
+function set_mac_lanXXXX() {
+    local interface="$1"
+    local mac="$2"
+    local magic="$3"
+
+    # check MAC address (also fills BASH_REMATCH)
+    is_valid_mac "$mac"
+
+    # write MAC Address
+    # offset is the same for LAN950X, 9512, 9513, 9514 and 7800
+    for idx in {1..6}; do
+        ethtool -E "${interface}" magic "${magic}" offset "${idx}" length 1 value 0x"${BASH_REMATCH[idx]}"
+    done
+}
+
+function set_mac_ks8851() {
+    local interface="$1"
+    local mac="$2"
+
+    # check MAC address (also fills BASH_REMATCH)
+    is_valid_mac "$mac"
+
+    # ks8851.c currently only supports writing a single byte
+    # note the byte order in the datasheet is bogus
+    /sbin/ethtool -E "$interface" magic 0x8851 offset 7 value "0x${BASH_REMATCH[1]}"
+    /sbin/ethtool -E "$interface" magic 0x8851 offset 6 value "0x${BASH_REMATCH[2]}"
+    /sbin/ethtool -E "$interface" magic 0x8851 offset 5 value "0x${BASH_REMATCH[3]}"
+    /sbin/ethtool -E "$interface" magic 0x8851 offset 4 value "0x${BASH_REMATCH[4]}"
+    /sbin/ethtool -E "$interface" magic 0x8851 offset 3 value "0x${BASH_REMATCH[5]}"
+    /sbin/ethtool -E "$interface" magic 0x8851 offset 2 value "0x${BASH_REMATCH[6]}"
+}
+
+function write_eeprom() {
+    local interface="$1"
+    local magic="$2"
+    local eeprom_file="$3"
+    local eeprom_file_size="$4"
+
+    if [ -f "${eeprom_file}" ]; then
+        ethtool -E "${interface}" magic "${magic}" offset 0 length "${eeprom_file_size}" <"${eeprom_file}"
+    else
+        error_exit "ERROR: Golden image for eeprom not found: '${eeprom_file}'"
+    fi
+}

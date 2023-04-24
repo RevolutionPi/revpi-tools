@@ -6,6 +6,10 @@ install(FILES pibridge-shutdown.8
   DESTINATION ${CMAKE_INSTALL_MANDIR}/man8/
 )
 
+install(FILES set-mac-functions
+  DESTINATION ${CMAKE_INSTALL_DATADIR}/revpi/
+)
+
 install(PROGRAMS ks8851-set-mac lan95xx-set-mac
   DESTINATION ${CMAKE_INSTALL_SBINDIR}/
 )
