@@ -2,26 +2,18 @@
 #
 # SPDX-License-Identifier: GPL-2.0
 #
-# Copyright: 2021 KUNBUS GmbH
+# Copyright: 2021-2023 KUNBUS GmbH
 #
 
-iface="$1"
+set -e
+
+# shellcheck source=set-mac-functions
+source /usr/share/revpi/set-mac-functions
+
+interface="$1"
 mac="$2"
-mac="${mac,,}"		# downcase
-mac="${mac//-/}"	# remove dashes
-mac="${mac//:/}"	# remove colons
 
-if [ "$#" != 2 ] ||
-   ! [[ "$mac" =~ ^([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$ ]] ; then
-	echo 1>&2 "Usage: `basename $0` <eth interface> <mac address>"
-	exit 1
-fi
+check_args_usage "$@"
 
-# ks8851.c currently only supports writing a single byte
-# note the byte order in the datasheet is bogus
-/sbin/ethtool -E "$iface" magic 0x8851 offset 7 length 1 value 0x${BASH_REMATCH[1]}
-/sbin/ethtool -E "$iface" magic 0x8851 offset 6 length 1 value 0x${BASH_REMATCH[2]}
-/sbin/ethtool -E "$iface" magic 0x8851 offset 5 length 1 value 0x${BASH_REMATCH[3]}
-/sbin/ethtool -E "$iface" magic 0x8851 offset 4 length 1 value 0x${BASH_REMATCH[4]}
-/sbin/ethtool -E "$iface" magic 0x8851 offset 3 length 1 value 0x${BASH_REMATCH[5]}
-/sbin/ethtool -E "$iface" magic 0x8851 offset 2 length 1 value 0x${BASH_REMATCH[6]}
+check_mac "$mac"
+set_mac_ks8851 "$interface" "$mac"
