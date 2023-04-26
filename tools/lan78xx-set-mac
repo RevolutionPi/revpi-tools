@@ -13,9 +13,9 @@ source /usr/share/revpi/set-mac-functions
 interface="$1"
 mac="$2"
 
-magic="0x9500"
-eeprom_file='/usr/share/revpi/lan9514.bin'
-eeprom_file_size=256
+magic="0x78A5"
+eeprom_file='/usr/share/revpi/lan7800.bin'
+eeprom_file_size=512
 
 check_args_usage "$@"
 
