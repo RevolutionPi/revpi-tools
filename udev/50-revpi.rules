@@ -23,7 +23,7 @@ ACTION=="add", DEVPATH=="*/spi0.1/net/*eth*", NAME="pileft"
 GOTO="revpi_end"
 
 LABEL="revpi_connect4"
-ACTION=="add", DEVPATH=="*/ttyAMA2", SYMLINK+="ttyRS485"
+ACTION=="add", DEVPATH=="/devices/platform/soc/fe201a00.serial/*", SYMLINK+="ttyRS485"
 GOTO="revpi_end"
 
 LABEL="revpi_compact"
