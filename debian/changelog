@@ -1,3 +1,10 @@
+revpi-tools (3.1.1-1+revpi11+1) bullseye; urgency=medium
+
+  * firstboot: Use pkg-config for services install path
+  * firstboot: Fix potential race condition in the service file
+
+ -- Philipp Rosenberger <p.rosenberger@kunbus.com>  Wed, 24 May 2023 18:02:12 +0200
+
 revpi-tools (3.1.0-1+revpi11+1) bullseye; urgency=medium
 
   [ Sven Sager ]
