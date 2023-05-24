@@ -24,6 +24,8 @@ GOTO="revpi_end"
 
 LABEL="revpi_connect4"
 ACTION=="add", DEVPATH=="*/ttyAMA2", SYMLINK+="ttyRS485"
+ACTION=="add", SUBSYSTEM=="net", ATTR{type}=="1", DEVPATH=="*/fd580000.ethernet/net/*", PROGRAM="revpi_mac %k 0"
+ACTION=="add", SUBSYSTEM=="net", ATTR{type}=="1", DEVPATH=="*/fe300000.mmcnr/mmc_host/mmc1/mmc1:0001/mmc1:0001:1/net/*", PROGRAM="revpi_mac %k 2"
 GOTO="revpi_end"
 
 LABEL="revpi_compact"

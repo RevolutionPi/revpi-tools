@@ -1,0 +1,83 @@
+#!/bin/bash
+#
+# SPDX-License-Identifier: GPL-2.0
+#
+# Copyright: 2023 KUNBUS GmbH
+#
+
+set -e
+
+iface="$1"
+dev_type="$2"
+mac="$3"
+
+# downcase
+mac="${mac,,}"
+# remove dashes
+mac="${mac//-/}"
+# remove colons
+mac="${mac//:/}"
+
+if [ "$#" != 3 ] ||
+  ! [[ "$mac" =~ ^([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$ ]] ; then
+    echo 1>&2 "Usage: $(basename "$0") <eth interface> <device type> <mac address>"
+    echo 1>&2 ""
+    echo 1>&2 "Supported devices types are:"
+    echo 1>&2 "  lan7800 lan9514 ks8851"
+    exit 1
+fi
+
+# Default offset delta where the MAC is written to.
+# The offset delta of MAC are the same in LAN950X, 9512, 9513, 9514, 7800 and
+# therefore used as default values.
+offset_delta=0
+
+# Default offset multiplier. The offset multiplier can be used in
+# combination with a negative offset to reverse the ordering of the
+# bytes (needed for KS8851)
+offset_multiplier=1
+
+case $dev_type in
+    lan7800)
+        magic='0x78A5'
+        size=512
+        eeprom_file='/usr/share/revpi/lan7800.bin'
+        ;;
+    lan9514)
+        magic='0x9500'
+        size=256
+        eeprom_file='/usr/share/revpi/lan9514.bin'
+        ;;
+    ks8851)
+        magic='0x8851'
+        # offset needs to be 7 to 2 (first to last byte)
+        # 1 (byte index) + -8 (offset) * -1 = 7
+        # ...
+        # 6 (byte index) + -8 (offset) * -1 = 2
+        offset_delta=-8
+        offset_multiplier=-1
+        ;;
+    *)
+        1>&2 echo "Unsupported device type: '$dev_type'"
+        exit 1
+        ;;
+esac
+
+# write golden image to EEPROM
+if [ -n "${eeprom_file:-}" ]; then
+    if [ -f "${eeprom_file}" ]; then
+        ethtool -E "${iface}" magic "${magic}" offset 0 length "${size}" < "${eeprom_file}"
+    else
+        echo 1>&2 "ERROR: Golden image not found: '${eeprom_file}'"
+        exit 1
+    fi
+fi
+
+# write MAC Address
+for idx in {1..6}
+do
+    # Determine byte offset (defaults to offset=idx)
+    offset=$(((idx + offset_delta) * offset_multiplier))
+
+    ethtool -E "${iface}" magic "${magic}" offset "${offset}" length 1 value 0x"${BASH_REMATCH[idx]}"
+done

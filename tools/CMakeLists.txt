@@ -6,7 +6,7 @@ install(FILES pibridge-shutdown.8
   DESTINATION ${CMAKE_INSTALL_MANDIR}/man8/
 )
 
-install(PROGRAMS ks8851-set-mac lan95xx-set-mac
+install(PROGRAMS lan78xx-set-mac lan95xx-set-mac ks8851-set-mac revpi-set-mac
   DESTINATION ${CMAKE_INSTALL_SBINDIR}/
 )
 
@@ -17,10 +17,16 @@ install(FILES ks8851-set-mac.8
 set(XXD /usr/bin/xxd)
 add_custom_target(
   lan9514.bin ALL
-  COMMAND ${XXD} -r ${CMAKE_SOURCE_DIR}/tools/lan9514.hex ${PROJECT_BINARY_DIR}/lan9514.bin
+  COMMAND ${XXD} -r ${CMAKE_SOURCE_DIR}/tools/lan9514.hex ${PROJECT_BINARY_DIR}/tools/lan9514.bin
   DEPENDS ${XXD} ${CMAKE_SOURCE_DIR}/tools/lan9514.hex
 )
 
-install(FILES ${PROJECT_BINARY_DIR}/lan9514.bin
+add_custom_target(
+  lan7800.bin ALL
+  COMMAND ${XXD} -r ${CMAKE_SOURCE_DIR}/tools/lan7800.hex ${PROJECT_BINARY_DIR}/tools/lan7800.bin
+  DEPENDS ${XXD} ${CMAKE_SOURCE_DIR}/tools/lan7800.hex
+)
+
+install(FILES ${PROJECT_BINARY_DIR}/tools/lan9514.bin ${PROJECT_BINARY_DIR}/tools/lan7800.bin
   DESTINATION ${CMAKE_INSTALL_DATADIR}/revpi
 )
