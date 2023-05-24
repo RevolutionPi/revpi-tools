@@ -11,7 +11,10 @@ Build-Depends:
   debhelper-compat (= 13),
   dh-python,
   libftdi1-dev,
+  pkg-config,
   python3-all,
+  systemd,
+  udev,
   xxd
 Standards-Version: 4.5.1
 
