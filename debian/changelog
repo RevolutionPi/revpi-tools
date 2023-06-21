@@ -1,3 +1,10 @@
+revpi-tools (3.1.2-1+revpi11+1) bullseye; urgency=medium
+
+  [ Nicolai Buchwitz ]
+  * fix(udev): Remove systemd tag for hdmi-disable rule
+
+ -- Thomas Böhler <t.boehler@kunbus.com>  Wed, 21 Jun 2023 09:42:43 +0200
+
 revpi-tools (3.1.1-1+revpi11+1) bullseye; urgency=medium
 
   * firstboot: Use pkg-config for services install path
