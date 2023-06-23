@@ -2,9 +2,20 @@ variables:
   # buster is based on the v2.x branch and not master
   SKIP_RELEASE_PATTERN: /buster/
 
+# Avoid duplicate pipelines
+# See: https://docs.gitlab.com/ee/ci/yaml/workflow.html#switch-between-branch-pipelines-and-merge-request-pipelines
+workflow:
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - if: "$CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS"
+      when: never
+    - if: "$CI_COMMIT_BRANCH"
+    - if: "$CI_COMMIT_TAG"
+
 stages:
   - build
 
+# Build a snapshot debian package from current master
 include:
   - project: "revolutionpi/infrastructure/ci-templates"
     file: "/package-build-raspios-snapshot.yml"
@@ -14,3 +25,17 @@ include:
       - exists:
           - debian/gitlab-ci.yml
 
+# build the repo
+build:
+  image: 'arm64v8/debian:11'
+  tags:
+    - docker
+    - host-arm64
+  stage: build
+  script:
+    - apt update
+    - apt install -y cmake pkg-config systemd udev libftdi1-dev xxd
+    - mkdir build
+    - cd build
+    - cmake ..
+    - cmake --build .
