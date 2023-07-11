@@ -17,6 +17,7 @@ usage() {
 	                    pimodbus-slave systemd-timesyncd ssh
 	                    logi-rts nodered noderedrevpinodes-server
 	                    revpipyload bluetooth ieee80211
+	                    external-antenna
 	EOF
 }
 
@@ -46,6 +47,33 @@ do_gui() {
 
 is_cm3() {
 	/bin/grep -E -q 'ARMv7' /proc/cpuinfo
+}
+
+rpi_revision_code() {
+	# see https://www.raspberrypi.com/documentation/computers/raspberry-pi.html#new-style-revision-codes
+	code=$(grep Revision /proc/cpuinfo | cut -d' ' -f2)
+
+	# Convert the hexadecimal revision code to base 10
+	echo $((16#${code}))
+}
+
+rpi_type() {
+	code=$(rpi_revision_code)
+	mask=4080
+
+	echo $(((code & mask) >> 4))
+}
+
+is_cm4() {
+	test $(rpi_type) -eq 20
+}
+
+is_cm4_with_wifi() {
+	if is_cm4 && grep -q 'DRIVER=brcmfmac' /sys/class/ieee80211/phy0/device/uevent 2>/dev/null; then
+		return 0
+	else
+		return 1
+	fi
 }
 
 is_revpi_connect() {
@@ -295,6 +323,7 @@ while [ $# -gt 0 ] ; do
 	revpipyload)		do_service "$cmd" "$svc" ;;
 	bluetooth)		do_wireless  "$cmd" "$svc" ;;
 	ieee80211)		do_wireless  "$cmd" "$svc" ;;
+	external-antenna)	do_config "$cmd" dtparam ant2 is_cm4_with_wifi ;;
 	*)			usage ; exit ;;
 	esac
 	echo -n "$? "
