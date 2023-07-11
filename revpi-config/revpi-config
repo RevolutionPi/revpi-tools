@@ -16,7 +16,7 @@ usage() {
 	                    teamviewer-revpi pimodbus-master
 	                    pimodbus-slave systemd-timesyncd ssh
 	                    logi-rts nodered noderedrevpinodes-server
-	                    revpipyload bluetooth ieee80211
+	                    revpipyload bluetooth ieee80211 avahi
 	                    external-antenna
 	EOF
 }
@@ -194,6 +194,18 @@ do_overlay() {
 	esac
 }
 
+avahi-daemon-post-disable() {
+	# Disable the avahi socket AFTER disabling the service unit
+	# Note: This is because a connected socket could interrupt stop
+	/bin/systemctl disable avahi-daemon.socket
+	/bin/systemctl stop avahi-daemon.socket
+}
+avahi-daemon-post-enable() {
+	# Enable the avahi socket after enabling the service unit
+	/bin/systemctl enable avahi-daemon.socket
+	/bin/systemctl start avahi-daemon.socket
+}
+
 dphys-swapfile-post-disable() {
 	# remove swapfile
 	/sbin/dphys-swapfile uninstall
@@ -321,6 +333,7 @@ while [ $# -gt 0 ] ; do
 	nodered)		do_service "$cmd" "$svc" ;;
 	noderedrevpinodes-server) do_service "$cmd" "$svc" ;;
 	revpipyload)		do_service "$cmd" "$svc" ;;
+	avahi)			do_service "$cmd" avahi-daemon ;;
 	bluetooth)		do_wireless  "$cmd" "$svc" ;;
 	ieee80211)		do_wireless  "$cmd" "$svc" ;;
 	external-antenna)	do_config "$cmd" dtparam ant2 is_cm4_with_wifi ;;
