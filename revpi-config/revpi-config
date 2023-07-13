@@ -193,10 +193,10 @@ do_service() {
 							 return ; }
 	declare -f "$2-pre-$1" >/dev/null 2>&1 && eval "$2-pre-$1"
 	case "$1" in
-	enable)		/bin/systemctl start   "$2"
-			/bin/systemctl enable  "$2" ;;
-	disable)	/bin/systemctl stop    "$2"
-			/bin/systemctl disable "$2" ;;
+	enable)		/bin/systemctl enable   "$2"
+			/bin/systemctl start  "$2" ;;
+	disable)	/bin/systemctl disable    "$2"
+			/bin/systemctl stop "$2" ;;
 	status)		/bin/systemctl status  "$2" 2>&1 | /bin/grep -q /etc/init.d
 			if [ $? = 0 ] ; then
 				# https://bugs.debian.org/760616
