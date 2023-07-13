@@ -1,3 +1,9 @@
+revpi-tools (3.1.3-1+revpi11+1) bullseye; urgency=medium
+
+  * fix: Ensure that pileft and piright are brought up
+
+ -- Nicolai Buchwitz <n.buchwitz@kunbus.com>  Thu, 13 Jul 2023 13:10:28 +0200
+
 revpi-tools (3.1.2-1+revpi11+1) bullseye; urgency=medium
 
   [ Nicolai Buchwitz ]
