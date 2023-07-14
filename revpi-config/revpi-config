@@ -46,7 +46,7 @@ do_gui() {
 }
 
 is_cm3() {
-	/bin/grep -E -q 'ARMv7' /proc/cpuinfo
+	test $(rpi_type) -eq 10
 }
 
 rpi_revision_code() {
