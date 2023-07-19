@@ -49,6 +49,10 @@ is_cm3() {
 	test $(rpi_type) -eq 10
 }
 
+is_not_cm1() {
+	is_cm3 || is_cm4
+}
+
 rpi_revision_code() {
 	# see https://www.raspberrypi.com/documentation/computers/raspberry-pi.html#new-style-revision-codes
 	code=$(grep Revision /proc/cpuinfo | cut -d' ' -f2)
@@ -114,7 +118,7 @@ do_governor() {
 			else
 				[ -z "$val" ] ; return
 			fi ;;
-	available)	is_cm3 &&
+	available)	is_not_cm1 &&
 			/usr/bin/dpkg-query -s cpufrequtils >/dev/null 2>&1
 			[ $? = 1 ] ; return ;;
 	availstat)	do_governor available
@@ -351,7 +355,7 @@ while [ $# -gt 0 ] ; do
 				else
 					arg=""
 				fi
-				do_config "$cmd" arm_freq "$arg" is_cm3 ;;
+				do_config "$cmd" arm_freq "$arg" is_not_cm1 ;;
 	perf-governor)		do_governor "$cmd" performance ;;
 	revpi-con-can)		do_overlay "$cmd" "$svc" is_revpi_connect ;;
 	var-log.mount)		do_service "$cmd" "$svc" ;;
