@@ -49,6 +49,10 @@ is_cm3() {
 	test $(rpi_type) -eq 10
 }
 
+is_not_cm1() {
+	is_cm3 || is_cm4
+}
+
 rpi_revision_code() {
 	# see https://www.raspberrypi.com/documentation/computers/raspberry-pi.html#new-style-revision-codes
 	code=$(grep Revision /proc/cpuinfo | cut -d' ' -f2)
@@ -114,7 +118,7 @@ do_governor() {
 			else
 				[ -z "$val" ] ; return
 			fi ;;
-	available)	is_cm3 &&
+	available)	is_not_cm1 &&
 			/usr/bin/dpkg-query -s cpufrequtils >/dev/null 2>&1
 			[ $? = 1 ] ; return ;;
 	availstat)	do_governor available
@@ -298,6 +302,38 @@ do_wireless() {
 	esac
 }
 
+do_cm4_external_antenna() {
+	case "$1" in
+		enable)
+			clear_config_var "dtparam" "ant1"
+			clear_config_var "dtparam" "ant2"
+			echo "dtparam=ant2" >> "$CONFIG"
+			;;
+		disable)
+			clear_config_var "dtparam" "ant1"
+			clear_config_var "dtparam" "ant2"
+			;;
+		status)
+			/bin/grep -E -q "^[[:blank:]]*dtparam=ant2$" "$CONFIG"
+			[ $? = 1 ]
+			return
+			;;
+		available)
+			is_cm4_with_wifi
+			[ $? = 1 ]
+			return
+			;;
+		availstat)
+			do_cm4_external_antenna available
+			if [ $? = 0 ] ; then
+				return 2
+			fi
+			do_cm4_external_antenna status
+			return
+			;;
+	esac
+}
+
 if [ "$1" != enable ] && 
    [ "$1" != disable ] && 
    [ "$1" != status ] &&
@@ -319,7 +355,7 @@ while [ $# -gt 0 ] ; do
 				else
 					arg=""
 				fi
-				do_config "$cmd" arm_freq "$arg" is_cm3 ;;
+				do_config "$cmd" arm_freq "$arg" is_not_cm1 ;;
 	perf-governor)		do_governor "$cmd" performance ;;
 	revpi-con-can)		do_overlay "$cmd" "$svc" is_revpi_connect ;;
 	var-log.mount)		do_service "$cmd" "$svc" ;;
@@ -336,7 +372,7 @@ while [ $# -gt 0 ] ; do
 	avahi)			do_service "$cmd" avahi-daemon ;;
 	bluetooth)		do_wireless  "$cmd" "$svc" ;;
 	ieee80211)		do_wireless  "$cmd" "$svc" ;;
-	external-antenna)	do_config "$cmd" dtparam ant2 is_cm4_with_wifi ;;
+	external-antenna)	do_cm4_external_antenna "$cmd";;
 	*)			usage ; exit ;;
 	esac
 	echo -n "$? "
