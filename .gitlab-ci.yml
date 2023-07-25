@@ -1,0 +1,12 @@
+stages:
+  - build
+
+include:
+  - project: "revolutionpi/infrastructure/ci-templates"
+    file: "/package-build-raspios-snapshot.yml"
+  - local: debian/gitlab-ci.yml
+    rules:
+      - if: $CI_COMMIT_BRANCH =~ /^raspios\/.*/
+      - exists:
+          - debian/gitlab-ci.yml
+
