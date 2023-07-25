@@ -1,0 +1,21 @@
+stages:
+  - build
+  - publish
+
+include:
+  - project: "revolutionpi/infrastructure/ci-templates"
+    file: "/package-build-raspios-snapshot.yml"
+  - local: debian/gitlab-ci.yml
+    rules:
+      - if: $CI_COMMIT_BRANCH =~ /^raspios\/.*/
+      - exists:
+          - debian/gitlab-ci.yml
+
+# only build snapshot packages for buster
+build-snapshot-packages:
+  parallel:
+    matrix:
+      - ARCH: armhf
+        RELEASE: [buster]
+  rules:
+    - if: $CI_COMMIT_REF_NAME == '2.x' && $RELEASE !~ $SKIP_RELEASE_PATTERN
