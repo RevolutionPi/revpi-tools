@@ -28,8 +28,8 @@ GOTO="revpi_end"
 
 LABEL="revpi_connect4"
 ACTION=="add", DEVPATH=="*/ttyAMA2", SYMLINK+="ttyRS485"
-ACTION=="add", DEVPATH=="*/fd580000.ethernet/net/*", SUBSYSTEM=="net", ATTR{type}=="1", PROGRAM="revpi_mac %k 0"
-ACTION=="add", DEVPATH=="*/fe300000.mmcnr/mmc_host/mmc1/mmc1:0001/mmc1:0001:1/net/*", SUBSYSTEM=="net", ATTR{type}=="1", PROGRAM="revpi_mac %k 2"
+ACTION=="add", DEVPATH=="*/fd580000.ethernet/net/*", SUBSYSTEM=="net", ATTR{type}=="1", NAME="eth0", PROGRAM="revpi_mac %k 0"
+ACTION=="add", DEVPATH=="*/fe300000.mmcnr/mmc_host/mmc1/mmc1:0001/mmc1:0001:1/net/*", SUBSYSTEM=="net", ATTR{type}=="1", NAME="wlan0", PROGRAM="revpi_mac %k 2"
 GOTO="revpi_end"
 
 LABEL="revpi_compact"
