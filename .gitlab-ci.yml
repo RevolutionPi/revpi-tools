@@ -12,11 +12,10 @@ workflow:
     - if: "$CI_COMMIT_BRANCH"
     - if: "$CI_COMMIT_TAG"
 
-stages:
-  - build
-
 # Build a snapshot debian package from current master
 include:
+  - project: "revolutionpi/infrastructure/ci-templates"
+    file: "base.yml"
   - project: "revolutionpi/infrastructure/ci-templates"
     file: "/package-build-raspios-snapshot.yml"
   - local: debian/gitlab-ci.yml
