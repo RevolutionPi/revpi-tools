@@ -1,3 +1,20 @@
+revpi-tools (3.3.1-1+revpi11+1) bullseye; urgency=medium
+
+  [ Nicolai Buchwitz ]
+  * ci: Add pipeline for package builds
+  * ci: Exclude buster from master snapshot packages
+
+  [ Philipp Rosenberger ]
+  * Drop systemd-timesyncd-override-available()
+  * udev: Use the same order in all rules: DEVPATH, SUBSYSTEM, ATTR, ...
+  * udev: Add a rule for eth0 on Core 3(+)/S(E)
+  * udev: Add a rule for eth0 and eth1 on Connect(+)/S(E)
+  * udev: Add a rule for eth0 and wlan0 on Connect 4
+  * udev: Add a rule for eth0 on Compact
+  * udev: Add a rule for eth0 and eth1 on Flat
+
+ -- Philipp Rosenberger <p.rosenberger@kunbus.com>  Fri, 28 Jul 2023 13:00:53 +0200
+
 revpi-tools (3.3.0-1+revpi11+1) bullseye; urgency=medium
 
   [ Nicolai Buchwitz ]
