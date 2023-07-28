@@ -26,8 +26,8 @@ include:
           - debian/gitlab-ci.yml
 
 # build the repo
-build:
-  image: 'arm64v8/debian:11'
+test-build-cmake:
+  image: registry.gitlab.com/revolutionpi/infrastructure/docker-images/build-container/build-container-bullseye:arm64-latest
   tags:
     - docker
     - host-arm64
@@ -39,3 +39,5 @@ build:
     - cd build
     - cmake ..
     - cmake --build .
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event' && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == $CI_DEFAULT_BRANCH
