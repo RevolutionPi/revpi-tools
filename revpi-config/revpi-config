@@ -224,17 +224,8 @@ var-log.mount-post-disable() {
 	/bin/systemctl mask var-log.mount
 }
 
-systemd-timesyncd-override-available() {
-	# fake nonavailability of systemd-timesyncd on jessie
-	# so that only ntpd is visible in the GUI
-	source /etc/os-release
-	[ "$VERSION_ID" -le 8 ]
-}
-
 # do_service <verb> <service>
 do_service() {
-	declare -f "$2-override-$1" >/dev/null 2>&1 && { eval "$2-override-$1"
-							 return ; }
 	declare -f "$2-pre-$1" >/dev/null 2>&1 && eval "$2-pre-$1"
 	case "$1" in
 	enable)		/bin/systemctl enable   "$2"
