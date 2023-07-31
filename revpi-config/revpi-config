@@ -8,6 +8,9 @@ fi
 CONFIG=/boot/config.txt
 CPUFREQCONFIG=/etc/default/cpufrequtils
 
+trap "exit 1" SIGUSR1
+PROC="$$"
+
 usage() {
 	cat <<-EOF
 	Usage: $(basename $0) enable | disable | status | available <feature>
@@ -45,17 +48,16 @@ do_gui() {
 	esac
 }
 
-is_cm3() {
-	test $(rpi_type) -eq 10
-}
-
-is_not_cm1() {
-	is_cm3 || is_cm4
-}
-
 rpi_revision_code() {
 	# see https://www.raspberrypi.com/documentation/computers/raspberry-pi.html#new-style-revision-codes
 	code=$(grep Revision /proc/cpuinfo | cut -d' ' -f2)
+
+	if [ -z "$code" ]; then
+		echo >&2 "Unable to determine board revision code. Not running on a RevPi?. Aborting."
+		# we are running in a subshell, thus cannot exit directly here
+		kill -10 "$PROC"
+		return
+	fi
 
 	# Convert the hexadecimal revision code to base 10
 	echo $((16#${code}))
@@ -68,8 +70,24 @@ rpi_type() {
 	echo $(((code & mask) >> 4))
 }
 
+is_cm1() {
+	test "$(rpi_type)" -eq 6
+}
+
+is_not_cm1() {
+	! is_cm1
+}
+
+is_cm3() {
+	test "$(rpi_type)" -eq 10
+}
+
+is_cm4s() {
+	test "$(rpi_type)" -eq 21
+}
+
 is_cm4() {
-	test $(rpi_type) -eq 20
+	test "$(rpi_type)" -eq 20
 }
 
 is_cm4_with_wifi() {
