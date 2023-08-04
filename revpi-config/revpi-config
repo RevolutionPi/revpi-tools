@@ -366,7 +366,7 @@ do_wireless() {
 		[ -z "$IDX" ] && return 0
 		disabled=$(</sys/class/rfkill/rfkill"$IDX"/soft)
 		# invert value
-		(($disabled))
+		((disabled))
 		return
 		;;
 	available)
@@ -377,7 +377,7 @@ do_wireless() {
 		[ -z "$IDX" ] && return 2
 		disabled=$(</sys/class/rfkill/rfkill"$IDX"/soft)
 		# invert value
-		(($disabled))
+		((disabled))
 		return
 		;;
 	esac
