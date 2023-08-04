@@ -13,7 +13,7 @@ PROC="$$"
 
 usage() {
 	cat <<-EOF
-		Usage: $(basename $0) enable | disable | status | available <feature>
+		Usage: $(basename "$0") enable | disable | status | available <feature>
 		Supported features: gui downclock-cpu perf-governor revpi-con-can
 		                    var-log.mount dphys-swapfile
 		                    teamviewer-revpi pimodbus-master
