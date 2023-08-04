@@ -293,14 +293,7 @@ do_service() {
 		/bin/systemctl stop "$2"
 		;;
 	status)
-		/bin/systemctl status "$2" 2>&1 | /bin/grep -q /etc/init.d
-		if [ $? = 0 ]; then
-			# https://bugs.debian.org/760616
-			# this is fixed in stretch
-			[ -n "$(/bin/ls /etc/rc?.d/S??$2 2>/dev/null)" ]
-		else
-			/bin/systemctl is-enabled "$2" >/dev/null 2>&1
-		fi
+		/bin/systemctl is-enabled "$2" >/dev/null 2>&1
 		[ $? = 1 ]
 		return
 		;;
