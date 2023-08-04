@@ -38,8 +38,7 @@ do_gui() {
 		return
 		;;
 	availstat)
-		do_gui available
-		if [ $? = 0 ]; then
+		if do_gui available; then
 			return 2
 		fi
 		do_gui status "$2"
@@ -114,8 +113,7 @@ is_revpi_connect() {
 do_governor() {
 	case "$1" in
 	enable)
-		do_governor available
-		if [ $? = 0 ]; then
+		if do_governor available; then
 			return
 		fi
 		/bin/sed -r -i -e "/^GOVERNOR=/d" "$CPUFREQCONFIG" \
@@ -125,8 +123,7 @@ do_governor() {
 		do_service enable cpufrequtils
 		;;
 	disable)
-		do_governor available
-		if [ $? = 0 ]; then
+		if do_governor available; then
 			return
 		fi
 		do_service disable cpufrequtils
@@ -158,8 +155,7 @@ do_governor() {
 		return
 		;;
 	availstat)
-		do_governor available
-		if [ $? = 0 ]; then
+		if do_governor available; then
 			return 2
 		fi
 		do_governor status "$2"
@@ -217,8 +213,7 @@ do_config() {
 		return
 		;;
 	availstat)
-		do_config available "$2" "$3" "$4"
-		if [ $? = 0 ]; then
+		if do_config available "$2" "$3" "$4"; then
 			return 2
 		fi
 		do_config status "$2" "$3" "$4"
@@ -250,8 +245,7 @@ do_overlay() {
 		return
 		;;
 	availstat)
-		do_overlay available "$2" "$3"
-		if [ $? = 0 ]; then
+		if do_overlay available "$2" "$3"; then
 			return 2
 		fi
 		do_overlay status "$2" "$3"
@@ -315,8 +309,7 @@ do_service() {
 		return
 		;;
 	availstat)
-		do_service available "$2"
-		if [ $? = 0 ]; then
+		if do_service available "$2"; then
 			return 2
 		fi
 		do_service status "$2"
@@ -405,8 +398,7 @@ do_cm4_external_antenna() {
 		return
 		;;
 	availstat)
-		do_cm4_external_antenna available
-		if [ $? = 0 ]; then
+		if do_cm4_external_antenna available; then
 			return 2
 		fi
 		do_cm4_external_antenna status
