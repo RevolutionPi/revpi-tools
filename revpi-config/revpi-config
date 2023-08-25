@@ -20,7 +20,7 @@ usage() {
 		                    pimodbus-slave systemd-timesyncd ssh
 		                    logi-rts nodered noderedrevpinodes-server
 		                    revpipyload bluetooth ieee80211 avahi
-		                    external-antenna
+		                    external-antenna opcua-revpi-server
 	EOF
 }
 
@@ -463,6 +463,9 @@ while [ $# -gt 0 ]; do
 		do_service "$cmd" "$svc"
 		;;
 	revpipyload)
+		do_service "$cmd" "$svc"
+		;;
+	opcua-revpi-server)
 		do_service "$cmd" "$svc"
 		;;
 	avahi)
