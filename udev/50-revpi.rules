@@ -37,7 +37,7 @@ ACTION=="add", ENV{OF_COMPATIBLE_0}=="fairchild,74hc595", SYMLINK+="gpiochip_dou
 ACTION=="add", ENV{OF_COMPATIBLE_0}=="maxim,max31913", SYMLINK+="gpiochip_din"
 ACTION=="add", DEVPATH=="*/usb1/1-1/1-1.1/1-1.1:1.0/*", SUBSYSTEM=="net", NAME="eth0"
 ACTION=="add", DEVPATH=="*/spi0.2/net/*eth*", NAME="eth1"
-ACTION=="add", DEVPATH=="*/ttyAMA0", SYMLINK+="ttyRS485"
+ACTION=="add", DEVPATH=="*/3f201000.serial/tty/*", SUBSYSTEM=="tty", SYMLINK+="ttyRS485"
 ACTION=="add", DEVPATH=="*/i2c-1/1-0050/1-00500", RUN+="/bin/chgrp pi /sys%p/nvmem", RUN+="/bin/chmod g+rw /sys%p/nvmem"
 ACTION=="add", DEVPATH=="/devices/platform/leds/leds/*", RUN+="/bin/chgrp pi /sys%p/brightness", RUN+="/bin/chmod g+rw /sys%p/brightness"
 ACTION=="add", DEVPATH=="*/spi2.0/iio:device*", RUN+="/bin/chgrp pi /sys%p/out_voltage0_raw /sys%p/out_voltage1_raw /sys%p/out_voltage_powerdown /sys%p/out_voltage_powerdown_mode", RUN+="/bin/chmod g+rw /sys%p/out_voltage0_raw /sys%p/out_voltage1_raw /sys%p/out_voltage_powerdown /sys%p/out_voltage_powerdown_mode"
