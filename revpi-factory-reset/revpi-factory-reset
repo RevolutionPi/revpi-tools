@@ -83,9 +83,6 @@ pw=$($piserial -p)
 echo -e "Password:\t$pw"
 echo "pi:${pw}" | chpasswd
 
-umount /etc/machine-id 2>/dev/null
-$piserial -s | /usr/bin/sha256sum | cut -c1-32 > /etc/machine-id
-
 hostname="RevPi$ser"
 echo -e "Hostname:\t$hostname"
 /bin/sed --follow-symlinks -r -i -e "s/^(127\.0\.1\.1[[:blank:]]+).*/\1$hostname/" /etc/hosts
