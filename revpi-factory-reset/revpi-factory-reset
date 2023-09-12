@@ -116,5 +116,3 @@ echo "on your RevPi!"
 
 # skip /etc/profile.d/revpi-factory-reset.sh on future logins
 true > /home/pi/.revpi-factory-reset
-# skip /etc/profile.d/sshpasswd.sh on future logins
-/usr/bin/sudo /bin/rm -f /run/sshwarn
