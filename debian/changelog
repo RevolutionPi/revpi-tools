@@ -1,3 +1,36 @@
+revpi-tools (3.3.2-1+revpi11+1) bullseye; urgency=medium
+
+  [ Thomas Böhler ]
+  * ci: Add GitLab CI manifest
+
+  [ Nicolai Buchwitz ]
+  * fix(revpi-config): Fix compute module detection
+
+  [ Philipp Rosenberger ]
+  * refactor(revpi-config): Cleanup the indentation
+  * chore(revpi-config): Address SC2004: $/${} is unnecessary on arithmetic variables
+  * chore(revpi-config): Address SC2086: Double quote to prevent globbing and word splitting
+  * chore(revpi-config): Address SC2181: Check exit code directly
+  * chore(revpi-config)!: Drop a workaround for Jessie
+
+  [ Thomas Böhler ]
+  * fix: Add dependency `whiptail` for factory-reset
+
+  [ Nicolai Buchwitz ]
+  * ci: Run cmake test build only on MR
+  * ci: Run publish stage too
+
+  [ Philipp Rosenberger ]
+  * fix(udev): Make ttyRS485 symlinking more robust on Connect 4
+  * fix(udev): Make ttyRS485 symlinking more robust on Flat
+  * fix(udev): Make ttyRS485 symlinking more robust on Compact
+
+  [ Thomas Böhler ]
+  * chore: Add move to GitLab to README
+  * fix: Remove setting the static machine-id
+
+ -- Thomas Böhler <t.boehler@kunbus.com>  Mon, 18 Sep 2023 16:17:47 +0200
+
 revpi-tools (3.3.1-1+revpi11+1) bullseye; urgency=medium
 
   [ Nicolai Buchwitz ]
