@@ -1,3 +1,9 @@
+revpi-tools (3.3.2-1+revpi12+1) bookworm; urgency=medium
+
+  * Update package for bookworm
+
+ -- Thomas Böhler <t.boehler@kunbus.com>  Fri, 13 Oct 2023 10:31:19 +0200
+
 revpi-tools (3.3.2-1+revpi11+1) bullseye; urgency=medium
 
   [ Thomas Böhler ]
