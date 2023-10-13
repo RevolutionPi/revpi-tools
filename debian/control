@@ -4,8 +4,8 @@ Priority: optional
 Maintainer: KUNBUS GmbH <support@kunbus.com>
 Rules-Requires-Root: binary-targets
 Homepage: https://revolutionpi.com/
-Vcs-Browser: https://github.com/RevolutionPi/revpi-tools
-Vcs-Git: https://github.com/RevolutionPi/revpi-tools.git -b raspios/bullseye
+Vcs-Browser: https://gitlab.com/revolutionpi/revpi-tools
+Vcs-Git: https://gitlab.com/pevolutionpi/revpi-tools.git -b raspios/bookworm
 Build-Depends:
   cmake,
   debhelper-compat (= 13),
@@ -16,7 +16,7 @@ Build-Depends:
   systemd,
   udev,
   xxd
-Standards-Version: 4.5.1
+Standards-Version: 4.6.2
 
 Package: revpi-tools
 Architecture: any
