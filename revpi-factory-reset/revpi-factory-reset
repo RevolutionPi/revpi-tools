@@ -15,7 +15,7 @@ if has_hat_eeprom; then
 	with_hat_eeprom=true
 
 	# Get the serial number from device tree according to document:
-	# https://github.com/RevolutionPi/revpi-hat-eeprom/blob/master/docs/RevPi-HAT-EEPROM-Format.md#1-serial
+	# https://gitlab.com/revolutionpi/revpi-hat-eeprom/blob/master/docs/RevPi-HAT-EEPROM-Format.md#1-serial
 	ser=$(cat /proc/device-tree/hat/custom_1)
 else
 	with_hat_eeprom=false
