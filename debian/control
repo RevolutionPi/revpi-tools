@@ -5,7 +5,7 @@ Maintainer: KUNBUS GmbH <support@kunbus.com>
 Rules-Requires-Root: binary-targets
 Homepage: https://revolutionpi.com/
 Vcs-Browser: https://gitlab.com/revolutionpi/revpi-tools
-Vcs-Git: https://gitlab.com/pevolutionpi/revpi-tools.git -b debian/bookworm
+Vcs-Git: https://gitlab.com/revolutionpi/revpi-tools.git -b debian/bookworm
 Build-Depends:
   cmake,
   debhelper-compat (= 13),
