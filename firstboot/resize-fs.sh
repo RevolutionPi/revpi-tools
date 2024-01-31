@@ -1,7 +1,8 @@
 #!/bin/bash
 #
-# SPDX-License-Identifier: GPL-2.0
-# Copyright: 2023 KUNBUS GmbH
+# SPDX-License-Identifier: GPL-2.0-or-later
+#
+# SPDX-FileCopyrightText: 2023 KUNBUS GmbH
 #
 # This script will run with the firstboot.service
 # at the very first boot of the system.

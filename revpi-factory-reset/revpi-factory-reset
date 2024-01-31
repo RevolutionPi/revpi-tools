@@ -1,8 +1,8 @@
 #!/bin/bash
 #
-# SPDX-License-Identifier: GPL-2.0
+# SPDX-License-Identifier: GPL-2.0-or-later
 #
-# Copyright: 2017-2023 KUNBUS GmbH
+# SPDX-FileCopyrightText: 2017-2024 KUNBUS GmbH
 #
 # reset dtoverlay, password of user pi, machine-id, hostname, FQDN and
 # MAC address of a RevPi to factory defaults

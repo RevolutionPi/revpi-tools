@@ -1,4 +1,9 @@
 #!/bin/bash
+#
+# SPDX-License-Identifier: GPL-2.0-or-later
+#
+# SPDX-FileCopyrightText: 2016-2023 KUNBUS GmbH
+
 
 # reset environment
 if [ "$(/usr/bin/env | /bin/grep -Ev '^(PWD|SHLVL|_)=')" ]; then

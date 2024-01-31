@@ -1,3 +1,7 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+#
+# SPDX-FileCopyrightText: 2024 KUNBUS GmbH
+
 variables:
   # buster is based on the v2.x branch and not master
   SKIP_RELEASE_PATTERN: /buster/

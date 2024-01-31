@@ -1,3 +1,7 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+#
+# SPDX-FileCopyrightText: 2021-2024 KUNBUS GmbH
+
 PROGRAM="/bin/grep -Fz -m 1 'kunbus,revpi-' /sys/firmware/devicetree/base/compatible"
 RESULT=="kunbus,revpi-core", GOTO="revpi_core"
 RESULT=="kunbus,revpi-core-2022", GOTO="revpi_core"
