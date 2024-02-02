@@ -8,7 +8,6 @@ project(revpi-tools LANGUAGES C)
 
 include(GNUInstallDirs)
 
-add_subdirectory(avahi-services)
 add_subdirectory(examples-watchdog)
 add_subdirectory(firstboot)
 add_subdirectory(revpi-config)
