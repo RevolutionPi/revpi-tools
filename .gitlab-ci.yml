@@ -4,7 +4,8 @@
 
 variables:
   # buster is based on the v2.x branch and not master
-  SKIP_RELEASE_PATTERN: /buster/
+  # bullseye is based on the 3.x branch
+  SKIP_RELEASE_PATTERN: /buster|bullseye/
 
 # Build a snapshot debian package from current master
 include:
