@@ -2,8 +2,7 @@
 #
 # SPDX-License-Identifier: MIT
 #
-# Copyright: 2019 KUNBUS GmbH
-#
+# SPDX-FileCopyrightText: 2019-2022 KUNBUS GmbH
 
 # disable relay watchdog on RevPi Connect
 

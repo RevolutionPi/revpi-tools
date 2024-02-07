@@ -1,3 +1,7 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+#
+# SPDX-FileCopyrightText: 2023-2024 KUNBUS GmbH
+
 add_executable(patch_eeprom patch_eeprom.c)
 
 target_link_libraries(patch_eeprom ftdi1)

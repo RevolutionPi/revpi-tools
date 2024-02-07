@@ -1,7 +1,0 @@
-[Unit]
-Description=PiBridge carrier check (piright)
-Documentation=man:pibridge-shutdown(8)
-After=dhcpcd.service
-
-[Service]
-ExecStart=/usr/sbin/pibridge-shutdown piright

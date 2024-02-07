@@ -1,3 +1,9 @@
+/*
+ * SPDX-FileCopyrightText: 2021-2023 KUNBUS GmbH
+ *
+ * SPDX-License-Identifier: GPL-2.0-or-later
+ */
+
 How to use the watchdog on the RevPi Connect to also powercycle the relay
 
 The FTDI EEPROM is patched as follows during factory end-of-line test

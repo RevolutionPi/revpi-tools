@@ -1,8 +1,8 @@
 #!/bin/bash
 #
-# SPDX-License-Identifier: GPL-2.0
+# SPDX-License-Identifier: GPL-2.0-or-later
 #
-# Copyright: 2017-2023 KUNBUS GmbH
+# SPDX-FileCopyrightText: 2017-2024 KUNBUS GmbH
 #
 # reset dtoverlay, password of user pi, machine-id, hostname, FQDN and
 # MAC address of a RevPi to factory defaults
@@ -15,7 +15,7 @@ if has_hat_eeprom; then
 	with_hat_eeprom=true
 
 	# Get the serial number from device tree according to document:
-	# https://github.com/RevolutionPi/revpi-hat-eeprom/blob/master/docs/RevPi-HAT-EEPROM-Format.md#1-serial
+	# https://gitlab.com/revolutionpi/revpi-hat-eeprom/blob/master/docs/RevPi-HAT-EEPROM-Format.md#1-serial
 	ser=$(cat /proc/device-tree/hat/custom_1)
 else
 	with_hat_eeprom=false
@@ -116,5 +116,3 @@ echo "on your RevPi!"
 
 # skip /etc/profile.d/revpi-factory-reset.sh on future logins
 true > /home/pi/.revpi-factory-reset
-# skip /etc/profile.d/sshpasswd.sh on future logins
-/usr/bin/sudo /bin/rm -f /run/sshwarn

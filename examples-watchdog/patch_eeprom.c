@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: MIT
-/*
- *  Copyright 2019 KUNBUS GmbH
- */
+//
+// SPDX-FileCopyrightText: 2019-2022 KUNBUS GmbH
 
 #include <stdio.h>
 #include <stdlib.h>
