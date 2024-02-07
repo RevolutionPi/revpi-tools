@@ -13,8 +13,6 @@ Build-Depends:
   libftdi1-dev,
   pkg-config,
   python3-all,
-  systemd,
-  udev,
   xxd
 Standards-Version: 4.6.2
 
