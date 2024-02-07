@@ -1,3 +1,10 @@
+revpi-tools (4.0.0-1+revpi12+2) bookworm; urgency=medium
+
+  * Update changelog for 4.0.0-1+revpi12+1 release
+  * fix(deb): Add dependency systemd again
+
+ -- Thomas Böhler <t.boehler@kunbus.com>  Wed, 07 Feb 2024 11:51:10 +0100
+
 revpi-tools (4.0.0-1+revpi12+1) bookworm; urgency=medium
 
   [ Thomas Böhler ]
