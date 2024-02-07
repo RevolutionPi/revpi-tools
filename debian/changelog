@@ -1,3 +1,36 @@
+revpi-tools (4.0.0-1+revpi12+1) bookworm; urgency=medium
+
+  [ Thomas Böhler ]
+  * fix(revpi-factory-reset): Do not remove sshwarn
+
+  [ Philipp Rosenberger ]
+  * Switch back to the debian/ namespace
+
+  [ Ramiro Gsponer ]
+  * fix: Vcs-Git Url in debian/control
+  * fix: Source Url in debian/copyright
+  * chore: Update files to reflect the move to gitlab
+
+  [ Nicolai Buchwitz ]
+  * docs(revpi-config): Make "see also" the last item
+
+  [ Thomas Böhler ]
+  * fix(udev): Always assign Connect4 eth1
+
+  [ Thomas Böhler ]
+  * chore: Add license information for REUSE
+
+  [ Nicolai Buchwitz ]
+  * feat(udev): Add rules for RevPi Flat S 2022
+
+  [ Thomas Böhler ]
+  * feat!(avahi): Move avahi files to base-files
+  * feat!(systemd): Move systemd files to base-files
+  * feat!(udev): Move udev files to base-files
+  * fix(deb): Remove dependencies systemd and udev
+
+ -- Thomas Böhler <t.boehler@kunbus.com>  Wed, 07 Feb 2024 08:02:14 +0100
+
 revpi-tools (3.3.2-1+revpi12+1) bookworm; urgency=medium
 
   * Update package for bookworm
