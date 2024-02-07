@@ -1,3 +1,56 @@
+revpi-tools (4.0.0-1+revpi12+1) bookworm; urgency=medium
+
+  [ Sven Sager ]
+  * feat(revpi-config): Support for groundbreaking OPC-UA server
+
+  [ Philipp Rosenberger ]
+  * fix(udev): Make ttyRS485 symlinking more robust on Connect 4
+  * fix(udev): Make ttyRS485 symlinking more robust on Flat
+  * fix(udev): Make ttyRS485 symlinking more robust on Compact
+
+  [ Thomas Böhler ]
+  * chore: Add move to GitLab to README
+  * fix: Remove setting the static machine-id
+  * fix(revpi-factory-reset): Do not remove sshwarn
+
+  [ Philipp Rosenberger ]
+  * Switch back to the debian/ namespace
+
+  [ Ramiro Gsponer ]
+  * fix: Vcs-Git Url in debian/control
+  * fix: Source Url in debian/copyright
+  * chore: Update files to reflect the move to gitlab
+
+  [ Nicolai Buchwitz ]
+  * docs(revpi-config): Make "see also" the last item
+
+  [ Sven Sager ]
+  * Revert "feat(revpi-config): Support for groundbreaking OPC-UA server"
+
+  [ Thomas Böhler ]
+  * fix(udev): Always assign Connect4 eth1
+
+  [ Nicolai Buchwitz ]
+  * ci: Remove local workflow rules
+  * ci: Fix include name and regex
+
+  [ Thomas Böhler ]
+  * chore: Add license information for REUSE
+  * ci: Add REUSE linting
+
+  [ Nicolai Buchwitz ]
+  * ci: Run local pipeline only if file exists
+  * feat(udev): Add rules for RevPi Flat S 2022
+
+  [ Thomas Böhler ]
+  * feat!(avahi): Move avahi files to base-files
+  * feat!(systemd): Move systemd files to base-files
+  * feat!(udev): Move udev files to base-files
+  * ci(snapshot): Don't build bullseye on master
+  * fix(deb): Remove dependencies systemd and udev
+
+ -- Thomas Böhler <t.boehler@kunbus.com>  Wed, 07 Feb 2024 08:02:14 +0100
+
 revpi-tools (3.3.2-1+revpi12+1) bookworm; urgency=medium
 
   * Update package for bookworm
