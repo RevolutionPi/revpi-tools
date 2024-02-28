@@ -1,0 +1,15 @@
+#!/bin/bash
+#
+# SPDX-License-Identifier: GPL-2.0-or-later
+#
+# SPDX-FileCopyrightText: 2024 KUNBUS GmbH
+
+iface="$1"
+mac="$2"
+
+if [ "$#" != 2 ]; then
+    echo 1>&2 "Usage: $(basename "$0") <eth interface> <mac address>"
+    exit 1
+fi
+
+exec /usr/sbin/revpi-set-mac "${iface}" lan743x "${mac}"
