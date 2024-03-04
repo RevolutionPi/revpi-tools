@@ -333,12 +333,19 @@ do_wireless() {
 				IDX="${IDX##*/rfkill}"
 			fi
 		else
-			if grep -q "revpi-flat" "/proc/device-tree/compatible"; then
-				[ ! -c /dev/ttyUSB0 ] && return 0
+			overlay=$(/bin/grep -z -m 1 'kunbus,revpi-' /proc/device-tree/compatible | tr -d '\0' | cut -f 2 -d ,)
+
+			if [ "$overlay" == "revpi-flat" ]; then
+				# only the original RevPi Flat uses an usb uart for bluetooth
+				bt_uart=/dev/ttyUSB0
+			else
+				bt_uart=/dev/ttyAMA0
 			fi
 
+			[ ! -c "$bt_uart" ] && return 0
+
 			IDX=(/sys/class/bluetooth/hci0)
-			[ -L "$IDX" ] || hciattach /dev/ttyUSB0 any
+			[ -L "$IDX" ] || hciattach "$bt_uart" any
 			# check if device available
 			[ ! -L "$IDX" ] && return 0
 			IDX=$(cat "$IDX"/rfkill*/index)
