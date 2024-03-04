@@ -326,7 +326,7 @@ do_wireless() {
 		if [ "$2" = "ieee80211" ]; then
 			#built-in devices are recognizable by having a devicetree node
 			IDX=(/sys/class/"$2"/*)
-			if grep -q -F 'DRIVER=brcmfmac' "$IDX"/device/uevent; then
+			if grep -q -E 'DRIVER=(brcmfmac|mwifiex_sdio)' "$IDX"/device/uevent; then
 				# search for rfkill directory
 				IDX=("$IDX"/rfkill*)
 				# strip everything except index
