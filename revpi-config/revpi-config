@@ -10,7 +10,7 @@ if [ "$(/usr/bin/env | /bin/grep -Ev '^(PWD|SHLVL|_)=')" ]; then
 	exec /usr/bin/env - /bin/bash "$0" "$@"
 fi
 
-CONFIG=/boot/config.txt
+CONFIG=/boot/firmware/config.txt
 CPUFREQCONFIG=/etc/default/cpufrequtils
 
 trap "exit 1" SIGUSR1

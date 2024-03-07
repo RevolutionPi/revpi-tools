@@ -9,7 +9,7 @@
 
 . /usr/share/revpi/revpi-functions
 
-RPI_FW_MOUNT="/boot"
+RPI_FW_MOUNT="/boot/firmware"
 
 full_devicetype_list="compact|connect|core|flat|connect-se"	# all suported devices
 if has_hat_eeprom; then
