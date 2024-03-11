@@ -1,3 +1,16 @@
+revpi-tools (4.1.0-1+revpi12+1) bookworm; urgency=medium
+
+  [ Nicolai Buchwitz ]
+  * feat(tools): Add tooling for lan7430 controller
+  * feat(revpi-config): Add support for mwifiex device
+  * feat(revpi-config): Add bt support for Flat S
+
+  [ Thomas Böhler ]
+  * refactor(factory-reset): Introduce RPI_FW_BOOT
+  * fix: Use /boot/firmware instead of /boot
+
+ -- Thomas Böhler <t.boehler@kunbus.com>  Mon, 11 Mar 2024 07:51:28 +0100
+
 revpi-tools (4.0.0-1+revpi12+2) bookworm; urgency=medium
 
   * Update changelog for 4.0.0-1+revpi12+1 release
