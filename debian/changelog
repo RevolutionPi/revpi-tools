@@ -1,3 +1,37 @@
+revpi-tools (3.4.0-1+revpi11+1) bullseye; urgency=medium
+
+  [ Thomas Böhler ]
+  * fix(revpi-factory-reset): Do not remove sshwarn
+
+  [ Ramiro Gsponer ]
+  * chore: Update files to reflect the move to gitlab
+
+  [ Nicolai Buchwitz ]
+  * docs(revpi-config): Make "see also" the last item
+
+  [ Thomas Böhler ]
+  * fix(udev): Always assign Connect4 eth1
+
+  [ Thomas Böhler ]
+  * chore: Add license information for REUSE
+
+  [ Nicolai Buchwitz ]
+  * feat(udev): Add rules for RevPi Flat S 2022
+
+  [ Thomas Böhler ]
+  * chore: Use upstream branch 3.x
+
+  [ Nicolai Buchwitz ]
+  * feat(revpi-config): Add support for mwifiex device
+  * feat(revpi-config): Add bt support for Flat S
+
+  [ Thomas Böhler ]
+  * refactor(factory-reset): Introduce RPI_FW_BOOT
+  * fix(deb): Reflect move to GitLab in debian dir
+  * chore: Update copyright years
+
+ -- Thomas Böhler <t.boehler@kunbus.com>  Fri, 15 Mar 2024 14:03:44 +0100
+
 revpi-tools (3.3.2-1+revpi11+1) bullseye; urgency=medium
 
   [ Thomas Böhler ]
