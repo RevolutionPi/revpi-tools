@@ -1,4 +1,9 @@
 #!/bin/bash
+#
+# SPDX-License-Identifier: GPL-2.0-or-later
+#
+# SPDX-FileCopyrightText: 2016-2023 KUNBUS GmbH
+
 
 # reset environment
 if [ "$(/usr/bin/env | /bin/grep -Ev '^(PWD|SHLVL|_)=')" ]; then
@@ -321,19 +326,26 @@ do_wireless() {
 		if [ "$2" = "ieee80211" ]; then
 			#built-in devices are recognizable by having a devicetree node
 			IDX=(/sys/class/"$2"/*)
-			if grep -q -F 'DRIVER=brcmfmac' "$IDX"/device/uevent; then
+			if grep -q -E 'DRIVER=(brcmfmac|mwifiex_sdio)' "$IDX"/device/uevent; then
 				# search for rfkill directory
 				IDX=("$IDX"/rfkill*)
 				# strip everything except index
 				IDX="${IDX##*/rfkill}"
 			fi
 		else
-			if grep -q "revpi-flat" "/proc/device-tree/compatible"; then
-				[ ! -c /dev/ttyUSB0 ] && return 0
+			overlay=$(/bin/grep -z -m 1 'kunbus,revpi-' /proc/device-tree/compatible | tr -d '\0' | cut -f 2 -d ,)
+
+			if [ "$overlay" == "revpi-flat" ]; then
+				# only the original RevPi Flat uses an usb uart for bluetooth
+				bt_uart=/dev/ttyUSB0
+			else
+				bt_uart=/dev/ttyAMA0
 			fi
 
+			[ ! -c "$bt_uart" ] && return 0
+
 			IDX=(/sys/class/bluetooth/hci0)
-			[ -L "$IDX" ] || hciattach /dev/ttyUSB0 any
+			[ -L "$IDX" ] || hciattach "$bt_uart" any
 			# check if device available
 			[ ! -L "$IDX" ] && return 0
 			IDX=$(cat "$IDX"/rfkill*/index)

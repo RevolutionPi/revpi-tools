@@ -1,9 +1,8 @@
 #!/bin/bash
 #
-# SPDX-License-Identifier: GPL-2.0
+# SPDX-License-Identifier: GPL-2.0-or-later
 #
-# Copyright: 2022 KUNBUS GmbH
-#
+# SPDX-FileCopyrightText: 2022-2024 KUNBUS GmbH
 
 cm1_detection() {
     grep -m 1 "model name" /proc/cpuinfo | grep -q v6l
@@ -11,7 +10,7 @@ cm1_detection() {
 }
 
 # Check existance of HAT EEPROM according to document:
-# https://github.com/RevolutionPi/revpi-hat-eeprom/blob/master/docs/RevPi-HAT-EEPROM-Format.md#custom-atoms
+# https://gitlab.com/revolutionpi/revpi-hat-eeprom/blob/master/docs/RevPi-HAT-EEPROM-Format.md#custom-atoms
 has_hat_eeprom() {
 	if [ -e /proc/device-tree/hat/custom_1 ]; then
 		return 0;

@@ -1,10 +1,12 @@
 .\"                                      Hey, EMACS: -*- nroff -*-
-.\" (C) Copyright 2016-2023 KUNBUS GmbH
+.\" SPDX-License-Identifier: GPL-2.0-or-later
+.\" 
+.\" SPDX-FileCopyrightText: 2016-2024 KUNBUS GmbH
 .\"
 .\" First parameter, NAME, should be all caps
 .\" Second parameter, SECTION, should be 1-8, maybe w/ subsection
 .\" other parameters are allowed: see man(7), man(1)
-.TH revpi-config 1 "April 4 2023"
+.TH revpi-config 1 "January 15 2024"
 .\" Please adjust this date whenever revising the manpage.
 .\"
 .\" Some roff macros, for reference:
@@ -120,11 +122,11 @@ Enable built-in Bluetooth interface using rfkill(8).  (Default is enabled.)
 .TP
 .B ieee80211
 Enable built-in WLAN interface using rfkill(8).  (Default is enabled.)
-.SH SEE ALSO
-For more information on Revolution Pi visit
-.IR https://revolutionpi.com
 .TP
 .B external-antenna
 Controls the use of the external antenna on a Revolution Pi with CM4 module.
 After activating this option, the external antenna is used. When this option
 is deactivated, the CM4 module falls back to the internal antenna by default.
+.SH SEE ALSO
+For more information on Revolution Pi visit
+.IR https://revolutionpi.com

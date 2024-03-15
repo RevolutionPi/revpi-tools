@@ -1,3 +1,7 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+#
+# SPDX-FileCopyrightText: 2022-2023 KUNBUS GmbH
+
 cmake_minimum_required(VERSION 3.13)
 
 project(revpi-tools LANGUAGES C)

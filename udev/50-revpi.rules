@@ -1,3 +1,7 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+#
+# SPDX-FileCopyrightText: 2021-2024 KUNBUS GmbH
+
 PROGRAM="/bin/grep -Fz -m 1 'kunbus,revpi-' /sys/firmware/devicetree/base/compatible"
 RESULT=="kunbus,revpi-core", GOTO="revpi_core"
 RESULT=="kunbus,revpi-core-2022", GOTO="revpi_core"
@@ -7,6 +11,7 @@ RESULT=="kunbus,revpi-connect", GOTO="revpi_connect"
 RESULT=="kunbus,revpi-connect-se", GOTO="revpi_connect"
 RESULT=="kunbus,revpi-connect4", GOTO="revpi_connect4"
 RESULT=="kunbus,revpi-compact", GOTO="revpi_compact"
+RESULT=="kunbus,revpi-flat-s-2022", GOTO="revpi_flat_s"
 RESULT=="kunbus,revpi-flat", GOTO="revpi_flat"
 GOTO="revpi_end"
 
@@ -29,6 +34,7 @@ GOTO="revpi_end"
 LABEL="revpi_connect4"
 ACTION=="add", DEVPATH=="*/fe201a00.serial/tty/*", SUBSYSTEM=="tty", SYMLINK+="ttyRS485"
 ACTION=="add", DEVPATH=="*/fd580000.ethernet/net/*", SUBSYSTEM=="net", ATTR{type}=="1", NAME="eth0", PROGRAM="revpi_mac %k 0"
+ACTION=="add", DEVPATH=="*/usb2/2-3/2-3:1.0/net/*", SUBSYSTEM=="net", ATTR{type}=="1", NAME="eth1"
 ACTION=="add", DEVPATH=="*/fe300000.mmcnr/mmc_host/mmc1/mmc1:0001/mmc1:0001:1/net/*", SUBSYSTEM=="net", ATTR{type}=="1", NAME="wlan0", PROGRAM="revpi_mac %k 2"
 GOTO="revpi_end"
 
@@ -49,6 +55,18 @@ ACTION=="add", DEVPATH=="*/*215040.serial/tty/*", SUBSYSTEM=="tty", SYMLINK+="tt
 ACTION=="add", ENV{SYSTEMD_WANTS}="hdmi-disable.service"
 ACTION=="add", DEVPATH=="*/usb1/1-1/1-1.1/1-1.1:1.0/*", SUBSYSTEM=="net", NAME="eth0"
 ACTION=="add", DEVPATH=="*/usb1/1-1/1-1.4/1-1.4:1.0/*", SUBSYSTEM=="net", NAME="eth1"
+GOTO="revpi_end"
+
+LABEL="revpi_flat_s"
+ACTION=="add", ENV{SYSTEMD_WANTS}="hdmi-disable.service"
+ACTION=="add", DEVPATH=="*/fe201600.serial/tty/*", SUBSYSTEM=="tty", SYMLINK+="ttyRS485-0"
+ACTION=="add", DEVPATH=="*/fe201800.serial/tty/*", SUBSYSTEM=="tty", SYMLINK+="ttyRS485-1"
+ACTION=="add", DEVPATH=="*/usb1/1-1/1-1.1/1-1.1:1.0/*", SUBSYSTEM=="net", NAME="eth0"
+ACTION=="add", DEVPATH=="*/usb1/1-1/1-1.4/1-1.4:1.0/*", SUBSYSTEM=="net", NAME="eth1"
+ACTION=="add", DEVPATH=="*/spi5/spi5.1/net/swp1", SUBSYSTEM=="net", ATTR{type}=="1", NAME="swp1", PROGRAM="revpi_mac %k 2"
+ACTION=="add", DEVPATH=="*/spi5/spi5.1/net/swp2", SUBSYSTEM=="net", ATTR{type}=="1", NAME="swp2", PROGRAM="revpi_mac %k 3"
+ACTION=="add", DEVPATH=="*/spi5/spi5.1/net/swp3", SUBSYSTEM=="net", ATTR{type}=="1", NAME="swp3", PROGRAM="revpi_mac %k 4"
+ACTION=="add", DEVPATH=="*/mmc3\:0001\:1/net/*", SUBSYSTEM=="net", ATTR{type}=="1", NAME="wlan0", PROGRAM="revpi_mac %k 5"
 GOTO="revpi_end"
 
 LABEL="revpi_end"
