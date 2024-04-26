@@ -18,6 +18,12 @@ install(PROGRAMS lan743x-set-mac lan78xx-set-mac lan95xx-set-mac ks8851-set-mac 
   DESTINATION ${CMAKE_INSTALL_SBINDIR}/
 )
 
+add_custom_target(
+  ks8851-set-mac.8 ALL
+  COMMAND scdoc < ${CMAKE_SOURCE_DIR}/tools/ks8851-set-mac.8.scd > ${PROJECT_BINARY_DIR}/ks8851-set-mac.8
+  DEPENDS ${CMAKE_SOURCE_DIR}/tools/ks8851-set-mac.8.scd
+)
+
 install(FILES ks8851-set-mac.8
   DESTINATION ${CMAKE_INSTALL_MANDIR}/man8/
 )

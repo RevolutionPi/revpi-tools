@@ -1,0 +1,8 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: revpi-tools
+Upstream-Contact: KUNBUS GmbH <support@kunbus.com>
+Source: https://gitlab.com/revolutionpi/revpi-tools
+
+Files: tools/*.8.scd
+Copyright: 2024 KUNBUS GmbH
+License: GPL-2.0-or-later
