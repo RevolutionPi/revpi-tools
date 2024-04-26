@@ -32,7 +32,7 @@ test-build-cmake:
   stage: build
   script:
     - apt update
-    - apt install -y cmake pkg-config systemd udev libftdi1-dev xxd
+    - apt install -y cmake pkg-config systemd libftdi1-dev xxd
     - mkdir build
     - cd build
     - cmake ..
