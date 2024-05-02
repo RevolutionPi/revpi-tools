@@ -14,7 +14,7 @@ install(PROGRAMS lan743x-set-mac lan78xx-set-mac lan95xx-set-mac ks8851-set-mac 
   DESTINATION ${CMAKE_INSTALL_SBINDIR}/
 )
 
-set(MAN_PAGES_8 ks8851-set-mac.8 pibridge-shutdown.8 lan743x-set-mac.8)
+set(MAN_PAGES_8 ks8851-set-mac.8 pibridge-shutdown.8 lan743x-set-mac.8 lan78xx-set-mac.8)
 
 foreach(man_page IN LISTS MAN_PAGES_8)
   add_custom_target(
