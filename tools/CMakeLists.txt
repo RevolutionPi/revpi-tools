@@ -18,15 +18,19 @@ install(PROGRAMS lan743x-set-mac lan78xx-set-mac lan95xx-set-mac ks8851-set-mac 
   DESTINATION ${CMAKE_INSTALL_SBINDIR}/
 )
 
-add_custom_target(
-  ks8851-set-mac.8 ALL
-  COMMAND scdoc < ${CMAKE_SOURCE_DIR}/tools/ks8851-set-mac.8.scd > ${PROJECT_BINARY_DIR}/ks8851-set-mac.8
-  DEPENDS ${CMAKE_SOURCE_DIR}/tools/ks8851-set-mac.8.scd
-)
+set(MAN_PAGES_8 ks8851-set-mac.8)
 
-install(FILES ks8851-set-mac.8
-  DESTINATION ${CMAKE_INSTALL_MANDIR}/man8/
-)
+foreach(man_page IN LISTS MAN_PAGES_8)
+  add_custom_target(
+    ${man_page} ALL
+    COMMAND scdoc < ${CMAKE_SOURCE_DIR}/tools/${man_page}.scd > ${PROJECT_BINARY_DIR}/${man_page}
+    DEPENDS ${CMAKE_SOURCE_DIR}/tools/${man_page}.scd
+  )
+
+  install(FILES ${man_page}
+    DESTINATION ${CMAKE_INSTALL_MANDIR}/man8/
+  )
+endforeach()
 
 set(XXD /usr/bin/xxd)
 add_custom_target(
@@ -50,3 +54,5 @@ add_custom_target(
 install(FILES ${PROJECT_BINARY_DIR}/tools/lan9514.bin ${PROJECT_BINARY_DIR}/tools/lan7800.bin
   DESTINATION ${CMAKE_INSTALL_DATADIR}/revpi
 )
+
+# vim:et sw=2
