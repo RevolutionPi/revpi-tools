@@ -6,10 +6,6 @@ install(PROGRAMS pibridge-shutdown
   DESTINATION ${CMAKE_INSTALL_SBINDIR}/
 )
 
-install(FILES pibridge-shutdown.8
-  DESTINATION ${CMAKE_INSTALL_MANDIR}/man8/
-)
-
 install(FILES pibridge.conf
   DESTINATION ${CMAKE_INSTALL_SYSCONFDIR}/network/interfaces.d/
 )
@@ -18,7 +14,7 @@ install(PROGRAMS lan743x-set-mac lan78xx-set-mac lan95xx-set-mac ks8851-set-mac 
   DESTINATION ${CMAKE_INSTALL_SBINDIR}/
 )
 
-set(MAN_PAGES_8 ks8851-set-mac.8)
+set(MAN_PAGES_8 ks8851-set-mac.8 pibridge-shutdown.8)
 
 foreach(man_page IN LISTS MAN_PAGES_8)
   add_custom_target(
