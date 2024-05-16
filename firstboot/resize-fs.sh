@@ -38,11 +38,12 @@ done
 dev=mmcblk0
 total_size="$(cat "${ROOT}"sys/block/"$dev"/size)"
 last_part="$(cd "${ROOT}"dev || exit 1 ; ls "${dev}"p* | tail -1)"
+last_part_nr="$(echo $last_part | awk -F'p' '{print $NF}')"
 last_part_start="$(cat "${ROOT}"sys/block/"$dev"/"$last_part"/start)"
 last_part_size="$(cat "${ROOT}"sys/block/"$dev"/"$last_part"/size)"
 last_part_max="$(("$total_size" - "$last_part_start"))"
 if [ "$last_part_size" -lt "$last_part_max" ] ; then
-	${MOCK} parted "${ROOT}"dev/"$dev" resizepart 2 $((total_size-1))s
+	${MOCK} parted "${ROOT}"dev/"$dev" resizepart "$last_part_nr" $((total_size-1))s
 	${MOCK} partprobe "${ROOT}"dev/"$dev"
 	${MOCK} resize2fs "${ROOT}"dev/"$last_part"
 fi
