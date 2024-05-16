@@ -1,0 +1,53 @@
+#!/usr/bin/env atf-sh
+
+# SPDX-FileCopyrightText: 2024 KUNBUS GmbH
+#
+# SPDX-License-Identifier: GPL-2.0-or-later
+
+. $(atf_get_srcdir)/test_env.sh
+
+atf_test_case resize_fs_resize
+atf_test_case resize_fs_part_3
+
+# resize should happen if the entire block device isn't used
+resize_fs_resize_body() {
+	init_env
+
+	mkdir -p sys/block/mmcblk0/mmcblk0p2 dev
+	touch dev/mmcblk0p2
+
+	# resize should happen because the last partition doesn't fill the entire
+	# size of the block device
+	echo "100" > sys/block/mmcblk0/size
+	echo "50" > sys/block/mmcblk0/mmcblk0p2/start
+	echo "30" > sys/block/mmcblk0/mmcblk0p2/size
+
+	atf_check -s exit:0 \
+		-o match:"parted .* resizepart 2 99s" \
+		-o match:"partprobe .*mmcblk0"\
+		-o match:"resize2fs .*mmcblk0p2"\
+		resize-fs.sh -r "$ROOT"
+}
+
+# the last partition should be resized if the entire block device isn't used,
+# in this case it's partition 3
+resize_fs_part_3_body() {
+	init_env
+
+	mkdir -p sys/block/mmcblk0/mmcblk0p3 dev
+	touch dev/mmcblk0p3
+	echo "100" > sys/block/mmcblk0/size
+	echo "50" > sys/block/mmcblk0/mmcblk0p3/start
+	echo "30" > sys/block/mmcblk0/mmcblk0p3/size
+
+	atf_check -s exit:0 \
+		-o match:"parted .* resizepart 3 99s" \
+		-o match:"partprobe .*mmcblk0"\
+		-o match:"resize2fs .*mmcblk0p3"\
+		resize-fs.sh -r "$ROOT"
+}
+
+atf_init_test_cases() {
+	atf_add_test_case resize_fs_resize
+	atf_add_test_case resize_fs_part_3
+}
