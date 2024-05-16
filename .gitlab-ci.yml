@@ -39,3 +39,21 @@ test-build-cmake:
     - cmake --build .
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event' && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == $CI_DEFAULT_BRANCH
+
+test:
+  image: registry.gitlab.com/revolutionpi/infrastructure/docker-images/build-container/build-container-bullseye:arm64-latest
+  tags:
+    - docker
+    - host-arm64
+    - self-hosted
+  stage: test
+  script:
+    - apt update && apt install -y kyua atf-sh
+    - kyua test
+    - kyua report-junit --output report.xml
+  artifacts:
+    reports:
+      junit: ${CI_PROJECT_DIR}/report.xml
+  rules:
+    - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == $CI_DEFAULT_BRANCH'
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
