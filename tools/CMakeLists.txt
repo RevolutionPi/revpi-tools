@@ -47,7 +47,10 @@ add_custom_target(
   DEPENDS ${XXD} ${CMAKE_SOURCE_DIR}/tools/lan743x.hex
 )
 
-install(FILES ${PROJECT_BINARY_DIR}/tools/lan9514.bin ${PROJECT_BINARY_DIR}/tools/lan7800.bin
+install(FILES
+  ${PROJECT_BINARY_DIR}/tools/lan9514.bin
+  ${PROJECT_BINARY_DIR}/tools/lan7800.bin
+  ${PROJECT_BINARY_DIR}/tools/lan743x.bin
   DESTINATION ${CMAKE_INSTALL_DATADIR}/revpi
 )
 
