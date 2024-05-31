@@ -8,6 +8,7 @@
 
 atf_test_case resize_fs_resize
 atf_test_case resize_fs_part_3
+atf_test_case resize_fs_only_fs
 
 # resize should happen if the entire block device isn't used
 resize_fs_resize_body() {
@@ -47,7 +48,36 @@ resize_fs_part_3_body() {
 		resize-fs.sh -r "$ROOT"
 }
 
+resize_fs_only_fs_body() {
+	init_env
+
+	mkdir -p sys/block/mmcblk0/mmcblk0p2 dev
+	touch dev/mmcblk0p2
+	echo "61071360" > sys/block/mmcblk0/size
+	echo "500001" > sys/block/mmcblk0/mmcblk0p2/start
+	echo "60571359" > sys/block/mmcblk0/mmcblk0p2/size
+
+	# Partition is already correct size.
+	# The file system hasn't been resized yet, though, so it needs to be resized
+	# here.
+	#
+	# If mmcblk0p2/size*512-fssize*4096 isn't < 4096 then the file system
+	# needs to be expanded. In this case it isn't, i.e. there's room for 1 more
+	# ext4 block of size 4096.
+	#
+	# Regardless, resize2fs should *always* run, even if the partition and file
+	# system are of the correct size, as this is a noop. On the contrary,
+	# resizing the partition should only be run if the partition is not
+	# correctly sized.
+
+	atf_check -s exit:0 \
+		-o not-match:"parted .* resizepart 3 99s" \
+		-o match:"resize2fs .*mmcblk0p2" \
+		resize-fs.sh -r "$ROOT"
+}
+
 atf_init_test_cases() {
 	atf_add_test_case resize_fs_resize
 	atf_add_test_case resize_fs_part_3
+	atf_add_test_case resize_fs_only_fs
 }

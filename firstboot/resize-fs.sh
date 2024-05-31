@@ -45,5 +45,5 @@ last_part_max="$(("$total_size" - "$last_part_start"))"
 if [ "$last_part_size" -lt "$last_part_max" ] ; then
 	${MOCK} parted "${ROOT}"dev/"$dev" resizepart "$last_part_nr" $((total_size-1))s
 	${MOCK} partprobe "${ROOT}"dev/"$dev"
-	${MOCK} resize2fs "${ROOT}"dev/"$last_part"
 fi
+${MOCK} resize2fs "${ROOT}"dev/"$last_part"
