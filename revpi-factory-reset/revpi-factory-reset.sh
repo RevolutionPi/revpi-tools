@@ -14,7 +14,7 @@ fi
 # for the background and grey color for the boxes.
 export NEWT_COLORS='root=,black entry=white,black'
 
-while [ ! -r /home/pi/.revpi-factory-reset ] ; do
+while [ ! -r /etc/revpi/factory-reset ] && [  ! -r /home/pi/.revpi-factory-reset  ]; do
 	clear
 	if has_hat_eeprom; then
 		# The device is equipped with HAT EEPROM
