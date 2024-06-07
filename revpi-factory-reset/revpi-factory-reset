@@ -63,7 +63,7 @@ if ! "$with_hat_eeprom"; then
 	if [ "$ovl" == flat ]; then
 		# wait for dtoverlay revpi-flat, and tpm modules get probed
 		wait_time=60
-		printf "Wait for tpm chip to become ready. Fail if the chip is not available after $wait_time seconds"
+		echo -n "Wait for tpm chip to become ready. Fail if the chip is not available after $wait_time seconds"
 		for (( i=1; i<=wait_time; i++ ))
 		do
 			if [ "$i" = "$wait_time" ]; then
@@ -75,7 +75,7 @@ if ! "$with_hat_eeprom"; then
 				echo " ok"
 				break
 			fi
-			printf '%c' '.'
+			echo -n "."
 			sleep 1
 		done
 	fi
