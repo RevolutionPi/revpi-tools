@@ -81,9 +81,13 @@ if ! "$with_hat_eeprom"; then
 	fi
 fi
 
-pw=$($piserial -p)
-echo -e "Password:\t$pw"
-echo "pi:${pw}" | chpasswd
+if user_pi_exists; then
+	pw="$("$piserial" -p)"
+	echo -e "Password:\t$pw"
+	echo "pi:${pw}" | chpasswd
+else
+	echo "WARNING: Cannot restore the default password, because the default user 'pi' is absent."
+fi
 
 hostname="RevPi$ser"
 echo -e "Hostname:\t$hostname"

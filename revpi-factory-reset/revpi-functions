@@ -17,3 +17,7 @@ has_hat_eeprom() {
 	fi
 	return 1;
 }
+
+user_pi_exists() {
+	getent passwd pi >/dev/null
+}
