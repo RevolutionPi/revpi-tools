@@ -13,6 +13,7 @@ Build-Depends:
   libftdi1-dev,
   pkg-config,
   python3-all,
+  scdoc,
   systemd,
   xxd
 Standards-Version: 4.6.2
