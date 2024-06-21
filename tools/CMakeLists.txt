@@ -23,7 +23,7 @@ foreach(man_page IN LISTS MAN_PAGES_8)
     DEPENDS ${CMAKE_SOURCE_DIR}/tools/${man_page}.scd
   )
 
-  install(FILES ${man_page}
+  install(FILES ${PROJECT_BINARY_DIR}/${man_page}
     DESTINATION ${CMAKE_INSTALL_MANDIR}/man8/
   )
 endforeach()
