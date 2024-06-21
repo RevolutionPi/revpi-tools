@@ -1,3 +1,42 @@
+revpi-tools (4.2.0-1+revpi12+1) bookworm; urgency=medium
+
+  [ Thomas Böhler ]
+  * fix(deb): Mention present parts in description
+  * doc(deb): Update copyright years
+  * ci: Add commit linting
+  * ci: udev is no longer needed to build revpi-tools
+  * fix(factory-reset): Make scripts executable
+  * doc: Rewrite ks8851-set-mac(8) in scdoc syntax
+  * build: Install man pages in loop
+  * doc: Rewrite pibridge-shutdown(8) in scdoc syntax
+  * doc: Add man page for lan743x-set-mac
+  * doc: Add man page for lan78xx-set-mac
+  * doc: Add man page for lan95xx-set-mac
+  * doc: Add man page for revpi-set-mac
+  * ci: Add scdoc dependency for building
+
+  [ Philipp Rosenberger ]
+  * fix: Install lan743x.bin
+
+  [ Thomas Böhler ]
+  * feat: Make resize-fs.sh testable
+  * test: Add tests with kyua for resize-fs.sh
+  * fix: Don't hard code last partition for resize
+  * ci: Add CI job for kyua tests
+  * fix(firstboot): Always resize fs
+  * feat: Regenerate SSH host keys on boot
+  * build: Fix man page source
+
+  [ Nicolai Buchwitz ]
+  * refactor(factory-reset): Use echo, not printf
+  * feat(factory-reset): Use global state file
+  * feat(factory-reset): Set password if user present
+
+  [ Thomas Böhler ]
+  * feat(deb): Add scdoc build dependency
+
+ -- Thomas Böhler <t.boehler@kunbus.com>  Fri, 21 Jun 2024 13:55:04 +0200
+
 revpi-tools (4.1.0-1+revpi12+1) bookworm; urgency=medium
 
   [ Nicolai Buchwitz ]
