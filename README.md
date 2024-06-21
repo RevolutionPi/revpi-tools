@@ -18,3 +18,11 @@ to happen on GitLab, but we also still accept contributions on GitHub if you
 prefer that.
 </details>
 
+## Testing
+
+To test, install the following packages:
+
+- `kyua`
+- `atf-sh`
+
+Test by executing `kyua test`.

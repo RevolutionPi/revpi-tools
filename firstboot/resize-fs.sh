@@ -2,7 +2,7 @@
 #
 # SPDX-License-Identifier: GPL-2.0-or-later
 #
-# SPDX-FileCopyrightText: 2023 KUNBUS GmbH
+# SPDX-FileCopyrightText: 2023-2024 KUNBUS GmbH
 #
 # This script will run with the firstboot.service
 # at the very first boot of the system.
@@ -18,14 +18,32 @@
 # The filesystem on the last partition is expected to be ext4 and will be
 # resized as well.
 
+ROOT="/"
+
+usage() {
+	cat <<- __EOF__
+	Usage: resize-fs.sh [-r ROOT]
+	__EOF__
+
+	exit "$1"
+}
+
+while getopts "r:" opt; do
+	case $opt in
+		r) ROOT="$OPTARG";;
+		?) usage 1;;
+	esac
+done
+
 dev=mmcblk0
-total_size="$(/bin/cat /sys/block/$dev/size)"
-last_part="$(cd /dev || exit 1 ; /bin/ls ${dev}p* | /usr/bin/tail -1)"
-last_part_start="$(/bin/cat "/sys/block/$dev/$last_part/start")"
-last_part_size="$(/bin/cat "/sys/block/$dev/$last_part/size")"
+total_size="$(cat "${ROOT}"sys/block/"$dev"/size)"
+last_part="$(cd "${ROOT}"dev || exit 1 ; ls "${dev}"p* | tail -1)"
+last_part_nr="$(echo $last_part | awk -F'p' '{print $NF}')"
+last_part_start="$(cat "${ROOT}"sys/block/"$dev"/"$last_part"/start)"
+last_part_size="$(cat "${ROOT}"sys/block/"$dev"/"$last_part"/size)"
 last_part_max="$(("$total_size" - "$last_part_start"))"
 if [ "$last_part_size" -lt "$last_part_max" ] ; then
-	/usr/sbin/parted "/dev/$dev" resizepart 2 $((total_size-1))s
-	/sbin/partprobe "/dev/$dev"
-	/sbin/resize2fs "/dev/$last_part"
+	${MOCK} parted "${ROOT}"dev/"$dev" resizepart "$last_part_nr" $((total_size-1))s
+	${MOCK} partprobe "${ROOT}"dev/"$dev"
 fi
+${MOCK} resize2fs "${ROOT}"dev/"$last_part"

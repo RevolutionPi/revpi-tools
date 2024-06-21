@@ -1,0 +1,20 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+#
+# SPDX-FileCopyrightText: 2024 KUNBUS GmbH
+
+[Unit]
+Description=Regenerate SSH host keys if they're missing
+DefaultDependencies=no
+Conflicts=shutdown.target
+After=systemd-remount-fs.service
+Before=shutdown.target
+ConditionPathIsReadWrite=/etc/ssh
+ConditionFirstBoot=yes
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=dpkg-reconfigure --frontend=noninteractive openssh-server
+
+[Install]
+WantedBy=sysinit.target

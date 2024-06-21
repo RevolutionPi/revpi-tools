@@ -1,0 +1,7 @@
+-- SPDX-FileCopyrightText: 2024 KUNBUS GmbH
+--
+-- SPDX-License-Identifier: GPL-2.0-or-later
+
+syntax(2)
+test_suite("revpi-tools")
+atf_test_program{name="resize_fs_test"}
