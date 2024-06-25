@@ -2,7 +2,7 @@
 #
 # SPDX-License-Identifier: GPL-2.0-or-later
 #
-# SPDX-FileCopyrightText: 2021-2023 KUNBUS GmbH
+# SPDX-FileCopyrightText: 2021-2024 KUNBUS GmbH
 
 . /usr/share/revpi/revpi-functions
 
