@@ -6,10 +6,6 @@
 
 . /usr/share/revpi/revpi-functions
 
-if [ "$USER" != pi ] ; then
-	return
-fi
-
 # Environment variable for whiptail to set the color palette as the black color
 # for the background and grey color for the boxes.
 export NEWT_COLORS='root=,black entry=white,black'
