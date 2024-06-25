@@ -52,7 +52,7 @@ while [ ! -r /etc/revpi/factory-reset ] && [  ! -r /home/pi/.revpi-factory-reset
 		return
 	fi
 
-	# this creates /home/pi/.revpi-factory-reset on success:
+	# this creates /etc/revpi/factory-reset on success:
 	/usr/bin/sudo /usr/sbin/revpi-factory-reset "$ovl" "$ser" "$mac" 2>/dev/null
 	if [ "$?" == "1" ]; then
 		whiptail --nocancel --title "ERROR" --msgbox "Invalid serial number or mac address" 0 0
