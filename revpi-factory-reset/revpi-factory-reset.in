@@ -51,6 +51,13 @@ fi
 
 echo "Using hostname prefix '$HOSTNAME_PREFIX'"
 
+if [ -r  "$SYSCONFDIR"/revpi/factory-reset ] \
+	|| [ -r "$ROOT"/home/pi/.revpi-factory-reset ]; then
+	echo "revpi-factory-reset was already run on this device. Skipping."
+
+	exit 0
+fi
+
 full_devicetype_list="compact|connect|core|flat|connect-se"	# all suported devices
 if has_hat_eeprom; then
 	# The device is equipped with HAT EEPROM
