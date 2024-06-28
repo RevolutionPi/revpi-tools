@@ -38,7 +38,8 @@ Suggests: revpi-sos-report, avahi-daemon
 Replaces: revpi-webstatus (<< 1:2.1.0)
 Breaks:
   piserial (<< 3.0.0),
-  revpi-webstatus (<< 1:2.1.0)
+  revpi-webstatus (<< 1:2.1.0),
+  revpi-base-files (<< 0.3.0),
 Description: Revolution Pi tools
  Assorted tools and support files for Revolution Pi products:
  .
