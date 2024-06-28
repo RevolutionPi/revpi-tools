@@ -1,3 +1,16 @@
+revpi-tools (4.2.1-1+revpi12+1) bookworm; urgency=medium
+
+  [ Ramiro Gsponer ]
+  * fix(factory-reset): remove dependency for user pi
+  * chore: Update copyright date
+  * chore(factory-reset): Update factory reset path
+
+  [ Thomas Böhler ]
+  * fix(pibridge): pibridge.conf moves to base-files
+  * feat(deb): Break on revpi-base-files < 0.3.0
+
+ -- Thomas Böhler <t.boehler@kunbus.com>  Fri, 28 Jun 2024 09:57:05 +0200
+
 revpi-tools (4.2.0-1+revpi12+1) bookworm; urgency=medium
 
   [ Thomas Böhler ]
