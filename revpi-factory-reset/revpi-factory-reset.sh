@@ -2,13 +2,9 @@
 #
 # SPDX-License-Identifier: GPL-2.0-or-later
 #
-# SPDX-FileCopyrightText: 2021-2023 KUNBUS GmbH
+# SPDX-FileCopyrightText: 2021-2024 KUNBUS GmbH
 
 . /usr/share/revpi/revpi-functions
-
-if [ "$USER" != pi ] ; then
-	return
-fi
 
 # Environment variable for whiptail to set the color palette as the black color
 # for the background and grey color for the boxes.
@@ -56,7 +52,7 @@ while [ ! -r /etc/revpi/factory-reset ] && [  ! -r /home/pi/.revpi-factory-reset
 		return
 	fi
 
-	# this creates /home/pi/.revpi-factory-reset on success:
+	# this creates /etc/revpi/factory-reset on success:
 	/usr/bin/sudo /usr/sbin/revpi-factory-reset "$ovl" "$ser" "$mac" 2>/dev/null
 	if [ "$?" == "1" ]; then
 		whiptail --nocancel --title "ERROR" --msgbox "Invalid serial number or mac address" 0 0

@@ -6,10 +6,6 @@ install(PROGRAMS pibridge-shutdown
   DESTINATION ${CMAKE_INSTALL_SBINDIR}/
 )
 
-install(FILES pibridge.conf
-  DESTINATION ${CMAKE_INSTALL_SYSCONFDIR}/network/interfaces.d/
-)
-
 install(PROGRAMS lan743x-set-mac lan78xx-set-mac lan95xx-set-mac ks8851-set-mac revpi-set-mac
   DESTINATION ${CMAKE_INSTALL_SBINDIR}/
 )
