@@ -1,3 +1,11 @@
+revpi-tools (4.2.2-1+revpi12+1) bookworm; urgency=medium
+
+  * fix(pibridge): Move files to -base-files
+  * feat(deb): Break on revpi-base-files < 0.4.0
+  * fix(deb): Depend on raspi-utils
+
+ -- Nicolai Buchwitz <n.buchwitz@kunbus.com>  Thu, 11 Jul 2024 13:41:29 +0200
+
 revpi-tools (4.2.1-1+revpi12+1) bookworm; urgency=medium
 
   [ Ramiro Gsponer ]
