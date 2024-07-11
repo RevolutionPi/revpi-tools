@@ -25,7 +25,7 @@ Depends:
   e2fsprogs,
   ethtool,
   iproute2,
-  libraspberrypi-bin,
+  raspi-utils,
   parted,
   piserial (>= 3.0.0),
   python3-ftdi1,
