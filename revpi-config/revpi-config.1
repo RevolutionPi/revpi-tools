@@ -44,17 +44,6 @@ towards industrial usage.
 Boot to the graphical desktop versus the text console.  (Default is the
 text console.)
 .TP
-.B downclock-cpu <frequency>
-Downclock the ARM CPU to the specified value to achieve more predictable
-latencies.  The ARM CPU will downclock further, if the core temperature
-exceeds 80 degrees Celsius.  The frequency should therefore be chosen to
-always keep the ARM CPU below this temperature under the expected load.
-Only available on a RevPi with CM3.  (Default is dynamic frequency scaling
-depending on the core temperature:  1200 MHz if the temperature is below
-80 degrees; between 600 and 1200 MHz if the temperature exceeds 80 degrees
-but is still below 85 degrees; between 300 and 600 MHz if the temperature
-exceeds 85 degrees.)
-.TP
 .B revpi-con-can
 Enable CON CAN device tree overlay for the RevPi Connect.
 (Default is disabled.)

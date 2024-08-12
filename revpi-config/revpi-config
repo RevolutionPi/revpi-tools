@@ -18,7 +18,7 @@ PROC="$$"
 usage() {
 	cat <<-EOF
 		Usage: $(basename "$0") enable | disable | status | available <feature>
-		Supported features: gui downclock-cpu revpi-con-can
+		Supported features: gui revpi-con-can
 		                    var-log.mount dphys-swapfile
 		                    teamviewer-revpi pimodbus-master
 		                    pimodbus-slave systemd-timesyncd ssh
@@ -372,15 +372,6 @@ while [ $# -gt 0 ]; do
 	case "$svc" in
 	gui)
 		do_gui "$cmd"
-		;;
-	downclock-cpu)
-		if [[ $2 =~ ^[0-9]+$ ]]; then
-			arg="$2"
-			shift
-		else
-			arg=""
-		fi
-		do_config "$cmd" arm_freq "$arg" is_not_cm1
 		;;
 	revpi-con-can)
 		do_overlay "$cmd" "$svc" is_revpi_connect
