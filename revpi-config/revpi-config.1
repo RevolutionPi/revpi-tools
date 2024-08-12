@@ -55,13 +55,6 @@ depending on the core temperature:  1200 MHz if the temperature is below
 but is still below 85 degrees; between 300 and 600 MHz if the temperature
 exceeds 85 degrees.)
 .TP
-.B perf-governor
-Keep the CPU at the maximum allowed frequency even if it's idling.
-This is achieved by switching to the "performance" cpufreq governor.
-It avoids frequency changes which would otherwise introduce jitter
-and generally improves responsiveness.  It is thus the recommended
-setting for realtime environments.  Only available on a RevPi with CM3.
-.TP
 .B revpi-con-can
 Enable CON CAN device tree overlay for the RevPi Connect.
 (Default is disabled.)

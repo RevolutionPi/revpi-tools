@@ -11,7 +11,6 @@ if [ "$(/usr/bin/env | /bin/grep -Ev '^(PWD|SHLVL|_)=')" ]; then
 fi
 
 CONFIG=/boot/firmware/config.txt
-CPUFREQCONFIG=/etc/default/cpufrequtils
 
 trap "exit 1" SIGUSR1
 PROC="$$"
@@ -19,7 +18,7 @@ PROC="$$"
 usage() {
 	cat <<-EOF
 		Usage: $(basename "$0") enable | disable | status | available <feature>
-		Supported features: gui downclock-cpu perf-governor revpi-con-can
+		Supported features: gui downclock-cpu revpi-con-can
 		                    var-log.mount dphys-swapfile
 		                    teamviewer-revpi pimodbus-master
 		                    pimodbus-slave systemd-timesyncd ssh
@@ -112,61 +111,6 @@ is_cm4_with_wifi() {
 is_revpi_connect() {
 	/bin/grep -F -q 'kunbus,revpi-connect' /proc/device-tree/compatible &&
 		! /bin/grep -F -q 'kunbus,revpi-connect4' /proc/device-tree/compatible
-}
-
-# do_governor <verb> <governor>
-do_governor() {
-	case "$1" in
-	enable)
-		if do_governor available; then
-			return
-		fi
-		/bin/sed -r -i -e "/^GOVERNOR=/d" "$CPUFREQCONFIG" \
-			2>/dev/null
-		echo "GOVERNOR=$2" >>"$CPUFREQCONFIG"
-		do_service disable raspi-config
-		do_service enable cpufrequtils
-		;;
-	disable)
-		if do_governor available; then
-			return
-		fi
-		do_service disable cpufrequtils
-		do_service enable raspi-config
-		/bin/sed -r -i -e "/^GOVERNOR=/d" "$CPUFREQCONFIG" \
-			2>/dev/null
-		;;
-	status)
-		val=$(/bin/grep -E "^GOVERNOR=$2" "$CPUFREQCONFIG" \
-			2>/dev/null |
-			/usr/bin/cut -d= -f2- | /usr/bin/tail -1)
-		if [ -z "$val" ]; then
-			echo -n "ondemand "
-		else
-			echo -n "$val "
-		fi
-		if [ -n "$2" ]; then
-			[ "$2" != "$val" ]
-			return
-		else
-			[ -z "$val" ]
-			return
-		fi
-		;;
-	available)
-		is_not_cm1 &&
-			/usr/bin/dpkg-query -s cpufrequtils >/dev/null 2>&1
-		[ $? = 1 ]
-		return
-		;;
-	availstat)
-		if do_governor available; then
-			return 2
-		fi
-		do_governor status "$2"
-		return
-		;;
-	esac
 }
 
 get_config_var() {
@@ -437,9 +381,6 @@ while [ $# -gt 0 ]; do
 			arg=""
 		fi
 		do_config "$cmd" arm_freq "$arg" is_not_cm1
-		;;
-	perf-governor)
-		do_governor "$cmd" performance
 		;;
 	revpi-con-can)
 		do_overlay "$cmd" "$svc" is_revpi_connect
