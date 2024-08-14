@@ -277,22 +277,17 @@ do_wireless() {
 				IDX="${IDX##*/rfkill}"
 			fi
 		else
-			overlay=$(/bin/grep -z -m 1 'kunbus,revpi-' /proc/device-tree/compatible | tr -d '\0' | cut -f 2 -d ,)
+			hci_device="/sys/class/bluetooth/hci0"
 
-			if [ "$overlay" == "revpi-flat" ]; then
-				# only the original RevPi Flat uses an usb uart for bluetooth
-				bt_uart=/dev/ttyUSB0
-			else
-				bt_uart=/dev/ttyAMA0
+			if [ ! -L $hci_device ]; then
+				# The bluetooth device is not present and
+				# the device should have been brought up by revpi-bluetooth's udev rules
+				# or vendor magic (devices based on CM4 and newer). Nothing we can do here,
+				# so treat the interface as disabled.
+				return 0
 			fi
 
-			[ ! -c "$bt_uart" ] && return 0
-
-			IDX=(/sys/class/bluetooth/hci0)
-			[ -L "$IDX" ] || hciattach "$bt_uart" any
-			# check if device available
-			[ ! -L "$IDX" ] && return 0
-			IDX=$(cat "$IDX"/rfkill*/index)
+			IDX=$(cat "$hci_device"/rfkill*/index)
 		fi
 	fi
 	shopt -u nullglob
