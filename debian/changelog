@@ -1,3 +1,9 @@
+revpi-tools (3.4.1-1+revpi11+1) bullseye; urgency=medium
+
+  * fix: Simplify bluetooth status detection
+
+ -- Nicolai Buchwitz <n.buchwitz@kunbus.com>  Mon, 19 Aug 2024 11:37:26 +0200
+
 revpi-tools (3.4.0-1+revpi11+1) bullseye; urgency=medium
 
   [ Thomas Böhler ]
