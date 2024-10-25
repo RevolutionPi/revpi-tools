@@ -100,8 +100,12 @@ is_cm4() {
 	test "$(rpi_type)" -eq 20
 }
 
-is_cm4_with_wifi() {
-	if is_cm4 && grep -q 'DRIVER=brcmfmac' /sys/class/ieee80211/phy0/device/uevent 2>/dev/null; then
+is_cm5() {
+	test "$(rpi_type)" -eq 24
+}
+
+is_cm_with_wifi() {
+	if is_cm4 || is_cm5 && grep -q 'DRIVER=brcmfmac' /sys/class/ieee80211/phy0/device/uevent 2>/dev/null; then
 		return 0
 	else
 		return 1
@@ -265,7 +269,7 @@ do_service() {
 # do_wireless <verb> <type> (where type is "bluetooth" or "ieee80211")
 do_wireless() {
 	shopt -s nullglob
-	if grep -q -E "(revpi-flat|revpi-connect4)" "/proc/device-tree/compatible"; then
+	if is_cm_with_wifi || grep -q "revpi-flat" "/proc/device-tree/compatible"; then
 		if [ "$2" = "ieee80211" ]; then
 			#built-in devices are recognizable by having a devicetree node
 			IDX=(/sys/class/"$2"/*)
@@ -319,7 +323,7 @@ do_wireless() {
 	esac
 }
 
-do_cm4_external_antenna() {
+do_cm_external_antenna() {
 	case "$1" in
 	enable)
 		clear_config_var "dtparam" "ant1"
@@ -336,15 +340,15 @@ do_cm4_external_antenna() {
 		return
 		;;
 	available)
-		is_cm4_with_wifi
+		is_cm_with_wifi
 		[ $? = 1 ]
 		return
 		;;
 	availstat)
-		if do_cm4_external_antenna available; then
+		if do_cm_external_antenna available; then
 			return 2
 		fi
-		do_cm4_external_antenna status
+		do_cm_external_antenna status
 		return
 		;;
 	esac
@@ -413,7 +417,7 @@ while [ $# -gt 0 ]; do
 		do_wireless "$cmd" "$svc"
 		;;
 	external-antenna)
-		do_cm4_external_antenna "$cmd"
+		do_cm_external_antenna "$cmd"
 		;;
 	*)
 		usage
