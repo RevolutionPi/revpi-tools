@@ -109,8 +109,7 @@ is_cm4_with_wifi() {
 }
 
 is_revpi_connect() {
-	/bin/grep -F -q 'kunbus,revpi-connect' /proc/device-tree/compatible &&
-		! /bin/grep -F -q 'kunbus,revpi-connect4' /proc/device-tree/compatible
+	is_cm3 || is_cm4s && /bin/grep -F -q 'kunbus,revpi-connect' /proc/device-tree/compatible
 }
 
 get_config_var() {
