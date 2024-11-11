@@ -1,3 +1,22 @@
+revpi-tools (4.3.0-1+deb12+1) bookworm; urgency=medium
+
+  [ Ahmad Arabi Katbi ]
+  * feat!: Remove perf-governer
+  * feat!: Remove downclock-cpu for clock handling
+  * doc(manpage): Convert manpage to scdoc format
+
+  [ Nicolai Buchwitz ]
+  * fix: Simplify bluetooth status detection
+
+  [ Thomas Böhler ]
+  * fix(deb): add dphys-swapfile to suggests
+
+  [ Nicolai Buchwitz ]
+  * feat(revpi-config): Simplify detection of Connect
+  * feat(revpi-config): Add support for Connect 5
+
+ -- Sven Sager <s.sager@kunbus.com>  Mon, 11 Nov 2024 09:29:40 +0100
+
 revpi-tools (4.2.2-1+revpi12+1) bookworm; urgency=medium
 
   * fix(pibridge): Move files to -base-files
