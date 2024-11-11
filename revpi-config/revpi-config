@@ -11,7 +11,6 @@ if [ "$(/usr/bin/env | /bin/grep -Ev '^(PWD|SHLVL|_)=')" ]; then
 fi
 
 CONFIG=/boot/firmware/config.txt
-CPUFREQCONFIG=/etc/default/cpufrequtils
 
 trap "exit 1" SIGUSR1
 PROC="$$"
@@ -19,7 +18,7 @@ PROC="$$"
 usage() {
 	cat <<-EOF
 		Usage: $(basename "$0") enable | disable | status | available <feature>
-		Supported features: gui downclock-cpu perf-governor revpi-con-can
+		Supported features: gui revpi-con-can
 		                    var-log.mount dphys-swapfile
 		                    teamviewer-revpi pimodbus-master
 		                    pimodbus-slave systemd-timesyncd ssh
@@ -101,8 +100,12 @@ is_cm4() {
 	test "$(rpi_type)" -eq 20
 }
 
-is_cm4_with_wifi() {
-	if is_cm4 && grep -q 'DRIVER=brcmfmac' /sys/class/ieee80211/phy0/device/uevent 2>/dev/null; then
+is_cm5() {
+	test "$(rpi_type)" -eq 24
+}
+
+is_cm_with_wifi() {
+	if is_cm4 || is_cm5 && grep -q 'DRIVER=brcmfmac' /sys/class/ieee80211/phy0/device/uevent 2>/dev/null; then
 		return 0
 	else
 		return 1
@@ -110,63 +113,7 @@ is_cm4_with_wifi() {
 }
 
 is_revpi_connect() {
-	/bin/grep -F -q 'kunbus,revpi-connect' /proc/device-tree/compatible &&
-		! /bin/grep -F -q 'kunbus,revpi-connect4' /proc/device-tree/compatible
-}
-
-# do_governor <verb> <governor>
-do_governor() {
-	case "$1" in
-	enable)
-		if do_governor available; then
-			return
-		fi
-		/bin/sed -r -i -e "/^GOVERNOR=/d" "$CPUFREQCONFIG" \
-			2>/dev/null
-		echo "GOVERNOR=$2" >>"$CPUFREQCONFIG"
-		do_service disable raspi-config
-		do_service enable cpufrequtils
-		;;
-	disable)
-		if do_governor available; then
-			return
-		fi
-		do_service disable cpufrequtils
-		do_service enable raspi-config
-		/bin/sed -r -i -e "/^GOVERNOR=/d" "$CPUFREQCONFIG" \
-			2>/dev/null
-		;;
-	status)
-		val=$(/bin/grep -E "^GOVERNOR=$2" "$CPUFREQCONFIG" \
-			2>/dev/null |
-			/usr/bin/cut -d= -f2- | /usr/bin/tail -1)
-		if [ -z "$val" ]; then
-			echo -n "ondemand "
-		else
-			echo -n "$val "
-		fi
-		if [ -n "$2" ]; then
-			[ "$2" != "$val" ]
-			return
-		else
-			[ -z "$val" ]
-			return
-		fi
-		;;
-	available)
-		is_not_cm1 &&
-			/usr/bin/dpkg-query -s cpufrequtils >/dev/null 2>&1
-		[ $? = 1 ]
-		return
-		;;
-	availstat)
-		if do_governor available; then
-			return 2
-		fi
-		do_governor status "$2"
-		return
-		;;
-	esac
+	is_cm3 || is_cm4s && /bin/grep -F -q 'kunbus,revpi-connect' /proc/device-tree/compatible
 }
 
 get_config_var() {
@@ -322,7 +269,7 @@ do_service() {
 # do_wireless <verb> <type> (where type is "bluetooth" or "ieee80211")
 do_wireless() {
 	shopt -s nullglob
-	if grep -q -E "(revpi-flat|revpi-connect4)" "/proc/device-tree/compatible"; then
+	if is_cm_with_wifi || grep -q "revpi-flat" "/proc/device-tree/compatible"; then
 		if [ "$2" = "ieee80211" ]; then
 			#built-in devices are recognizable by having a devicetree node
 			IDX=(/sys/class/"$2"/*)
@@ -333,22 +280,17 @@ do_wireless() {
 				IDX="${IDX##*/rfkill}"
 			fi
 		else
-			overlay=$(/bin/grep -z -m 1 'kunbus,revpi-' /proc/device-tree/compatible | tr -d '\0' | cut -f 2 -d ,)
+			hci_device="/sys/class/bluetooth/hci0"
 
-			if [ "$overlay" == "revpi-flat" ]; then
-				# only the original RevPi Flat uses an usb uart for bluetooth
-				bt_uart=/dev/ttyUSB0
-			else
-				bt_uart=/dev/ttyAMA0
+			if [ ! -L $hci_device ]; then
+				# The bluetooth device is not present and
+				# the device should have been brought up by revpi-bluetooth's udev rules
+				# or vendor magic (devices based on CM4 and newer). Nothing we can do here,
+				# so treat the interface as disabled.
+				return 0
 			fi
 
-			[ ! -c "$bt_uart" ] && return 0
-
-			IDX=(/sys/class/bluetooth/hci0)
-			[ -L "$IDX" ] || hciattach "$bt_uart" any
-			# check if device available
-			[ ! -L "$IDX" ] && return 0
-			IDX=$(cat "$IDX"/rfkill*/index)
+			IDX=$(cat "$hci_device"/rfkill*/index)
 		fi
 	fi
 	shopt -u nullglob
@@ -381,7 +323,7 @@ do_wireless() {
 	esac
 }
 
-do_cm4_external_antenna() {
+do_cm_external_antenna() {
 	case "$1" in
 	enable)
 		clear_config_var "dtparam" "ant1"
@@ -398,15 +340,15 @@ do_cm4_external_antenna() {
 		return
 		;;
 	available)
-		is_cm4_with_wifi
+		is_cm_with_wifi
 		[ $? = 1 ]
 		return
 		;;
 	availstat)
-		if do_cm4_external_antenna available; then
+		if do_cm_external_antenna available; then
 			return 2
 		fi
-		do_cm4_external_antenna status
+		do_cm_external_antenna status
 		return
 		;;
 	esac
@@ -428,18 +370,6 @@ while [ $# -gt 0 ]; do
 	case "$svc" in
 	gui)
 		do_gui "$cmd"
-		;;
-	downclock-cpu)
-		if [[ $2 =~ ^[0-9]+$ ]]; then
-			arg="$2"
-			shift
-		else
-			arg=""
-		fi
-		do_config "$cmd" arm_freq "$arg" is_not_cm1
-		;;
-	perf-governor)
-		do_governor "$cmd" performance
 		;;
 	revpi-con-can)
 		do_overlay "$cmd" "$svc" is_revpi_connect
@@ -487,7 +417,7 @@ while [ $# -gt 0 ]; do
 		do_wireless "$cmd" "$svc"
 		;;
 	external-antenna)
-		do_cm4_external_antenna "$cmd"
+		do_cm_external_antenna "$cmd"
 		;;
 	*)
 		usage
