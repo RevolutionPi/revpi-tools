@@ -6,7 +6,7 @@ revpi-set-mac - set non-volatile MAC address of Revolution Pi device
 
 # SYNOPSIS
 
-*revpi-set-mac* <eth interface> <device type> <mac address>
+*revpi-set-mac* _eth\_interface_ _device\_type_ _mac\_address_
 
 # Device types
 

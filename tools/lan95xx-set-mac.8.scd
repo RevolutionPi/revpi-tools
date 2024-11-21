@@ -6,7 +6,7 @@ lan95xx-set-mac - set non-volatile MAC address of LAN95xx Ethernet chip
 
 # SYNOPSIS
 
-*lan95xx-set-mac* <eth interface> <mac address>
+*lan95xx-set-mac* _eth\_interface_ _mac\_address_
 
 # DESCRIPTION
 
