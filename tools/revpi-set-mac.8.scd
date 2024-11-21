@@ -8,6 +8,15 @@ revpi-set-mac - set non-volatile MAC address of Revolution Pi device
 
 *revpi-set-mac* <eth interface> <device type> <mac address>
 
+# Device types
+
+The following device types are supported with *revpi-set-mac*:
+
+- lan743x
+- lan7800
+- lan9514
+- ks8851
+
 # DESCRIPTION
 
 *revpi-set-mac* sets the non-volatile MAC address of a Revolution Pi by writing
