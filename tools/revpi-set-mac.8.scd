@@ -26,6 +26,10 @@ or lower case characters and dashes or colons as byte separators.
 Revolution Pi is a set of IoT products based on the Raspberry Pi and
 geared towards industrial usage.
 
+# FILES
+
+*revpi-set-mac* uses files stored in in */usr/share/revpi/*.
+
 # SEE ALSO
 
 For more information on Revolution Pi visit https://revolutionpi.com
