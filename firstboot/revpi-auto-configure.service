@@ -1,0 +1,29 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+#
+# SPDX-FileCopyrightText: 2026 KUNBUS GmbH
+
+[Unit]
+Description=Automatically configure RevPi device with HAT-EEPROM
+DefaultDependencies=no
+Conflicts=reboot.target shutdown.target
+After=local-fs.target dev-revpi\x2dsec.device
+Requires=local-fs.target dev-revpi\x2dsec.device
+Before=first-boot-complete.target sysinit.target shutdown.target
+ConditionPathIsReadWrite=/usr/share/revpi
+ConditionFirstBoot=yes
+Wants=first-boot-complete.target
+
+# Check for HAT-EEPROM device
+ConditionPathExists=/proc/device-tree/hat/custom_1
+
+# Option to disable auto configure via flag file in FAT partition
+ConditionPathExists=!/boot/firmware/skip-autoconfigure
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/sbin/revpi-factory-reset
+StandardOutput=null
+
+[Install]
+WantedBy=sysinit.target
