@@ -1,3 +1,13 @@
+revpi-tools (4.3.1-1+deb12+1) bookworm; urgency=medium
+
+  * doc(revpi-set-mac): list device types in man page
+  * doc(revpi-config): improve SYNOPSIS readability
+  * doc(man-pages): underline replaceable text
+  * doc(revpi-set-mac): add FILES section
+  * fix(lan743x): expand binary to 512 bytes
+
+ -- Thomas Böhler <t.boehler@kunbus.com>  Tue, 26 Nov 2024 14:31:00 +0100
+
 revpi-tools (4.3.0-1+deb12+1) bookworm; urgency=medium
 
   [ Ahmad Arabi Katbi ]
