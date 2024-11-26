@@ -39,7 +39,7 @@ offset_multiplier=1
 case $dev_type in
     lan743x)
         magic='0x74A5'
-        size=256
+        size=512
         eeprom_file='/usr/share/revpi/lan743x.bin'
         ;;
     lan7800)

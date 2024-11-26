@@ -10,7 +10,11 @@ revpi-config - enable and disable features on a RevPi
 
 # SYNOPSIS
 
-*revpi-config enable | disable | status | available | availstat <feature>*
+*revpi-config* *enable* _feature_++
+*revpi-config* *disable* _feature_++
+*revpi-config* *status* _feature_++
+*revpi-config* *available* _feature_++
+*revpi-config* *availstat* _feature_
 
 # DESCRIPTION
 

@@ -6,7 +6,7 @@ ks8851-set-mac - set non-volatile MAC address of KS8851 Ethernet chip
 
 # SYNOPSIS
 
-*ks8851-set-mac* <eth interface> <mac address>
+*ks8851-set-mac* _eth\_interface_ _mac\_address_
 
 # DESCRIPTION
 

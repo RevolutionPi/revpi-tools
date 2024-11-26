@@ -6,7 +6,16 @@ revpi-set-mac - set non-volatile MAC address of Revolution Pi device
 
 # SYNOPSIS
 
-*revpi-set-mac* <eth interface> <device type> <mac address>
+*revpi-set-mac* _eth\_interface_ _device\_type_ _mac\_address_
+
+# Device types
+
+The following device types are supported with *revpi-set-mac*:
+
+- lan743x
+- lan7800
+- lan9514
+- ks8851
 
 # DESCRIPTION
 
@@ -16,6 +25,10 @@ or lower case characters and dashes or colons as byte separators.
 
 Revolution Pi is a set of IoT products based on the Raspberry Pi and
 geared towards industrial usage.
+
+# FILES
+
+*revpi-set-mac* uses files stored in in */usr/share/revpi/*.
 
 # SEE ALSO
 

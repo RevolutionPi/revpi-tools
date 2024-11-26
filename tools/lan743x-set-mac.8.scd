@@ -6,7 +6,7 @@ lan743x-set-mac - set non-volatile MAC address of LAN743x Ethernet chip
 
 # SYNOPSIS
 
-*lan743x-set-mac* <eth interface> <mac address>
+*lan743x-set-mac* _eth\_interface_ _mac\_address_
 
 # DESCRIPTION
 
