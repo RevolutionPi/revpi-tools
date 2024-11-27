@@ -17,11 +17,6 @@ include:
     file: "/reuse-lint.yml"
   - project: "revolutionpi/infrastructure/ci-templates"
     file: "/check-commit/lint-commit.yml"
-  - local: debian/gitlab-ci.yml
-    rules:
-      - if: $CI_COMMIT_BRANCH =~ /^(raspios|debian)\/.*/
-        exists:
-          - debian/gitlab-ci.yml
 
 test:
   image: registry.gitlab.com/revolutionpi/infrastructure/docker-images/build-container/build-container-bullseye:arm64-latest
