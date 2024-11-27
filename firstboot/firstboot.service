@@ -5,9 +5,9 @@
 [Unit]
 Description=First Boot Wizard
 DefaultDependencies=no
-Conflicts=shutdown.target
+Conflicts=reboot.target shutdown.target
 After=systemd-remount-fs.service
-Before=shutdown.target
+Before=reboot.target shutdown.target
 ConditionPathIsReadWrite=/etc
 ConditionFirstBoot=yes
 
