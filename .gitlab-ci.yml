@@ -13,7 +13,7 @@ include:
   - project: "revolutionpi/infrastructure/ci-templates"
     file: "base.yml"
   - project: "revolutionpi/infrastructure/ci-templates"
-    file: "/package-snapshot-debian.yml"
+    file: "package-devel.yml"
   - project: "revolutionpi/infrastructure/ci-templates"
     file: "/reuse-lint.yml"
   - local: debian/gitlab-ci.yml
@@ -21,20 +21,3 @@ include:
       - if: $CI_COMMIT_BRANCH =~ /^(raspios|debian)\/.*/
         exists:
           - debian/gitlab-ci.yml
-
-# build the repo
-test-build-cmake:
-  image: registry.gitlab.com/revolutionpi/infrastructure/docker-images/build-container/build-container-bullseye:arm64-latest
-  tags:
-    - docker
-    - host-arm64
-  stage: build
-  script:
-    - apt update
-    - apt install -y cmake pkg-config systemd udev libftdi1-dev xxd
-    - mkdir build
-    - cd build
-    - cmake ..
-    - cmake --build .
-  rules:
-    - if: $CI_PIPELINE_SOURCE == 'merge_request_event' && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == $CI_DEFAULT_BRANCH
