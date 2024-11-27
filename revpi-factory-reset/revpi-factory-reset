@@ -67,8 +67,8 @@ if ! "$with_hat_eeprom"; then
 		for (( i=1; i<=wait_time; i++ ))
 		do
 			if [ "$i" = "$wait_time" ]; then
-				echo "timeout!"
-				echo "The factory reset is stopped here!"
+				echo 1>&2 "timeout!"
+				echo 1>&2 "The factory reset is stopped here!"
 				exit 1
 			fi
 			if [ -c /dev/tpm0 ]; then
@@ -86,7 +86,7 @@ if user_pi_exists; then
 	echo -e "Password:\t$pw"
 	echo "pi:${pw}" | chpasswd
 else
-	echo "WARNING: Cannot restore the default password, because the default user 'pi' is absent."
+	echo 1>&2 "WARNING: Cannot restore the default password, because the default user 'pi' is absent."
 fi
 
 hostname="RevPi$ser"
