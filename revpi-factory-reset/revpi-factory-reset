@@ -67,7 +67,7 @@ if ! "$with_hat_eeprom"; then
 		for (( i=1; i<=wait_time; i++ ))
 		do
 			if [ "$i" = "$wait_time" ]; then
-				echo 1>&2 "timeout!"
+				echo 1>&2 "Timeout while waiting for the TPM chip to become ready"
 				echo 1>&2 "The factory reset is stopped here!"
 				exit 1
 			fi
