@@ -17,13 +17,20 @@ mac="${mac//-/}"
 # remove colons
 mac="${mac//:/}"
 
+usage() {
+    cat << __EOF__
+usage: $(basename "$0") <eth interface> <device type> <mac address>
+
+Supported device types are:
+  lan743x lan7800 lan9514 ks8851
+__EOF__
+
+    exit ${1:-0}
+}
+
 if [ "$#" != 3 ] ||
   ! [[ "$mac" =~ ^([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$ ]] ; then
-    echo 1>&2 "Usage: $(basename "$0") <eth interface> <device type> <mac address>"
-    echo 1>&2 ""
-    echo 1>&2 "Supported devices types are:"
-    echo 1>&2 "  lan743x lan7800 lan9514 ks8851"
-    exit 1
+    1>&2 usage 1
 fi
 
 # Default offset delta where the MAC is written to.
