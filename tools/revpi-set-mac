@@ -70,7 +70,7 @@ case $dev_type in
         ;;
     *)
         1>&2 echo "Unsupported device type: '$dev_type'"
-        exit 1
+        1>&2 usage 1
         ;;
 esac
 
