@@ -21,11 +21,11 @@ set(MAN_PAGES_8 ks8851-set-mac.8 lan743x-set-mac.8 lan78xx-set-mac.8 lan95xx-set
 foreach(man_page IN LISTS MAN_PAGES_8)
   add_custom_target(
     ${man_page} ALL
-    COMMAND scdoc < ${CMAKE_SOURCE_DIR}/tools/${man_page}.scd > ${PROJECT_BINARY_DIR}/${man_page}
-    DEPENDS ${CMAKE_SOURCE_DIR}/tools/${man_page}.scd
+    COMMAND scdoc < ${CMAKE_CURRENT_SOURCE_DIR}/${man_page}.scd > ${CMAKE_CURRENT_BINARY_DIR}/${man_page}
+    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/${man_page}.scd
   )
 
-  install(FILES ${PROJECT_BINARY_DIR}/${man_page}
+  install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${man_page}
     DESTINATION ${CMAKE_INSTALL_MANDIR}/man8/
   )
 endforeach()
@@ -33,26 +33,26 @@ endforeach()
 set(XXD /usr/bin/xxd)
 add_custom_target(
   lan9514.bin ALL
-  COMMAND ${XXD} -r ${CMAKE_SOURCE_DIR}/tools/lan9514.hex ${PROJECT_BINARY_DIR}/tools/lan9514.bin
-  DEPENDS ${XXD} ${CMAKE_SOURCE_DIR}/tools/lan9514.hex
+  COMMAND ${XXD} -r ${CMAKE_CURRENT_SOURCE_DIR}/lan9514.hex ${CMAKE_CURRENT_BINARY_DIR}/lan9514.bin
+  DEPENDS ${XXD} ${CMAKE_CURRENT_SOURCE_DIR}/lan9514.hex
 )
 
 add_custom_target(
   lan7800.bin ALL
-  COMMAND ${XXD} -r ${CMAKE_SOURCE_DIR}/tools/lan7800.hex ${PROJECT_BINARY_DIR}/tools/lan7800.bin
-  DEPENDS ${XXD} ${CMAKE_SOURCE_DIR}/tools/lan7800.hex
+  COMMAND ${XXD} -r ${CMAKE_CURRENT_SOURCE_DIR}/lan7800.hex ${CMAKE_CURRENT_BINARY_DIR}/lan7800.bin
+  DEPENDS ${XXD} ${CMAKE_CURRENT_SOURCE_DIR}/lan7800.hex
 )
 
 add_custom_target(
   lan743x.bin ALL
-  COMMAND ${XXD} -r ${CMAKE_SOURCE_DIR}/tools/lan743x.hex ${PROJECT_BINARY_DIR}/tools/lan743x.bin
-  DEPENDS ${XXD} ${CMAKE_SOURCE_DIR}/tools/lan743x.hex
+  COMMAND ${XXD} -r ${CMAKE_CURRENT_SOURCE_DIR}/lan743x.hex ${CMAKE_CURRENT_BINARY_DIR}/lan743x.bin
+  DEPENDS ${XXD} ${CMAKE_CURRENT_SOURCE_DIR}/lan743x.hex
 )
 
 install(FILES
-  ${PROJECT_BINARY_DIR}/tools/lan9514.bin
-  ${PROJECT_BINARY_DIR}/tools/lan7800.bin
-  ${PROJECT_BINARY_DIR}/tools/lan743x.bin
+  ${CMAKE_CURRENT_BINARY_DIR}/lan9514.bin
+  ${CMAKE_CURRENT_BINARY_DIR}/lan7800.bin
+  ${CMAKE_CURRENT_BINARY_DIR}/lan743x.bin
   DESTINATION ${CMAKE_INSTALL_DATADIR}/revpi
 )
 
