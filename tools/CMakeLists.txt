@@ -30,30 +30,20 @@ foreach(man_page IN LISTS MAN_PAGES_8)
   )
 endforeach()
 
-set(XXD /usr/bin/xxd)
-add_custom_target(
-  lan9514.bin ALL
-  COMMAND ${XXD} -r ${CMAKE_CURRENT_SOURCE_DIR}/lan9514.hex ${CMAKE_CURRENT_BINARY_DIR}/lan9514.bin
-  DEPENDS ${XXD} ${CMAKE_CURRENT_SOURCE_DIR}/lan9514.hex
-)
+set(EEPROM_FILES lan9514 lan7800 lan743x)
+find_program(XXD NAMES xxd REQUIRED)
 
-add_custom_target(
-  lan7800.bin ALL
-  COMMAND ${XXD} -r ${CMAKE_CURRENT_SOURCE_DIR}/lan7800.hex ${CMAKE_CURRENT_BINARY_DIR}/lan7800.bin
-  DEPENDS ${XXD} ${CMAKE_CURRENT_SOURCE_DIR}/lan7800.hex
-)
+foreach(file IN LISTS EEPROM_FILES)
+  add_custom_target(
+    ${file}.bin ALL
+    COMMAND ${XXD} -r ${CMAKE_CURRENT_SOURCE_DIR}/${file}.hex ${CMAKE_CURRENT_BINARY_DIR}/${file}.bin
+    DEPENDS ${XXD} ${CMAKE_CURRENT_SOURCE_DIR}/${file}.hex
+  )
 
-add_custom_target(
-  lan743x.bin ALL
-  COMMAND ${XXD} -r ${CMAKE_CURRENT_SOURCE_DIR}/lan743x.hex ${CMAKE_CURRENT_BINARY_DIR}/lan743x.bin
-  DEPENDS ${XXD} ${CMAKE_CURRENT_SOURCE_DIR}/lan743x.hex
-)
-
-install(FILES
-  ${CMAKE_CURRENT_BINARY_DIR}/lan9514.bin
-  ${CMAKE_CURRENT_BINARY_DIR}/lan7800.bin
-  ${CMAKE_CURRENT_BINARY_DIR}/lan743x.bin
-  DESTINATION ${CMAKE_INSTALL_DATADIR}/revpi
-)
+  install(FILES
+    ${CMAKE_CURRENT_BINARY_DIR}/${file}.bin
+    DESTINATION ${CMAKE_INSTALL_DATADIR}/revpi
+  )
+endforeach()
 
 # vim:et sw=2
