@@ -6,6 +6,8 @@
 
 set -e
 
+DATADIR='@DATADIR@'
+
 iface="$1"
 dev_type="$2"
 mac="$3"
@@ -47,17 +49,17 @@ case $dev_type in
     lan743x)
         magic='0x74A5'
         size=512
-        eeprom_file='/usr/share/revpi/lan743x.bin'
+        eeprom_file="$DATADIR/revpi/lan743x.bin"
         ;;
     lan7800)
         magic='0x78A5'
         size=512
-        eeprom_file='/usr/share/revpi/lan7800.bin'
+        eeprom_file="$DATADIR/revpi/lan7800.bin"
         ;;
     lan9514)
         magic='0x9500'
         size=256
-        eeprom_file='/usr/share/revpi/lan9514.bin'
+        eeprom_file="$DATADIR/revpi/lan9514.bin"
         ;;
     ks8851)
         magic='0x8851'

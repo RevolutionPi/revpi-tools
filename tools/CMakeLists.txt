@@ -2,7 +2,17 @@
 #
 # SPDX-FileCopyrightText: 2022-2024 KUNBUS GmbH
 
-install(PROGRAMS lan743x-set-mac lan78xx-set-mac lan95xx-set-mac ks8851-set-mac revpi-set-mac
+set(DATADIR ${CMAKE_INSTALL_FULL_DATADIR})
+
+configure_file(
+  revpi-set-mac.in
+  revpi-set-mac
+  FILE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
+  @ONLY
+)
+
+install(PROGRAMS
+  lan743x-set-mac lan78xx-set-mac lan95xx-set-mac ks8851-set-mac ${CMAKE_CURRENT_BINARY_DIR}/revpi-set-mac
   DESTINATION ${CMAKE_INSTALL_SBINDIR}/
 )
 
