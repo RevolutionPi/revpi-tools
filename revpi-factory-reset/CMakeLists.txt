@@ -1,16 +1,34 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
 #
-# SPDX-FileCopyrightText: 2022-2023 KUNBUS GmbH
+# SPDX-FileCopyrightText: 2022-2024 KUNBUS GmbH
+
+set(DATADIR ${CMAKE_INSTALL_FULL_DATADIR})
+set(SYSCONFDIR ${CMAKE_INSTALL_FULL_SYSCONFDIR})
+set(SBINDIR ${CMAKE_INSTALL_FULL_SBINDIR})
+
+configure_file(
+  revpi-factory-reset.in
+  revpi-factory-reset
+  FILE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
+  @ONLY
+)
+
+configure_file(
+  revpi-factory-reset.sh.in
+  revpi-factory-reset.sh
+  FILE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
+  @ONLY
+)
 
 install(FILES revpi-functions
   DESTINATION ${CMAKE_INSTALL_DATADIR}/revpi/
 )
 
-install(PROGRAMS revpi-factory-reset
+install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/revpi-factory-reset
   DESTINATION ${CMAKE_INSTALL_SBINDIR}/
 )
 
-install(FILES revpi-factory-reset.sh
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/revpi-factory-reset.sh
   DESTINATION ${CMAKE_INSTALL_SYSCONFDIR}/profile.d/
 )
 

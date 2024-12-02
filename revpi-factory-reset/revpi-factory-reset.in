@@ -7,8 +7,9 @@
 # reset dtoverlay, password of user pi, machine-id, hostname, FQDN and
 # MAC address of a RevPi to factory defaults
 
-. /usr/share/revpi/revpi-functions
+. @DATADIR@/revpi/revpi-functions
 
+SYSCONFDIR='@SYSCONFDIR@'
 RPI_FW_MOUNT="/boot/firmware"
 
 full_devicetype_list="compact|connect|core|flat|connect-se"	# all suported devices
@@ -121,4 +122,4 @@ echo "Be sure to write down the password if you have lost the sticker"
 echo "on your RevPi!"
 
 # skip /etc/profile.d/revpi-factory-reset.sh on future logins
-true > /etc/revpi/factory-reset
+true > "$SYSCONFDIR/revpi/factory-reset"
