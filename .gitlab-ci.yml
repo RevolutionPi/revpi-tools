@@ -26,12 +26,16 @@ test:
     - self-hosted
   stage: test
   script:
-    - apt update && apt install -y kyua atf-sh
-    - kyua test
-    - kyua report-junit --output report.xml
+    - apt update
+        && apt install -y
+          cmake pkg-config systemd libftdi1-dev xxd scdoc kyua atf-sh
+    - mkdir build && cd build
+    - cmake -G"Unix Makefiles" -DENABLE_TESTS=ON ..
+    - cmake --build .
+    - make test
   artifacts:
     reports:
-      junit: ${CI_PROJECT_DIR}/report.xml
+      junit: ${CI_PROJECT_DIR}/build/report.xml
   rules:
     - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == $CI_DEFAULT_BRANCH'
     - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
