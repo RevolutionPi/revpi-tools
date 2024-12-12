@@ -12,8 +12,8 @@ install(FILES firstboot.service
   DESTINATION ${SYSTEMD_SYSTEMUNITDIR}
 )
 
-install(FILES regenerate-ssh-host-keys.service
-  DESTINATION ${SYSTEMD_SYSTEMUNITDIR}
+install(PROGRAMS create-ssh-host-keys.sh
+  DESTINATION ${CMAKE_INSTALL_DATADIR}/revpi/firstboot/
 )
 
 install(PROGRAMS resize-fs.sh

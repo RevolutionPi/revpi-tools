@@ -15,7 +15,12 @@ ConditionFirstBoot=yes
 Type=oneshot
 RemainAfterExit=yes
 ExecStartPost=/usr/bin/systemd-machine-id-setup
+
+# Expand filesystem to all available space of eMMC
 ExecStart=/usr/share/revpi/firstboot/resize-fs.sh
+
+# Generate SSH host keys
+ExecStart=/usr/share/revpi/firstboot/create-ssh-host-keys.sh
 
 [Install]
 WantedBy=sysinit.target
