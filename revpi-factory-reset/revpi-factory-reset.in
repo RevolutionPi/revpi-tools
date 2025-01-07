@@ -2,15 +2,31 @@
 #
 # SPDX-License-Identifier: GPL-2.0-or-later
 #
-# SPDX-FileCopyrightText: 2017-2024 KUNBUS GmbH
+# SPDX-FileCopyrightText: 2017-2025 KUNBUS GmbH
 #
 # reset dtoverlay, password of user pi, machine-id, hostname, FQDN and
 # MAC address of a RevPi to factory defaults
 
 . @DATADIR@/revpi/revpi-functions
 
+DATADIR='@DATADIR@'
 SYSCONFDIR='@SYSCONFDIR@'
 RPI_FW_MOUNT="/boot/firmware"
+HOSTNAME_PREFIX_FILE="$DATADIR/revpi/hostname"
+
+HOSTNAME_PREFIX="RevPi"
+
+if [ -f "$HOSTNAME_PREFIX_FILE" ]; then
+	echo "Using custom hostname prefix from $HOSTNAME_PREFIX_FILE"
+	HOSTNAME_PREFIX="$(head -n1 "$HOSTNAME_PREFIX_FILE")"
+
+	if echo "$HOSTNAME_PREFIX" | grep -Eq "[[:space:]]"; then
+		echo 1>&2 "Hostname prefix '$HOSTNAME_PREFIX' contains invalid characters"
+		exit 1
+	fi
+fi
+
+echo "Using hostname prefix '$HOSTNAME_PREFIX'"
 
 full_devicetype_list="compact|connect|core|flat|connect-se"	# all suported devices
 if has_hat_eeprom; then
@@ -90,7 +106,7 @@ else
 	echo 1>&2 "WARNING: Cannot restore the default password, because the default user 'pi' is absent."
 fi
 
-hostname="RevPi$ser"
+hostname="$HOSTNAME_PREFIX$ser"
 echo -e "Hostname:\t$hostname"
 /bin/sed --follow-symlinks -r -i -e "s/^(127\.0\.1\.1[[:blank:]]+).*/\1$hostname/" /etc/hosts
 echo "$hostname" > /etc/hostname
