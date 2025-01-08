@@ -34,6 +34,10 @@ system, and the MAC address of the first Ethernet interface.++
 Figuring out the required information is documented in section *FINDING REQUIRED
 INFORMATION*.
 
+The default hostname prefix for the hostname is _RevPi_. If this should be
+changed to something else the file _/usr/share/revpi/hostname_ can be filled
+with the content being only the desired prefix on the first line of the file.
+
 # FINDING REQUIRED INFORMATION
 
 The required information for using *revpi-factory-reset* without a HAT EEPROM is
@@ -62,6 +66,7 @@ labelled as "MAC ADD". Only the first address listed here is required.
 - _/boot/firmware/config.txt_
 - _/boot/firmware/dt-blob.bin_
 - _/dev/tpm0_
+- _/usr/share/revpi/hostname_
 - _/etc/shadow_
 - _/etc/hosts_
 - _/etc/hostname_
