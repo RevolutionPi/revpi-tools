@@ -3,6 +3,6 @@ Upstream-Name: revpi-tools
 Upstream-Contact: KUNBUS GmbH <support@kunbus.com>
 Source: https://gitlab.com/revolutionpi/revpi-tools
 
-Files: tools/*.8.scd
-Copyright: 2024 KUNBUS GmbH
+Files: */*.scd
+Copyright: 2024-2025 KUNBUS GmbH
 License: GPL-2.0-or-later
