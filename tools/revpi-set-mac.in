@@ -6,6 +6,8 @@
 
 set -e
 
+DATADIR='@DATADIR@'
+
 iface="$1"
 dev_type="$2"
 mac="$3"
@@ -17,13 +19,20 @@ mac="${mac//-/}"
 # remove colons
 mac="${mac//:/}"
 
+usage() {
+    cat << __EOF__
+usage: $(basename "$0") <eth interface> <device type> <mac address>
+
+Supported device types are:
+  lan743x lan7800 lan9514 ks8851
+__EOF__
+
+    exit ${1:-0}
+}
+
 if [ "$#" != 3 ] ||
   ! [[ "$mac" =~ ^([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$ ]] ; then
-    echo 1>&2 "Usage: $(basename "$0") <eth interface> <device type> <mac address>"
-    echo 1>&2 ""
-    echo 1>&2 "Supported devices types are:"
-    echo 1>&2 "  lan743x lan7800 lan9514 ks8851"
-    exit 1
+    1>&2 usage 1
 fi
 
 # Default offset delta where the MAC is written to.
@@ -36,21 +45,21 @@ offset_delta=0
 # bytes (needed for KS8851)
 offset_multiplier=1
 
-case $dev_type in
+case "$dev_type" in
     lan743x)
         magic='0x74A5'
         size=512
-        eeprom_file='/usr/share/revpi/lan743x.bin'
+        eeprom_file="$DATADIR/revpi/lan743x.bin"
         ;;
     lan7800)
         magic='0x78A5'
         size=512
-        eeprom_file='/usr/share/revpi/lan7800.bin'
+        eeprom_file="$DATADIR/revpi/lan7800.bin"
         ;;
     lan9514)
         magic='0x9500'
         size=256
-        eeprom_file='/usr/share/revpi/lan9514.bin'
+        eeprom_file="$DATADIR/revpi/lan9514.bin"
         ;;
     ks8851)
         magic='0x8851'
@@ -63,7 +72,7 @@ case $dev_type in
         ;;
     *)
         1>&2 echo "Unsupported device type: '$dev_type'"
-        exit 1
+        1>&2 usage 1
         ;;
 esac
 

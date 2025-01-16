@@ -1,13 +1,14 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
 #
-# SPDX-FileCopyrightText: 2023 KUNBUS GmbH
+# SPDX-FileCopyrightText: 2023-2024 KUNBUS GmbH
 
 [Unit]
-Description=First Boot Wizard
+Description=RevPi First Boot Wizard
 DefaultDependencies=no
-Conflicts=shutdown.target
-After=systemd-remount-fs.service
-Before=shutdown.target
+Conflicts=reboot.target shutdown.target
+After=local-fs.target
+Requires=local-fs.target
+Before=sysinit.target
 ConditionPathIsReadWrite=/etc
 ConditionFirstBoot=yes
 
@@ -15,7 +16,12 @@ ConditionFirstBoot=yes
 Type=oneshot
 RemainAfterExit=yes
 ExecStartPost=/usr/bin/systemd-machine-id-setup
+
+# Expand filesystem to all available space of eMMC
 ExecStart=/usr/share/revpi/firstboot/resize-fs.sh
+
+# Generate SSH host keys
+ExecStart=/usr/share/revpi/firstboot/create-ssh-host-keys.sh
 
 [Install]
 WantedBy=sysinit.target

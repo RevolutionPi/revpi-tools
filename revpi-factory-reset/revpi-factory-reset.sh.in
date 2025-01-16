@@ -4,19 +4,22 @@
 #
 # SPDX-FileCopyrightText: 2021-2024 KUNBUS GmbH
 
-. /usr/share/revpi/revpi-functions
+. @DATADIR@/revpi/revpi-functions
+
+SYSCONFDIR='@SYSCONFDIR@'
+SBINDIR='@SBINDIR@'
 
 # Environment variable for whiptail to set the color palette as the black color
 # for the background and grey color for the boxes.
 export NEWT_COLORS='root=,black entry=white,black'
 
-while [ ! -r /etc/revpi/factory-reset ] && [  ! -r /home/pi/.revpi-factory-reset  ]; do
+while [ ! -r "$SYSCONFDIR/revpi/factory-reset" ] && [  ! -r /home/pi/.revpi-factory-reset  ]; do
 	clear
 	if has_hat_eeprom; then
 		# The device is equipped with HAT EEPROM
 		whiptail --nocancel --title "INFO" --msgbox "The device configuration was detected automatically. Manual configuration is therefore not necessary." 0 0
 
-		/usr/bin/sudo /usr/sbin/revpi-factory-reset 2>/dev/null
+		/usr/bin/sudo "$SBINDIR/revpi-factory-reset" 2>/dev/null
 		return
 	fi
 	msg="Please select the Product Type:"
@@ -53,7 +56,7 @@ while [ ! -r /etc/revpi/factory-reset ] && [  ! -r /home/pi/.revpi-factory-reset
 	fi
 
 	# this creates /etc/revpi/factory-reset on success:
-	/usr/bin/sudo /usr/sbin/revpi-factory-reset "$ovl" "$ser" "$mac" 2>/dev/null
+	/usr/bin/sudo "$SBINDIR/revpi-factory-reset" "$ovl" "$ser" "$mac" 2>/dev/null
 	if [ "$?" == "1" ]; then
 		whiptail --nocancel --title "ERROR" --msgbox "Invalid serial number or mac address" 0 0
 	fi

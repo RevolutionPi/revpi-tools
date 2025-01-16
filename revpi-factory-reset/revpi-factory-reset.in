@@ -2,14 +2,31 @@
 #
 # SPDX-License-Identifier: GPL-2.0-or-later
 #
-# SPDX-FileCopyrightText: 2017-2024 KUNBUS GmbH
+# SPDX-FileCopyrightText: 2017-2025 KUNBUS GmbH
 #
 # reset dtoverlay, password of user pi, machine-id, hostname, FQDN and
 # MAC address of a RevPi to factory defaults
 
-. /usr/share/revpi/revpi-functions
+. @DATADIR@/revpi/revpi-functions
 
+DATADIR='@DATADIR@'
+SYSCONFDIR='@SYSCONFDIR@'
 RPI_FW_MOUNT="/boot/firmware"
+HOSTNAME_PREFIX_FILE="$DATADIR/revpi/hostname"
+
+HOSTNAME_PREFIX="RevPi"
+
+if [ -f "$HOSTNAME_PREFIX_FILE" ]; then
+	echo "Using custom hostname prefix from $HOSTNAME_PREFIX_FILE"
+	HOSTNAME_PREFIX="$(head -n1 "$HOSTNAME_PREFIX_FILE")"
+
+	if echo "$HOSTNAME_PREFIX" | grep -Eq "[[:space:]]"; then
+		echo 1>&2 "Hostname prefix '$HOSTNAME_PREFIX' contains invalid characters"
+		exit 1
+	fi
+fi
+
+echo "Using hostname prefix '$HOSTNAME_PREFIX'"
 
 full_devicetype_list="compact|connect|core|flat|connect-se"	# all suported devices
 if has_hat_eeprom; then
@@ -67,8 +84,8 @@ if ! "$with_hat_eeprom"; then
 		for (( i=1; i<=wait_time; i++ ))
 		do
 			if [ "$i" = "$wait_time" ]; then
-				echo "timeout!"
-				echo "The factory reset is stopped here!"
+				echo 1>&2 "Timeout while waiting for the TPM chip to become ready"
+				echo 1>&2 "The factory reset is stopped here!"
 				exit 1
 			fi
 			if [ -c /dev/tpm0 ]; then
@@ -86,10 +103,10 @@ if user_pi_exists; then
 	echo -e "Password:\t$pw"
 	echo "pi:${pw}" | chpasswd
 else
-	echo "WARNING: Cannot restore the default password, because the default user 'pi' is absent."
+	echo 1>&2 "WARNING: Cannot restore the default password, because the default user 'pi' is absent."
 fi
 
-hostname="RevPi$ser"
+hostname="$HOSTNAME_PREFIX$ser"
 echo -e "Hostname:\t$hostname"
 /bin/sed --follow-symlinks -r -i -e "s/^(127\.0\.1\.1[[:blank:]]+).*/\1$hostname/" /etc/hosts
 echo "$hostname" > /etc/hostname
@@ -121,4 +138,4 @@ echo "Be sure to write down the password if you have lost the sticker"
 echo "on your RevPi!"
 
 # skip /etc/profile.d/revpi-factory-reset.sh on future logins
-true > /etc/revpi/factory-reset
+true > "$SYSCONFDIR/revpi/factory-reset"
