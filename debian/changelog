@@ -1,3 +1,34 @@
+revpi-tools (4.4.0-1+deb12+1) bookworm; urgency=medium
+
+  [ Sven Sager ]
+  * fix(firstboot): Add dependency to reboot.target in unit file
+  * fix(factory-reset): Write error and warning messages to stderr
+
+  [ Thomas Böhler ]
+  * build: integrate kyua testing into CMake
+  * fix(factory-reset): give timeout more context
+  * refactor(set-mac): add usage function
+  * feat(set-mac): print usage on wrong device type
+  * fix(set-mac): compute datadir
+  * fix(factory-reset): compute datadir and sysconfdir
+  * build: use CMAKE_CURRENT_{SOURCE,BINARY}_DIR
+  * build: install factory-reset files with good perms
+  * build: loop over all eeprom hex files
+  * fix(set-mac): quote expanded variables
+
+  [ Sven Sager ]
+  * fix(firstboot): Combine first boot jobs in the firstboot.service file
+  * fix(firstboot): Execute tasks in the right order in boot process
+
+  [ Thomas Böhler ]
+  * refactor(factory-reset): rewrite man page in scdoc
+  * doc(factory-reset): rewrite man page
+  * feat(factory-reset): allow custom hostname prefix
+  * doc(factory-reset): mention custom hostname prefix
+  * build: install revpi-factory-reset.8 from bindir
+
+ -- Thomas Böhler <t.boehler@kunbus.com>  Thu, 16 Jan 2025 11:48:28 +0100
+
 revpi-tools (4.3.1-1+deb12+1) bookworm; urgency=medium
 
   * doc(revpi-set-mac): list device types in man page
