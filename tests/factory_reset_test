@@ -8,6 +8,7 @@
 
 atf_test_case factory_reset_hat_eeprom
 atf_test_case factory_reset_custom_hostname_prefix
+atf_test_case factory_reset_state_file
 
 factory_reset_hat_eeprom_body() {
 	init_env
@@ -80,7 +81,21 @@ factory_reset_custom_hostname_prefix_body() {
 	atf_check_equal "custom-prefix1" "$(cat etc/hostname)"
 }
 
+factory_reset_state_file_body() {
+	init_env
+
+	# create state file
+	mkdir -p etc/revpi
+	touch etc/revpi/factory-reset
+
+	export LIBDIR="$(atf_get_srcdir)"/../revpi-factory-reset
+	atf_check -s exit:0 \
+		-o match:"revpi-factory-reset was already run on this device. Skipping." \
+		revpi-factory-reset -r "$ROOT"
+}
+
 atf_init_test_cases() {
 	atf_add_test_case factory_reset_hat_eeprom
 	atf_add_test_case factory_reset_custom_hostname_prefix
+	atf_add_test_case factory_reset_state_file
 }
