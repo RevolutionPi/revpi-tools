@@ -1,3 +1,10 @@
+revpi-tools (4.4.1-1+deb12+1) bookworm; urgency=medium
+
+  [ Sven Sager ]
+  * fix(firstboot): Ensure cache is written to disk after ssh key generation
+
+ -- Thomas Böhler <t.boehler@kunbus.com>  Fri, 24 Jan 2025 10:46:29 +0100
+
 revpi-tools (4.4.0-1+deb12+1) bookworm; urgency=medium
 
   [ Sven Sager ]
