@@ -49,3 +49,7 @@ create_keys() {
 }
 
 create_keys
+
+# The "sync" command is used to ensure all file system changes are written to disk,
+# making sure the generated SSH keys are safely stored before the script exits.
+sync
