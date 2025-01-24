@@ -10,6 +10,7 @@ atf_test_case factory_reset_hat_eeprom
 atf_test_case factory_reset_custom_hostname_prefix
 atf_test_case factory_reset_state_file
 atf_test_case factory_reset_default_hostname
+atf_test_case factory_reset_state_file_created
 
 factory_reset_hat_eeprom_body() {
 	init_env
@@ -127,9 +128,44 @@ factory_reset_state_file_body() {
 		revpi-factory-reset -r "$ROOT"
 }
 
+factory_reset_state_file_created_body() {
+	init_env
+
+	export PI_EXISTS=true
+	export TEST_UID=0
+
+	mkdir -p proc/device-tree/hat
+	# HAT EEPROM present on device and serial number is "1"
+	echo "1" > proc/device-tree/hat/custom_1
+
+	mkdir -p boot/firmware
+	# fill config.txt with bogus mac addresses that will just be removed on
+	# devices with HAT EEPROM
+	echo -e "dtparam=eth0_mac_\ndtparam=eth1_mac_" > boot/firmware/config.txt
+
+	mkdir -p etc
+	# standard hosts file, hostname will be updated
+	echo "127.0.1.1 localhost" > etc/hosts
+
+	# directory for state file
+	mkdir -p etc/revpi
+
+	export LIBDIR="$(atf_get_srcdir)"/../revpi-factory-reset
+	# only care about if state file is created
+	atf_check -s exit:0 \
+		-o ignore \
+		revpi-factory-reset -r "$ROOT"
+
+	atf_check -s exit:0 \
+		test -f etc/revpi/factory-reset
+	atf_check -s exit:1 \
+		test -f home/pi/.revpi-factory-reset
+}
+
 atf_init_test_cases() {
 	atf_add_test_case factory_reset_hat_eeprom
 	atf_add_test_case factory_reset_custom_hostname_prefix
 	atf_add_test_case factory_reset_state_file
 	atf_add_test_case factory_reset_default_hostname
+	atf_add_test_case factory_reset_state_file_created
 }
