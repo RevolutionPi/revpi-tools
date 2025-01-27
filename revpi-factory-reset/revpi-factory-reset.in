@@ -7,14 +7,37 @@
 # reset dtoverlay, password of user pi, machine-id, hostname, FQDN and
 # MAC address of a RevPi to factory defaults
 
-. @DATADIR@/revpi/revpi-functions
+: ${DATADIR='@DATADIR@'}
+: ${SYSCONFDIR='@SYSCONFDIR@'}
+: ${LIBDIR="$DATADIR"/revpi}
 
-DATADIR='@DATADIR@'
-SYSCONFDIR='@SYSCONFDIR@'
-RPI_FW_MOUNT="/boot/firmware"
+. "$LIBDIR"/revpi-functions
+
+RPI_FW_MOUNT="$ROOT"/boot/firmware
 HOSTNAME_PREFIX_FILE="$DATADIR/revpi/hostname"
 
 HOSTNAME_PREFIX="RevPi"
+
+usage() {
+	cat <<- __EOF__
+	Usage: revpi-factory-reset
+	       revpi-factory-reset OVERLAY SERIAL_NR MAC_ADDR
+
+	Calling revpi-factory-reset without any arguments is only permitted if the
+	device it is called on is equipped with a HAT EEPROM.
+	__EOF__
+
+	exit "$1"
+}
+
+while getopts "r:h" opt; do
+	case "$opt" in
+	r) ROOT="$OPTARG" ;;
+	h) usage 0 ;;
+	?) usage 1 >&2 ;;
+	esac
+done
+
 
 if [ -f "$HOSTNAME_PREFIX_FILE" ]; then
 	echo "Using custom hostname prefix from $HOSTNAME_PREFIX_FILE"
@@ -35,7 +58,7 @@ if has_hat_eeprom; then
 
 	# Get the serial number from device tree according to document:
 	# https://gitlab.com/revolutionpi/revpi-hat-eeprom/blob/master/docs/RevPi-HAT-EEPROM-Format.md#1-serial
-	ser=$(cat /proc/device-tree/hat/custom_1)
+	ser=$(cat "$ROOT"/proc/device-tree/hat/custom_1)
 else
 	with_hat_eeprom=false
 
@@ -64,18 +87,19 @@ else
 		fi
 	fi
 fi
-if [ "$(/usr/bin/id -u)" != 0 ] ; then
+
+if [ "$(id -u)" != 0 ] ; then
 	echo 1>&2 "This program requires root access"
 	exit 1
 fi
 
-piserial="/usr/sbin/piSerial"
-/bin/sed --follow-symlinks -r -i -e "/^dtoverlay=revpi-($full_devicetype_list)/d" "$RPI_FW_MOUNT/config.txt"
+piserial="piSerial"
+sed --follow-symlinks -r -i -e "/^dtoverlay=revpi-($full_devicetype_list)/d" "$RPI_FW_MOUNT/config.txt"
 
 if ! "$with_hat_eeprom"; then
 	echo "dtoverlay=revpi-$ovl" >> "$RPI_FW_MOUNT/config.txt"
-	/usr/bin/dtoverlay "revpi-$ovl"
-	/bin/cp "$RPI_FW_MOUNT/overlays/revpi-$ovl-dt-blob.dtbo" "$RPI_FW_MOUNT/dt-blob.bin" 2>/dev/null
+	dtoverlay "revpi-$ovl"
+	cp "$RPI_FW_MOUNT/overlays/revpi-$ovl-dt-blob.dtbo" "$RPI_FW_MOUNT/dt-blob.bin" 2>/dev/null
 
 	if [ "$ovl" == flat ]; then
 		# wait for dtoverlay revpi-flat, and tpm modules get probed
@@ -108,12 +132,12 @@ fi
 
 hostname="$HOSTNAME_PREFIX$ser"
 echo -e "Hostname:\t$hostname"
-/bin/sed --follow-symlinks -r -i -e "s/^(127\.0\.1\.1[[:blank:]]+).*/\1$hostname/" /etc/hosts
-echo "$hostname" > /etc/hostname
-/bin/hostname "$hostname"
+sed --follow-symlinks -r -i -e "s/^(127\.0\.1\.1[[:blank:]]+).*/\1$hostname/" "$ROOT"/etc/hosts
+echo "$hostname" > "$ROOT"/etc/hostname
+$MOCK hostname "$hostname"
 
 # remove existing entries before writing new ones
-/bin/sed --follow-symlinks -r -i -e "/^dtparam=eth[0-9]_mac_/d" "$RPI_FW_MOUNT/config.txt"
+sed --follow-symlinks -r -i -e "/^dtparam=eth[0-9]_mac_/d" "$RPI_FW_MOUNT/config.txt"
 if ! "$with_hat_eeprom"; then
 	mac_hi="${mac:0:2}${mac:2:2}${mac:4:2}${mac:6:2}"
 	mac_lo="${mac:8:2}${mac:10:2}"
@@ -123,12 +147,12 @@ if ! "$with_hat_eeprom"; then
 
 	if [[ "$ovl" =~ ^($witheth1_devicetype_list)$ ]] ; then
 		mac_lo1=$(( 0x${mac_lo} + 1))
-		mac_lo1=$(/usr/bin/printf "%.4hx" "${mac_lo1}")
+		mac_lo1=$(printf "%.4hx" "${mac_lo1}")
 		echo -e "MAC Address eth1:\t$mac_hi$mac_lo1"
 		echo "dtparam=eth1_mac_hi=0x${mac_hi}" >> "$RPI_FW_MOUNT/config.txt"
 		echo "dtparam=eth1_mac_lo=0x${mac_lo1}" >> "$RPI_FW_MOUNT/config.txt"
 		if [[ "$ovl" =~ ^compact$ ]] ; then
-			/usr/sbin/ks8851-set-mac eth1 "$mac_hi$mac_lo1"
+			ks8851-set-mac eth1 "$mac_hi$mac_lo1"
 		fi
 	fi
 
