@@ -1,7 +1,8 @@
--- SPDX-FileCopyrightText: 2024 KUNBUS GmbH
+-- SPDX-FileCopyrightText: 2024-2025 KUNBUS GmbH
 --
 -- SPDX-License-Identifier: GPL-2.0-or-later
 
 syntax(2)
 test_suite("revpi-tools")
 atf_test_program{name="resize_fs_test"}
+atf_test_program{name="factory_reset_test"}

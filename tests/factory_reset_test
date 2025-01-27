@@ -1,0 +1,47 @@
+#!/usr/bin/env atf-sh
+
+# SPDX-FileCopyrightText: 2025 KUNBUS GmbH
+#
+# SPDX-License-Identifier: GPL-2.0-or-later
+
+. $(atf_get_srcdir)/test_env.sh
+
+atf_test_case factory_reset_hat_eeprom
+
+factory_reset_hat_eeprom_body() {
+	init_env
+
+	export PI_EXISTS=true
+	export TEST_UID=0
+
+	mkdir -p proc/device-tree/hat
+	# HAT EEPROM present on device and serial number is "1"
+	echo "1" > proc/device-tree/hat/custom_1
+
+	mkdir -p boot/firmware
+	# fill config.txt with bogus mac addresses that will just be removed on
+	# devices with HAT EEPROM
+	echo -e "dtparam=eth0_mac_\ndtparam=eth1_mac_" > boot/firmware/config.txt
+
+	mkdir -p etc
+	# standard hosts file, hostname will be updated
+	echo "127.0.1.1 localhost" > etc/hosts
+
+	# directory for state file
+	mkdir -p etc/revpi
+
+	export LIBDIR="$(atf_get_srcdir)"/../revpi-factory-reset
+	atf_check -s exit:0 \
+		-o match:"Password:.*pass" \
+		-o match:"chpasswd pi:pass" \
+		-o match:"Hostname:.*RevPi1" \
+		-o match:"hostname RevPi1" \
+		revpi-factory-reset -r "$ROOT"
+
+	atf_check_equal "127.0.1.1 RevPi1" "$(cat etc/hosts)"
+	atf_check_equal "" "$(cat boot/firmware/config.txt)"
+}
+
+atf_init_test_cases() {
+	atf_add_test_case factory_reset_hat_eeprom
+}

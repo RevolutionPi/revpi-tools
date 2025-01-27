@@ -1,0 +1,13 @@
+#!/bin/sh
+
+# SPDX-FileCopyrightText: 2025 KUNBUS GmbH
+#
+# SPDX-License-Identifier: GPL-2.0-or-later
+
+while getopts "ps" opt; do
+	case "$opt" in
+	p) echo "pass" ;;
+	s) echo "DEADBEEF" ;;
+	*) exit 1 ;;
+	esac
+done
