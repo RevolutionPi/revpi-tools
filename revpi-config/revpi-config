@@ -2,8 +2,9 @@
 #
 # SPDX-License-Identifier: GPL-2.0-or-later
 #
-# SPDX-FileCopyrightText: 2016-2023 KUNBUS GmbH
+# SPDX-FileCopyrightText: 2016-2025 KUNBUS GmbH
 
+. /etc/os-release
 
 # reset environment
 if [ "$(/usr/bin/env | /bin/grep -Ev '^(PWD|SHLVL|_)=')" ]; then
@@ -17,14 +18,14 @@ PROC="$$"
 
 usage() {
 	cat <<-EOF
-		Usage: $(basename "$0") enable | disable | status | available <feature>
+		Usage: $(basename "$0") enable | disable | status | available | set <feature>
 		Supported features: gui revpi-con-can
 		                    var-log.mount dphys-swapfile
 		                    teamviewer-revpi pimodbus-master
 		                    pimodbus-slave systemd-timesyncd ssh
 		                    logi-rts nodered noderedrevpinodes-server
 		                    revpipyload bluetooth ieee80211 avahi
-		                    external-antenna
+		                    external-antenna wifi_country
 	EOF
 }
 
@@ -354,11 +355,54 @@ do_cm_external_antenna() {
 	esac
 }
 
+do_wifi_country() {
+    local cmd="$1"
+    local country="$2"
+	local cmdline
+    
+    if [ "$cmd" != "set" ]; then
+        echo >&2 "Invalid command for wifi_country. Use: set <country_code>"
+        return
+    fi
+    
+    if [ -z "$country" ]; then
+        echo >&2 "No country code provided. Usage: set wifi_country <COUNTRY_CODE>"
+        return
+    fi
+    
+	if ! grep -q "^${country}[[:space:]]" /usr/share/zoneinfo/iso3166.tab; then
+        echo >&2 "Invalid country code: $country. Must be an ISO 3166-1 alpha-2 code."
+        return
+    fi
+
+	if [ "$VERSION_ID" -ge 12 ]; then
+		cmdline=/boot/firmware/cmdline.txt
+	else
+		cmdline=/boot/cmdline.txt
+	fi
+
+    echo "Setting WiFi country to $country"
+    # This code for setting the WiFi country is partially taken from the Raspberry Pi's
+    # raspi-config script, which is licensed under the MIT License.
+    # Original code can be found here:
+    # https://github.com/RPi-Distro/raspi-config/blob/bbea4d8d03eb3fb642d9738456635a026a2c842b/raspi-config#L891-L894
+    # SPDX-SnippetBegin
+    # SPDX-License-Identifier: MIT
+    # SPDX-SnippetCopyrightText: 2012 Alex Bradbury <asb@asbradbury.org>
+    sed -i \
+        -e "s/\s*cfg80211.ieee80211_regdom=\S*//" \
+        -e "s/\(.*\)/\1 cfg80211.ieee80211_regdom=$country/" \
+        "$cmdline"
+	# SPDX-SnippetEnd
+    iw reg set "$country"
+}
+
 if [ "$1" != enable ] &&
 	[ "$1" != disable ] &&
 	[ "$1" != status ] &&
 	[ "$1" != available ] &&
-	[ "$1" != availstat ]; then
+	[ "$1" != availstat ] &&
+	[ "$1" != "set" ]; then
 	usage
 	exit
 fi
@@ -418,6 +462,10 @@ while [ $# -gt 0 ]; do
 		;;
 	external-antenna)
 		do_cm_external_antenna "$cmd"
+		;;
+	wifi_country)
+	    shift
+		do_wifi_country "$cmd" "$1"
 		;;
 	*)
 		usage

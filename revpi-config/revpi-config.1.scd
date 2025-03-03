@@ -2,7 +2,7 @@ revpi-config(1)
 
 ; SPDX-License-Identifier: GPL-2.0-or-later
 
-; SPDX-FileCopyrightText: 2016-2024 KUNBUS GmbH
+; SPDX-FileCopyrightText: 2016-2025 KUNBUS GmbH
 
 # NAME
 
@@ -14,7 +14,8 @@ revpi-config - enable and disable features on a RevPi
 *revpi-config* *disable* _feature_++
 *revpi-config* *status* _feature_++
 *revpi-config* *available* _feature_++
-*revpi-config* *availstat* _feature_
+*revpi-config* *availstat* _feature_++
+*revpi-config* *set* _feature_ _value_
 
 # DESCRIPTION
 
@@ -118,6 +119,11 @@ Enable built-in WLAN interface using rfkill(8). (Default is enabled.)
 Controls the use of the external antenna on a Revolution Pi with CM4 module.
 After activating this option, the external antenna is used. When this option is
 deactivated, the CM4 module falls back to the internal antenna by default.
+
+## wifi-country
+
+Set the WiFi country code for the device. The country code must be a valid
+ISO 3166-1 alpha-2 code.
 
 # SEE ALSO
 
