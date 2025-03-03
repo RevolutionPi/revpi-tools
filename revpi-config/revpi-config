@@ -397,6 +397,29 @@ do_wifi_country() {
     iw reg set "$country"
 }
 
+get_wifi_country() {
+    local regdomain
+    # This code for getting the WiFi country is partially taken from the Raspberry Pi's
+    # raspi-config script, which is licensed under the MIT License.
+    # Original code can be found here:
+    # https://github.com/RPi-Distro/raspi-config/blob/bbea4d8d03eb3fb642d9738456635a026a2c842b/raspi-config#L857-L871
+    # SPDX-SnippetBegin
+    # SPDX-License-Identifier: MIT
+    # SPDX-SnippetCopyrightText: 2012 Alex Bradbury <asb@asbradbury.org>
+    if grep -q "cfg80211.ieee80211_regdom=" "$CMDLINE"; then
+        regdomain="$(sed -n 's/.*cfg80211.ieee80211_regdom=\(\S*\).*/\1/p' "$CMDLINE")"
+    else
+        regdomain="$(iw reg get | sed -n "0,/country/s/^country \(.\+\):.*$/\1/p")"
+    fi
+    if [ -z "$regdomain" ] \
+        || ! grep -q "^${regdomain}[[:space:]]" /usr/share/zoneinfo/iso3166.tab; then
+        return 1
+    fi
+    echo "$regdomain"
+    return 0
+    # SPDX-SnippetEnd
+}
+
 if [ "$1" != enable ] &&
 	[ "$1" != disable ] &&
 	[ "$1" != status ] &&
