@@ -25,7 +25,7 @@ fi
 
 usage() {
 	cat <<-EOF
-		Usage: $(basename "$0") enable | disable | status | available | set <feature>
+		Usage: $(basename "$0") enable | disable | status | available | set | get <feature>
 		Supported features: gui revpi-con-can
 		                    var-log.mount dphys-swapfile
 		                    teamviewer-revpi pimodbus-master
@@ -362,14 +362,8 @@ do_cm_external_antenna() {
 	esac
 }
 
-do_wifi_country() {
-    local cmd="$1"
-    local country="$2"
-    
-    if [ "$cmd" != "set" ]; then
-        echo >&2 "Invalid command for wifi_country. Use: set <country_code>"
-        return
-    fi
+set_wifi_country() {
+    local country="$1"
     
     if [ -z "$country" ]; then
         echo >&2 "No country code provided. Usage: set wifi_country <COUNTRY_CODE>"
@@ -420,12 +414,27 @@ get_wifi_country() {
     # SPDX-SnippetEnd
 }
 
+do_wifi_country() {
+    local cmd="$1"
+    local country="$2"
+
+    case "$cmd" in
+    "set")
+        set_wifi_country "$country"
+        ;;
+    get)
+        get_wifi_country
+        ;;
+    esac
+}
+
 if [ "$1" != enable ] &&
 	[ "$1" != disable ] &&
 	[ "$1" != status ] &&
 	[ "$1" != available ] &&
 	[ "$1" != availstat ] &&
-	[ "$1" != "set" ]; then
+	[ "$1" != "set" ] &&
+	[ "$1" != "get" ]; then
 	usage
 	exit
 fi

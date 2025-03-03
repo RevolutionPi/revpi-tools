@@ -16,6 +16,7 @@ revpi-config - enable and disable features on a RevPi
 *revpi-config* *available* _feature_++
 *revpi-config* *availstat* _feature_++
 *revpi-config* *set* _feature_ _value_
+*revpi-config* *get* _feature_
 
 # DESCRIPTION
 
@@ -122,7 +123,7 @@ deactivated, the CM4 module falls back to the internal antenna by default.
 
 ## wifi-country
 
-Set the WiFi country code for the device. The country code must be a valid
+Set or get the WiFi country code for the device. The country code must be a valid
 ISO 3166-1 alpha-2 code.
 
 # SEE ALSO
