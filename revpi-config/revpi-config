@@ -12,9 +12,16 @@ if [ "$(/usr/bin/env | /bin/grep -Ev '^(PWD|SHLVL|_)=')" ]; then
 fi
 
 CONFIG=/boot/firmware/config.txt
+CMDLINE=""
 
 trap "exit 1" SIGUSR1
 PROC="$$"
+
+if [ "$VERSION_ID" -ge 12 ]; then
+    CMDLINE="/boot/firmware/cmdline.txt"
+else
+    CMDLINE="/boot/cmdline.txt"
+fi
 
 usage() {
 	cat <<-EOF
@@ -358,7 +365,6 @@ do_cm_external_antenna() {
 do_wifi_country() {
     local cmd="$1"
     local country="$2"
-	local cmdline
     
     if [ "$cmd" != "set" ]; then
         echo >&2 "Invalid command for wifi_country. Use: set <country_code>"
@@ -375,12 +381,6 @@ do_wifi_country() {
         return
     fi
 
-	if [ "$VERSION_ID" -ge 12 ]; then
-		cmdline=/boot/firmware/cmdline.txt
-	else
-		cmdline=/boot/cmdline.txt
-	fi
-
     echo "Setting WiFi country to $country"
     # This code for setting the WiFi country is partially taken from the Raspberry Pi's
     # raspi-config script, which is licensed under the MIT License.
@@ -392,7 +392,7 @@ do_wifi_country() {
     sed -i \
         -e "s/\s*cfg80211.ieee80211_regdom=\S*//" \
         -e "s/\(.*\)/\1 cfg80211.ieee80211_regdom=$country/" \
-        "$cmdline"
+        "$CMDLINE"
 	# SPDX-SnippetEnd
     iw reg set "$country"
 }
