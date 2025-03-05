@@ -19,7 +19,8 @@ include:
     file: "/check-commit/lint-commit.yml"
   - local: debian/gitlab-ci.yml
     rules:
-      - exists: debian/gitlab-ci.yml
+      - exists:
+          - debian/gitlab-ci.yml
 
 test:
   image: registry.gitlab.com/revolutionpi/infrastructure/docker-images/build-container/build-container-bullseye:arm64-latest
