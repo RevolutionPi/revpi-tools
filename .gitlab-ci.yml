@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
 #
-# SPDX-FileCopyrightText: 2024 KUNBUS GmbH
+# SPDX-FileCopyrightText: 2024-2025 KUNBUS GmbH
 
 variables:
   # buster is based on the v2.x branch and not master
@@ -17,6 +17,9 @@ include:
     file: "/reuse-lint.yml"
   - project: "revolutionpi/infrastructure/ci-templates"
     file: "/check-commit/lint-commit.yml"
+  - local: debian/gitlab-ci.yml
+    rules:
+      - exists: debian/gitlab-ci.yml
 
 test:
   image: registry.gitlab.com/revolutionpi/infrastructure/docker-images/build-container/build-container-bullseye:arm64-latest
