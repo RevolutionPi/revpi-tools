@@ -170,3 +170,7 @@ echo "on your RevPi!"
 
 # skip /etc/profile.d/revpi-factory-reset.sh on future logins
 true > "$SYSCONFDIR/revpi/factory-reset"
+
+# Remove sudoers rule for revpi-factory-reset.
+# Allows passwordless execution only on first boot.
+rm -f "$SYSCONFDIR/sudoers.d/051_revpi-factory-reset"
