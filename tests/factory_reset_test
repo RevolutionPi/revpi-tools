@@ -12,6 +12,7 @@ atf_test_case factory_reset_state_file
 atf_test_case factory_reset_default_hostname
 atf_test_case factory_reset_state_file_created
 atf_test_case factory_reset_remove_sudoers_file
+atf_test_case factory_reset_remove_missing_sudoers_file
 
 factory_reset_hat_eeprom_body() {
 	init_env
@@ -198,6 +199,36 @@ factory_reset_remove_sudoers_file_body() {
 	atf_check -s exit:1 test -f "$SYSCONFIG/sudoers.d/051_revpi-factory-reset"
 }
 
+factory_reset_remove_missing_sudoers_file_body() {
+	init_env
+
+	export PI_EXISTS=true
+	export TEST_UID=0
+
+	mkdir -p proc/device-tree/hat
+	echo "1" > proc/device-tree/hat/custom_1
+
+	mkdir -p boot/firmware
+	echo -e "dtparam=eth0_mac_\ndtparam=eth1_mac_" > boot/firmware/config.txt
+
+	mkdir -p etc
+	echo "127.0.1.1 localhost" > etc/hosts
+
+	mkdir -p etc/revpi
+
+	export SYSCONFIG="$ROOT/etc"
+	# don't write the sudoers file which will be removed by revpi-factory-reset
+
+	export LIBDIR="$(atf_get_srcdir)"/../revpi-factory-reset
+	atf_check -s exit:0 \
+		-o match:"Password:.*pass" \
+		-o match:"chpasswd pi:pass" \
+		-o match:"Hostname:.*RevPi1" \
+		-o match:"hostname RevPi1" \
+		-e empty \
+		revpi-factory-reset -r "$ROOT"
+}
+
 atf_init_test_cases() {
 	atf_add_test_case factory_reset_hat_eeprom
 	atf_add_test_case factory_reset_custom_hostname_prefix
@@ -205,4 +236,5 @@ atf_init_test_cases() {
 	atf_add_test_case factory_reset_default_hostname
 	atf_add_test_case factory_reset_state_file_created
 	atf_add_test_case factory_reset_remove_sudoers_file
+	atf_add_test_case factory_reset_remove_missing_sudoers_file
 }
