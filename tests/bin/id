@@ -1,0 +1,9 @@
+#!/bin/sh
+
+# SPDX-FileCopyrightText: 2025 KUNBUS GmbH
+#
+# SPDX-License-Identifier: GPL-2.0-or-later
+
+if [ "$1" = "-u" ]; then
+	echo $TEST_UID
+fi

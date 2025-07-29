@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2024 KUNBUS GmbH
+# SPDX-FileCopyrightText: 2024-2025 KUNBUS GmbH
 #
 # SPDX-License-Identifier: GPL-2.0-or-later
 
@@ -7,5 +7,7 @@
 
 init_env() {
 	export MOCK=echo ROOT=$PWD/
-	export PATH="$(atf_get_srcdir)"/../firstboot:"$PATH"
+	export PATH="$(atf_get_srcdir)"/../../tests/bin:"$(atf_get_srcdir)"/../revpi-factory-reset:"$(atf_get_srcdir)"/../firstboot:"$PATH"
+	export DATADIR=usr/share
+	export SYSCONFDIR=etc
 }

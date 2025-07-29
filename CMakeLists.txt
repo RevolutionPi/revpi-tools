@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
 #
-# SPDX-FileCopyrightText: 2022-2024 KUNBUS GmbH
+# SPDX-FileCopyrightText: 2022-2025 KUNBUS GmbH
 
 cmake_minimum_required(VERSION 3.13)
 
@@ -26,7 +26,9 @@ if(ENABLE_TESTS)
 	add_test(
 		NAME kyua
 		COMMAND sh -c "kyua test --kyuafile Kyuafile --build-root ${CMAKE_CURRENT_BINARY_DIR}; \
-			kyua report-junit --output report.xml"
+			RC=$?; \
+			kyua report-junit --output report.xml; \
+			exit $RC"
 	)
 	add_subdirectory(tests)
 endif(ENABLE_TESTS)
