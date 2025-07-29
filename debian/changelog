@@ -1,3 +1,32 @@
+revpi-tools (4.5.0-1+deb12+1) bookworm; urgency=medium
+
+  [ Thomas Böhler ]
+  * build: failed tests fail the CMake tests as well
+  * feat(factory-reset): prepare for tests
+  * test(factory-reset): add HAT EEPROM test
+  * fix(factory-reset): Exit early if flag set
+  * build: copy revpi-functions to builddir
+  * test(factory-reset): add test for hostname prefix
+  * test(factory-reset): skip if state file present
+  * test(factory-reset): test for default hostname
+  * test(factory-reset): check for created state file
+
+  [ Ramiro Gsponer ]
+  * feat: Add function to set WiFi country code
+  * feat: Use global CMDLINE variable for path
+  * feat: Add get_wifi_country function
+  * fix: Update wifi country settings functions
+  * revert: "feat: Add function to set WiFi country code"
+
+  [ Marc Kittner ]
+  * feat: Remove sudoers rule for revpi-factory-reset
+  * test(factory-reset): add test to rm sudoers file
+
+  [ Thomas Böhler ]
+  * test(factory-reset): remove missing sudoers file
+
+ -- Thomas Böhler <t.boehler@kunbus.com>  Tue, 29 Jul 2025 15:42:47 +0200
+
 revpi-tools (4.4.1-1+deb12+1) bookworm; urgency=medium
 
   [ Sven Sager ]
