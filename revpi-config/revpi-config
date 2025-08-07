@@ -266,6 +266,30 @@ do_service() {
 	return $ret
 }
 
+# Check if the WLAN country is set with the cfg80211 kernel module's
+# ieee80211_regdom parameter. Abort if it isn't present in sysfs as the kernel
+# module isn't loaded then. Print a warning when the country wasn't explicitly
+# set.
+#
+# If the country isn't explicitly set then a fallback is used. This is fine, so
+# a warning is printed instead of aborting.
+#
+# The value of ieee80211_regdom is 00 if no country was explicitly set.
+_check_wlan_country_set() {
+	local regdom_param_file=/sys/module/cfg80211/parameters/ieee80211_regdom
+	if [ ! -f "$regdom_param_file" ]; then
+		printf "WLAN kernel module not active. Aborting.\n" >&2
+		return 1
+	fi
+
+	local regdom="$(cat "$regdom_param_file")"
+	if [ "$regdom" = "00" ]; then
+		printf "WARNING: WLAN country isn't set. Set the WLAN country and reboot.\n" >&2
+	fi
+
+	return 0
+}
+
 _set_wlan_state_networkmanager() {
 	local state_file=/var/lib/NetworkManager/NetworkManager.state
 	local action="$1"
@@ -325,10 +349,15 @@ do_wireless() {
 
 	case "$1" in
 	enable)
+		if ! _check_wlan_country_set; then
+			return
+		fi
 		[ "$IDX" ] && rfkill unblock "$IDX"
 		_set_wlan_state_networkmanager "$1"
 		;;
 	disable)
+		# don't check whether the WLAN country is set when disabling as it
+		# should always be possible to disable it
 		[ "$IDX" ] && rfkill block "$IDX"
 		_set_wlan_state_networkmanager "$1"
 		;;
