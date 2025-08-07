@@ -266,6 +266,34 @@ do_service() {
 	return $ret
 }
 
+_set_wlan_state_networkmanager() {
+	local state_file=/var/lib/NetworkManager/NetworkManager.state
+	local action="$1"
+	local enabled=false
+	local radio=off
+
+	case "$action" in
+	enable)
+		enabled=true
+		radio=on
+		;;
+	disable)
+		enabled=false
+		radio=off
+		;;
+	*)
+		printf "BUG: cannot pass '%s' to _set_wlan_state_networkmanager()\n" "$action" >&2
+		return 1
+		;;
+	esac
+
+	if systemctl -q is-active NetworkManager; then
+		nmcli radio wifi "$radio"
+	elif [ -f "$state_file" ]; then
+		sed -i -e "s/^\(WirelessEnabled\)=.*\$/\1=$enabled/" "$state_file"
+	fi
+}
+
 # do_wireless <verb> <type> (where type is "bluetooth" or "ieee80211")
 do_wireless() {
 	shopt -s nullglob
@@ -298,9 +326,11 @@ do_wireless() {
 	case "$1" in
 	enable)
 		[ "$IDX" ] && rfkill unblock "$IDX"
+		_set_wlan_state_networkmanager "$1"
 		;;
 	disable)
 		[ "$IDX" ] && rfkill block "$IDX"
+		_set_wlan_state_networkmanager "$1"
 		;;
 	status)
 		[ -z "$IDX" ] && return 0
