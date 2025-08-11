@@ -1,3 +1,12 @@
+revpi-tools (4.5.1-1+deb12+1) bookworm; urgency=medium
+
+  * fix(factory-reset): check first if ran before
+  * test(factory-reset): minimal output if run before
+  * fix(revpi-config): update NetworkManager state
+  * feat(revpi-config): check if WLAN country is set
+
+ -- Thomas Böhler <t.boehler@kunbus.com>  Mon, 11 Aug 2025 14:59:17 +0200
+
 revpi-tools (4.5.0-1+deb12+1) bookworm; urgency=medium
 
   [ Thomas Böhler ]
