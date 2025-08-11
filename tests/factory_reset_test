@@ -8,6 +8,7 @@
 
 atf_test_case factory_reset_hat_eeprom
 atf_test_case factory_reset_custom_hostname_prefix
+atf_test_case factory_reset_no_hostname_output_already_ran
 atf_test_case factory_reset_state_file
 atf_test_case factory_reset_default_hostname
 atf_test_case factory_reset_state_file_created
@@ -115,6 +116,22 @@ factory_reset_custom_hostname_prefix_body() {
 		revpi-factory-reset -r "$ROOT"
 
 	atf_check_equal "custom-prefix1" "$(cat etc/hostname)"
+}
+
+factory_reset_no_hostname_output_already_ran_body() {
+	init_env
+
+	export PI_EXISTS=true
+	export TEST_UID=0
+
+	# directory for state file
+	mkdir -p etc/revpi
+	touch etc/revpi/factory-reset
+
+	export LIBDIR="$(atf_get_srcdir)"/../revpi-factory-reset
+	atf_check -s exit:0 \
+		-o match:"^.*Skipping.$" \
+		revpi-factory-reset -r "$ROOT"
 }
 
 factory_reset_state_file_body() {
@@ -232,6 +249,7 @@ factory_reset_remove_missing_sudoers_file_body() {
 atf_init_test_cases() {
 	atf_add_test_case factory_reset_hat_eeprom
 	atf_add_test_case factory_reset_custom_hostname_prefix
+	atf_add_test_case factory_reset_no_hostname_output_already_ran
 	atf_add_test_case factory_reset_state_file
 	atf_add_test_case factory_reset_default_hostname
 	atf_add_test_case factory_reset_state_file_created

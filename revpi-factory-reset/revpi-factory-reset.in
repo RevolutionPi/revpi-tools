@@ -38,6 +38,12 @@ while getopts "r:h" opt; do
 	esac
 done
 
+if [ -r  "$SYSCONFDIR"/revpi/factory-reset ] \
+	|| [ -r "$ROOT"/home/pi/.revpi-factory-reset ]; then
+	echo "revpi-factory-reset was already run on this device. Skipping."
+
+	exit 0
+fi
 
 if [ -f "$HOSTNAME_PREFIX_FILE" ]; then
 	echo "Using custom hostname prefix from $HOSTNAME_PREFIX_FILE"
@@ -50,13 +56,6 @@ if [ -f "$HOSTNAME_PREFIX_FILE" ]; then
 fi
 
 echo "Using hostname prefix '$HOSTNAME_PREFIX'"
-
-if [ -r  "$SYSCONFDIR"/revpi/factory-reset ] \
-	|| [ -r "$ROOT"/home/pi/.revpi-factory-reset ]; then
-	echo "revpi-factory-reset was already run on this device. Skipping."
-
-	exit 0
-fi
 
 full_devicetype_list="compact|connect|core|flat|connect-se"	# all suported devices
 if has_hat_eeprom; then
