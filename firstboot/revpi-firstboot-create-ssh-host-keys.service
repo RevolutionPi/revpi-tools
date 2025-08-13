@@ -1,0 +1,19 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+#
+# SPDX-FileCopyrightText: 2025 KUNBUS GmbH
+
+[Unit]
+Description=Generate SSH host keys if they're missing on first boot
+ConditionFirstBoot=yes
+ConditionPathIsReadWrite=/etc
+Before=first-boot-complete.target ssh.service
+Wants=first-boot-complete.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/share/revpi/firstboot/create-ssh-host-keys.sh
+
+[Install]
+WantedBy=sysinit.target
+RequiredBy=ssh.service
