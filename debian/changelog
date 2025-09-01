@@ -1,3 +1,9 @@
+revpi-tools (4.5.2-1+deb12+1) bookworm; urgency=medium
+
+  * fix(revpi-config): don't let Bluetooth toggle WLAN
+
+ -- Thomas Böhler <t.boehler@kunbus.com>  Mon, 01 Sep 2025 15:02:27 +0200
+
 revpi-tools (4.5.1-1+deb12+1) bookworm; urgency=medium
 
   * fix(factory-reset): check first if ran before
