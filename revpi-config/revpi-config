@@ -353,13 +353,17 @@ do_wireless() {
 			return
 		fi
 		[ "$IDX" ] && rfkill unblock "$IDX"
-		_set_wlan_state_networkmanager "$1"
+		if [ "$2" = "ieee80211" ]; then
+			_set_wlan_state_networkmanager "$1"
+		fi
 		;;
 	disable)
 		# don't check whether the WLAN country is set when disabling as it
 		# should always be possible to disable it
 		[ "$IDX" ] && rfkill block "$IDX"
-		_set_wlan_state_networkmanager "$1"
+		if [ "$2" = "ieee80211" ]; then
+			_set_wlan_state_networkmanager "$1"
+		fi
 		;;
 	status)
 		[ -z "$IDX" ] && return 0
