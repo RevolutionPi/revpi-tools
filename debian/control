@@ -22,11 +22,11 @@ Package: revpi-tools
 Architecture: any
 Multi-Arch: foreign
 Depends:
+  cloud-guest-utils,
   e2fsprogs,
   ethtool,
   iproute2,
   raspi-utils,
-  parted,
   piserial (>= 3.0.0),
   python3-ftdi1,
   sudo,
