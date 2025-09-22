@@ -6,7 +6,8 @@
 Description=Resize the last partition to use the entire disk on first boot
 DefaultDependencies=no
 Conflicts=reboot.target shutdown.target
-Before=local-fs-pre.target first-boot-complete.target shutdown.target
+Before=first-boot-complete.target shutdown.target
+After=local-fs.target
 Wants=first-boot-complete.target
 ConditionFirstBoot=yes
 
