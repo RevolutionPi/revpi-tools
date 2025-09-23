@@ -1,3 +1,17 @@
+revpi-tools (4.5.3-1+deb12+1) bookworm; urgency=medium
+
+  [ Ramiro Gsponer ]
+  * fix: replace parted dependency with growpart
+
+  [ Thomas Böhler ]
+  * fix(firstboot): split service, fix ordering
+  * fix(resize-fs): use growpart for resizing
+
+  [ Ramiro Gsponer ]
+  * fix(resize-fs): run resize-fs after local-fs
+
+ -- Ramiro Gsponer <r.gsponer@kunbus.com>  Tue, 23 Sep 2025 11:06:36 +0200
+
 revpi-tools (4.5.2-1+deb12+1) bookworm; urgency=medium
 
   * fix(revpi-config): don't let Bluetooth toggle WLAN
