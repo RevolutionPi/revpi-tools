@@ -24,7 +24,7 @@ resize_fs_resize_body() {
 	echo "30" > sys/block/mmcblk0/mmcblk0p2/size
 
 	atf_check -s exit:0 \
-		-o match:"parted .* resizepart 2 99s" \
+		-o match:"growpart .*mmcblk0 2" \
 		-o match:"partprobe .*mmcblk0"\
 		-o match:"resize2fs .*mmcblk0p2"\
 		resize-fs.sh -r "$ROOT"
@@ -42,7 +42,7 @@ resize_fs_part_3_body() {
 	echo "30" > sys/block/mmcblk0/mmcblk0p3/size
 
 	atf_check -s exit:0 \
-		-o match:"parted .* resizepart 3 99s" \
+		-o match:"growpart .*mmcblk0 3" \
 		-o match:"partprobe .*mmcblk0"\
 		-o match:"resize2fs .*mmcblk0p3"\
 		resize-fs.sh -r "$ROOT"
@@ -71,7 +71,7 @@ resize_fs_only_fs_body() {
 	# correctly sized.
 
 	atf_check -s exit:0 \
-		-o not-match:"parted .* resizepart 3 99s" \
+		-o not-match:"growpart .*mmcblk0 3" \
 		-o match:"resize2fs .*mmcblk0p2" \
 		resize-fs.sh -r "$ROOT"
 }

@@ -1,0 +1,20 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+#
+# SPDX-FileCopyrightText: 2023-2025 KUNBUS GmbH
+
+[Unit]
+Description=Resize the last partition to use the entire disk on first boot
+DefaultDependencies=no
+Conflicts=reboot.target shutdown.target
+Before=first-boot-complete.target shutdown.target
+After=local-fs.target
+Wants=first-boot-complete.target
+ConditionFirstBoot=yes
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/share/revpi/firstboot/resize-fs.sh
+
+[Install]
+WantedBy=sysinit.target
