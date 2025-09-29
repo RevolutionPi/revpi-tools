@@ -7,9 +7,12 @@ Description=Resize the last partition to use the entire disk on first boot
 DefaultDependencies=no
 Conflicts=reboot.target shutdown.target
 Before=first-boot-complete.target shutdown.target
-After=local-fs.target
+# creates /tmp required for growpart
+After=systemd-tmpfiles-setup.service
 Wants=first-boot-complete.target
 ConditionFirstBoot=yes
+# growpart writes to /tmp
+ConditionPathIsReadWrite=/tmp
 
 [Service]
 Type=oneshot
