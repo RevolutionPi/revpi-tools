@@ -1,3 +1,10 @@
+revpi-tools (4.5.4-1+deb12+1) bookworm; urgency=medium
+
+  [ Thomas Böhler ]
+  * fix(resize-fs): remove race condition with /tmp
+
+ -- Ramiro Gsponer <r.gsponer@kunbus.com>  Mon, 29 Sep 2025 22:20:12 +0200
+
 revpi-tools (4.5.3-1+deb12+1) bookworm; urgency=medium
 
   [ Ramiro Gsponer ]
