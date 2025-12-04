@@ -5,18 +5,18 @@ Maintainer: KUNBUS GmbH <support@kunbus.com>
 Rules-Requires-Root: binary-targets
 Homepage: https://revolutionpi.com/
 Vcs-Browser: https://gitlab.com/revolutionpi/revpi-tools
-Vcs-Git: https://gitlab.com/revolutionpi/revpi-tools.git -b debian/bookworm
+Vcs-Git: https://gitlab.com/revolutionpi/revpi-tools.git -b debian/trixie
 Build-Depends:
   cmake,
   debhelper-compat (= 13),
   dh-python,
   libftdi1-dev,
-  pkg-config,
+  pkgconf,
   python3-all,
   scdoc,
-  systemd,
+  systemd-dev,
   xxd
-Standards-Version: 4.6.2
+Standards-Version: 4.7.2
 
 Package: revpi-tools
 Architecture: any

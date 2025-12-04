@@ -1,3 +1,9 @@
+revpi-tools (4.5.4-1+deb13+1) trixie; urgency=medium
+
+  * Initial release for trixie
+
+ -- Thomas Böhler <t.boehler@kunbus.com>  Thu, 04 Dec 2025 09:06:58 +0100
+
 revpi-tools (4.5.4-1+deb12+1) bookworm; urgency=medium
 
   [ Thomas Böhler ]
