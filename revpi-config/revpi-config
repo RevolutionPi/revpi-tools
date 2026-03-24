@@ -20,8 +20,8 @@ usage() {
 		Usage: $(basename "$0") enable | disable | status | available <feature>
 		Supported features: gui revpi-con-can
 		                    var-log.mount dphys-swapfile
-		                    teamviewer-revpi pimodbus-master
-		                    pimodbus-slave systemd-timesyncd ssh
+		                    teamviewer-revpi pimodbus-client
+		                    pimodbus-server systemd-timesyncd ssh
 		                    logi-rts nodered noderedrevpinodes-server
 		                    revpipyload bluetooth ieee80211 avahi
 		                    external-antenna
@@ -446,11 +446,13 @@ while [ $# -gt 0 ]; do
 	teamviewer-revpi)
 		do_service "$cmd" "$svc"
 		;;
-	pimodbus-master)
-		do_service "$cmd" "$svc"
+	# The option pimodbus-master is deprecated and for compatibility only
+	pimodbus-client|pimodbus-master)
+		do_service "$cmd" pimodbus-client
 		;;
-	pimodbus-slave)
-		do_service "$cmd" "$svc"
+	# The option pimodbus-slave is deprecated and for compatibility only
+	pimodbus-server|pimodbus-slave)
+		do_service "$cmd" pimodbus-server
 		;;
 	systemd-timesyncd)
 		do_service "$cmd" "$svc"
