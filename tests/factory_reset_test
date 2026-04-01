@@ -24,6 +24,7 @@ setup_hat_eeprom() {
 	mkdir -p proc/device-tree/hat
 	# HAT EEPROM present on device and serial number is "1"
 	echo "1" > proc/device-tree/hat/custom_1
+	echo "12:34:56:78:9A:BC" > proc/device-tree/hat/custom_5
 }
 
 setup_configtxt() {

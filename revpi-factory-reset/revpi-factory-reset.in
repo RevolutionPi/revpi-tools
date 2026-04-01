@@ -11,6 +11,7 @@
 : ${REVPI_DATADIR="$DATADIR"/revpi}
 : ${SYSCONFDIR='@SYSCONFDIR@'}
 : ${LIBDIR="$REVPI_DATADIR"}
+: ${DEVINFODIR="$REVPI_DATADIR"/devinfo}
 
 . "$LIBDIR"/revpi-functions
 
@@ -106,6 +107,7 @@ if has_hat_eeprom; then
 	# Get the serial number from device tree according to document:
 	# https://gitlab.com/revolutionpi/revpi-hat-eeprom/blob/master/docs/RevPi-HAT-EEPROM-Format.md#1-serial
 	ser=$(cat "$ROOT"/proc/device-tree/hat/custom_1)
+	mac=$(cat "$ROOT"/proc/device-tree/hat/custom_5 | normalise_mac)
 else
 	if [ "$#" != 3 ] ||
 		! echo "$ovl" | grep -qEx "($FULL_DEVICETYPE_LIST)" ||
@@ -224,6 +226,15 @@ printf "Hostname:\t%s\n" "$hostname"
 log_info "revpi-factory-reset successful!"
 echo "Be sure to write down the password if you have lost the sticker"
 echo "on your RevPi!"
+
+
+# format mac address as 01:23:45:67:89:AB
+mac=$(echo "$mac" | sed 's/\(..\)/\1:/g; s/:$//' | tr 'a-z' 'A-Z')
+
+# store device information
+mkdir -p "$DEVINFODIR"
+printf '%s' "$ser" > "$DEVINFODIR/serial-number"
+printf '%s' "$mac" > "$DEVINFODIR/base-mac-address"
 
 # skip /etc/profile.d/revpi-factory-reset.sh on future logins
 true > "$REVPI_DATADIR/factory-reset"

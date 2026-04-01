@@ -20,6 +20,8 @@ encompasses the following tasks:
 - resetting the default password of the user _pi_ *if the user exists*
 - setting the hostname
 - setting the MAC address of the Ethernet interfaces
+- saving the base MAC address and serial number of the device in
+_/usr/share/revpi/devinfo/_ for later use
 
 The first form, without arguments, can be used when a HAT EEPROM is present, as
 it already contains all the information that would otherwise be required from
@@ -70,6 +72,7 @@ labelled as "MAC ADD". Only the first address listed here is required.
 # FILES
 
 - _/proc/device-tree/hat/custom_1_
+- _/proc/device-tree/hat/custom_5_
 - _/boot/firmware/config.txt_
 - _/boot/firmware/dt-blob.bin_
 - _/dev/tpm0_
@@ -78,6 +81,8 @@ labelled as "MAC ADD". Only the first address listed here is required.
 - _/etc/hosts_
 - _/etc/hostname_
 - _/usr/share/revpi/factory-reset_
+- _/usr/share/revpi/devinfo/base-mac-address_
+- _/usr/share/revpi/devinfo/serial-number_
 
 # EXAMPLES
 
