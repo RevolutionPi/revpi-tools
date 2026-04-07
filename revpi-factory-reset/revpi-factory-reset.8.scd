@@ -6,8 +6,8 @@ revpi-factory-reset(8)
 
 # SYNOPSIS
 
-*revpi-factory-reset*++
-*revpi-factory-reset* _core|connect|connect-se|flat|compact_ _serial_nr_ _mac_address_
+*revpi-factory-reset* [-f]++
+*revpi-factory-reset* [-f] _core|connect|connect-se|flat|compact_ _serial_nr_ _mac_address_
 
 # DESCRIPTION
 
@@ -37,6 +37,13 @@ INFORMATION*.
 The default hostname prefix for the hostname is _RevPi_. If this should be
 changed to something else the file _/usr/share/revpi/hostname_ can be filled
 with the content being only the desired prefix on the first line of the file.
+
+# OPTIONS
+
+revpi-factory-reset accepts the following options.
+
+*-f*
+	Force running revpi-factory-reset even if it already ran before.
 
 # FINDING REQUIRED INFORMATION
 

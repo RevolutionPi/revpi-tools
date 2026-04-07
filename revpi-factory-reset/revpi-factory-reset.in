@@ -22,11 +22,14 @@ HOSTNAME_PREFIX="RevPi"
 
 usage() {
 	cat <<- __EOF__
-	Usage: revpi-factory-reset
-	       revpi-factory-reset OVERLAY SERIAL_NR MAC_ADDR
+	Usage: revpi-factory-reset [-f]
+	       revpi-factory-reset [-f] OVERLAY SERIAL_NR MAC_ADDR
 
 	Calling revpi-factory-reset without any arguments is only permitted if the
 	device it is called on is equipped with a HAT EEPROM.
+
+	Options:
+	  -f      Force run even if revpi-factory-reset already ran before
 	__EOF__
 
 	exit "$1"
@@ -36,8 +39,9 @@ normalise_mac() {
 	tr -d ':-' | tr 'A-F' 'a-f'
 }
 
-while getopts "r:h" opt; do
+while getopts "fr:h" opt; do
 	case "$opt" in
+	f) FORCE=true ;;
 	r) ROOT="$OPTARG" ;;
 	h) usage 0 ;;
 	?) usage 1 >&2 ;;
@@ -45,7 +49,8 @@ while getopts "r:h" opt; do
 done
 shift $((OPTIND-1))
 
-if [ -r "$DATADIR"/revpi/factory-reset ]; then
+if [ -z "$FORCE" ] \
+	&& [ -r "$DATADIR"/revpi/factory-reset ]; then
 	echo "revpi-factory-reset was already run on this device. Skipping."
 
 	exit 0
