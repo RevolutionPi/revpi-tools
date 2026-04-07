@@ -89,8 +89,6 @@ if [ "$(id -u)" != 0 ] ; then
 	exit 1
 fi
 
-piserial="piSerial"
-
 # clean up config.txt before doing anything else
 sed --follow-symlinks -ri \
 	-e "/^dtoverlay=revpi-($FULL_DEVICETYPE_LIST)/d" \
@@ -141,7 +139,7 @@ if ! "$with_hat_eeprom"; then
 fi
 
 if user_pi_exists; then
-	pw="$("$piserial" -p)"
+	pw="$(piSerial -p)"
 	echo -e "Password:\t$pw"
 	echo "pi:${pw}" | chpasswd
 else
