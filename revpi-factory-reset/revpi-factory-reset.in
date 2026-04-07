@@ -15,6 +15,8 @@
 
 RPI_FW_MOUNT="$ROOT"/boot/firmware
 HOSTNAME_PREFIX_FILE="$DATADIR/revpi/hostname"
+FULL_DEVICETYPE_LIST="compact|connect|core|flat|connect-se"	# all suported devices
+WITHETH1_DEVICETYPE_LIST="compact|connect|flat|connect-se"	# devices with "eth1"
 
 HOSTNAME_PREFIX="RevPi"
 
@@ -30,6 +32,10 @@ usage() {
 	exit "$1"
 }
 
+normalise_mac() {
+	tr -d ':-' | tr 'A-F' 'a-f'
+}
+
 while getopts "r:h" opt; do
 	case "$opt" in
 	r) ROOT="$OPTARG" ;;
@@ -37,11 +43,33 @@ while getopts "r:h" opt; do
 	?) usage 1 >&2 ;;
 	esac
 done
+shift $((OPTIND-1))
 
 if [ -r "$DATADIR"/revpi/factory-reset ]; then
 	echo "revpi-factory-reset was already run on this device. Skipping."
 
 	exit 0
+fi
+
+ovl="$1"
+ser="$2"
+mac="$(echo "$3" | normalise_mac)"
+
+if has_hat_eeprom; then
+	with_hat_eeprom=true
+	# Get the serial number from device tree according to document:
+	# https://gitlab.com/revolutionpi/revpi-hat-eeprom/blob/master/docs/RevPi-HAT-EEPROM-Format.md#1-serial
+	ser=$(cat "$ROOT"/proc/device-tree/hat/custom_1)
+else
+	if [ "$#" != 3 ] ||
+		! [[ "$ovl" =~ ^($FULL_DEVICETYPE_LIST)$ ]] ||
+		! [[ "$ser" =~ ^[0-9]+$ ]] ||
+		! [[ "$mac" =~ ^[0-9a-f]{12}$ ]] ; then
+		echo >&2 "$(basename "$0") must be called with all arguments because no HAT EEPROM is present"
+		usage 1 >&2
+	fi
+
+	with_hat_eeprom=false
 fi
 
 if [ -f "$HOSTNAME_PREFIX_FILE" ]; then
@@ -56,42 +84,13 @@ fi
 
 echo "Using hostname prefix '$HOSTNAME_PREFIX'"
 
-full_devicetype_list="compact|connect|core|flat|connect-se"	# all suported devices
-if has_hat_eeprom; then
-	# The device is equipped with HAT EEPROM
-	with_hat_eeprom=true
-
-	# Get the serial number from device tree according to document:
-	# https://gitlab.com/revolutionpi/revpi-hat-eeprom/blob/master/docs/RevPi-HAT-EEPROM-Format.md#1-serial
-	ser=$(cat "$ROOT"/proc/device-tree/hat/custom_1)
-else
-	with_hat_eeprom=false
-
-	ovl="$1"
-	ser="$2"
-	mac="$3"
-	mac="${mac,,}"		# downcase
-	mac="${mac//-/}"	# remove dashes
-	mac="${mac//:/}"	# remove colons
-
-	witheth1_devicetype_list="compact|connect|flat|connect-se"	# devices with "eth1"
-
-	if [ "$#" != 3 ] ||
-	! [[ "$ovl" =~ ^($full_devicetype_list)$ ]] ||
-	! [[ "$ser" =~ ^[0-9]+$ ]] ||
-	! [[ "$mac" =~ ^[0-9a-f]{12}$ ]] ; then
-		echo -e 1>&2 "Usage: $(basename "$0") <$full_devicetype_list> <serial> <mac addr>\n(see front plate)"
-		exit 1
-	fi
-fi
-
 if [ "$(id -u)" != 0 ] ; then
 	echo 1>&2 "This program requires root access"
 	exit 1
 fi
 
 piserial="piSerial"
-sed --follow-symlinks -r -i -e "/^dtoverlay=revpi-($full_devicetype_list)/d" "$RPI_FW_MOUNT/config.txt"
+sed --follow-symlinks -r -i -e "/^dtoverlay=revpi-($FULL_DEVICETYPE_LIST)/d" "$RPI_FW_MOUNT/config.txt"
 
 if ! "$with_hat_eeprom"; then
 	echo "dtoverlay=revpi-$ovl" >> "$RPI_FW_MOUNT/config.txt"
@@ -142,7 +141,7 @@ if ! "$with_hat_eeprom"; then
 	echo "dtparam=eth0_mac_hi=0x${mac_hi}" >> "$RPI_FW_MOUNT/config.txt"
 	echo "dtparam=eth0_mac_lo=0x${mac_lo}" >> "$RPI_FW_MOUNT/config.txt"
 
-	if [[ "$ovl" =~ ^($witheth1_devicetype_list)$ ]] ; then
+	if [[ "$ovl" =~ ^($WITHETH1_DEVICETYPE_LIST)$ ]] ; then
 		mac_lo1=$(( 0x${mac_lo} + 1))
 		mac_lo1=$(printf "%.4hx" "${mac_lo1}")
 		echo -e "MAC Address eth1:\t$mac_hi$mac_lo1"
