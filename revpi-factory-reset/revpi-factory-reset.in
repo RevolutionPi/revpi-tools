@@ -121,23 +121,7 @@ if ! "$with_hat_eeprom"; then
 			sleep 1
 		done
 	fi
-fi
 
-if user_pi_exists; then
-	pw="$("$piserial" -p)"
-	echo -e "Password:\t$pw"
-	echo "pi:${pw}" | chpasswd
-else
-	echo 1>&2 "WARNING: Cannot restore the default password, because the default user 'pi' is absent."
-fi
-
-hostname="$HOSTNAME_PREFIX$ser"
-echo -e "Hostname:\t$hostname"
-sed --follow-symlinks -r -i -e "s/^(127\.0\.1\.1[[:blank:]]+).*/\1$hostname/" "$ROOT"/etc/hosts
-echo "$hostname" > "$ROOT"/etc/hostname
-$MOCK hostname "$hostname"
-
-if ! "$with_hat_eeprom"; then
 	mac_hi="${mac:0:2}${mac:2:2}${mac:4:2}${mac:6:2}"
 	mac_lo="${mac:8:2}${mac:10:2}"
 	echo -e "MAC Address eth0:\t$mac_hi$mac_lo"
@@ -157,6 +141,21 @@ if ! "$with_hat_eeprom"; then
 
 	echo "Reboot to activate the MAC Address"
 fi
+
+if user_pi_exists; then
+	pw="$("$piserial" -p)"
+	echo -e "Password:\t$pw"
+	echo "pi:${pw}" | chpasswd
+else
+	echo 1>&2 "WARNING: Cannot restore the default password, because the default user 'pi' is absent."
+fi
+
+hostname="$HOSTNAME_PREFIX$ser"
+echo -e "Hostname:\t$hostname"
+sed --follow-symlinks -r -i -e "s/^(127\.0\.1\.1[[:blank:]]+).*/\1$hostname/" "$ROOT"/etc/hosts
+echo "$hostname" > "$ROOT"/etc/hostname
+$MOCK hostname "$hostname"
+
 echo "Be sure to write down the password if you have lost the sticker"
 echo "on your RevPi!"
 
