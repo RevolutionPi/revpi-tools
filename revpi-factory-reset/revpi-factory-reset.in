@@ -124,14 +124,12 @@ if ! "$with_hat_eeprom"; then
 
 	mac_hi="${mac:0:2}${mac:2:2}${mac:4:2}${mac:6:2}"
 	mac_lo="${mac:8:2}${mac:10:2}"
-	echo -e "MAC Address eth0:\t$mac_hi$mac_lo"
 	echo "dtparam=eth0_mac_hi=0x${mac_hi}" >> "$RPI_FW_MOUNT/config.txt"
 	echo "dtparam=eth0_mac_lo=0x${mac_lo}" >> "$RPI_FW_MOUNT/config.txt"
 
 	if [[ "$ovl" =~ ^($WITHETH1_DEVICETYPE_LIST)$ ]] ; then
 		mac_lo1=$(( 0x${mac_lo} + 1))
 		mac_lo1=$(printf "%.4hx" "${mac_lo1}")
-		echo -e "MAC Address eth1:\t$mac_hi$mac_lo1"
 		echo "dtparam=eth1_mac_hi=0x${mac_hi}" >> "$RPI_FW_MOUNT/config.txt"
 		echo "dtparam=eth1_mac_lo=0x${mac_lo1}" >> "$RPI_FW_MOUNT/config.txt"
 		if [[ "$ovl" =~ ^compact$ ]] ; then
