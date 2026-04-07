@@ -90,7 +90,12 @@ if [ "$(id -u)" != 0 ] ; then
 fi
 
 piserial="piSerial"
-sed --follow-symlinks -r -i -e "/^dtoverlay=revpi-($FULL_DEVICETYPE_LIST)/d" "$RPI_FW_MOUNT/config.txt"
+
+# clean up config.txt before doing anything else
+sed --follow-symlinks -ri \
+	-e "/^dtoverlay=revpi-($FULL_DEVICETYPE_LIST)/d" \
+	-e "/^dtparam=eth[0-9]_mac_/d" \
+	"$RPI_FW_MOUNT/config.txt"
 
 if ! "$with_hat_eeprom"; then
 	echo "dtoverlay=revpi-$ovl" >> "$RPI_FW_MOUNT/config.txt"
@@ -132,8 +137,6 @@ sed --follow-symlinks -r -i -e "s/^(127\.0\.1\.1[[:blank:]]+).*/\1$hostname/" "$
 echo "$hostname" > "$ROOT"/etc/hostname
 $MOCK hostname "$hostname"
 
-# remove existing entries before writing new ones
-sed --follow-symlinks -r -i -e "/^dtparam=eth[0-9]_mac_/d" "$RPI_FW_MOUNT/config.txt"
 if ! "$with_hat_eeprom"; then
 	mac_hi="${mac:0:2}${mac:2:2}${mac:4:2}${mac:6:2}"
 	mac_lo="${mac:8:2}${mac:10:2}"
