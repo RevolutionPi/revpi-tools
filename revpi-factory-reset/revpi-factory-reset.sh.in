@@ -23,24 +23,15 @@ while [ ! -r "$DATADIR/revpi/factory-reset" ]; do
 		return
 	fi
 	msg="Please select the Product Type:"
-	if cm1_detection; then
-		ovl=$(whiptail --notags --title "PRODUCT TYPE" --menu "$msg" 0 0 0 \
-			core "RevPi Core (autodetected)" \
-			3>&1 1>&2 2>&3)
-		if [ "$?" == "1" ]; then
-			return
-		fi
-	else
-		ovl=$(whiptail --notags --title "PRODUCT TYPE" --menu "$msg" 0 0 0 \
-			compact "RevPi Compact" \
-			connect "RevPi Connect(+) / Connect S" \
-			connect-se "RevPi Connect SE" \
-			core "RevPi Core 3(+) / Core S" \
-			flat "RevPi Flat" \
-			3>&1 1>&2 2>&3)
-		if [ "$?" == "1" ]; then
-			return
-		fi
+	ovl=$(whiptail --notags --title "PRODUCT TYPE" --menu "$msg" 0 0 0 \
+		compact "RevPi Compact" \
+		connect "RevPi Connect(+) / Connect S" \
+		connect-se "RevPi Connect SE" \
+		core "RevPi Core 3(+) / Core S" \
+		flat "RevPi Flat" \
+		3>&1 1>&2 2>&3)
+	if [ "$?" == "1" ]; then
+		return
 	fi
 
 	msg="Please enter the Serial Number on the front plate of your RevPi:"
