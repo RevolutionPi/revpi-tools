@@ -1,6 +1,6 @@
 #!/usr/bin/env atf-sh
 
-# SPDX-FileCopyrightText: 2025 KUNBUS GmbH
+# SPDX-FileCopyrightText: 2025-2026 KUNBUS GmbH
 #
 # SPDX-License-Identifier: GPL-2.0-or-later
 
@@ -35,7 +35,7 @@ factory_reset_hat_eeprom_body() {
 	echo "127.0.1.1 localhost" > etc/hosts
 
 	# directory for state file
-	mkdir -p etc/revpi
+	mkdir -p usr/share/revpi
 
 	export LIBDIR="$(atf_get_srcdir)"/../revpi-factory-reset
 	atf_check -s exit:0 \
@@ -69,7 +69,7 @@ factory_reset_default_hostname_body() {
 	echo "127.0.1.1 localhost" > etc/hosts
 
 	# directory for state file
-	mkdir -p etc/revpi
+	mkdir -p usr/share/revpi
 
 	export LIBDIR="$(atf_get_srcdir)"/../revpi-factory-reset
 	atf_check -s exit:0 \
@@ -101,7 +101,7 @@ factory_reset_custom_hostname_prefix_body() {
 	echo "127.0.1.1 localhost" > etc/hosts
 
 	# directory for state file
-	mkdir -p etc/revpi
+	mkdir -p usr/share/revpi
 
 	mkdir -p usr/share/revpi
 	echo "custom-prefix" > usr/share/revpi/hostname
@@ -125,8 +125,8 @@ factory_reset_no_hostname_output_already_ran_body() {
 	export TEST_UID=0
 
 	# directory for state file
-	mkdir -p etc/revpi
-	touch etc/revpi/factory-reset
+	mkdir -p usr/share/revpi
+	touch usr/share/revpi/factory-reset
 
 	export LIBDIR="$(atf_get_srcdir)"/../revpi-factory-reset
 	atf_check -s exit:0 \
@@ -138,8 +138,8 @@ factory_reset_state_file_body() {
 	init_env
 
 	# create state file
-	mkdir -p etc/revpi
-	touch etc/revpi/factory-reset
+	mkdir -p usr/share/revpi
+	touch usr/share/revpi/factory-reset
 
 	export LIBDIR="$(atf_get_srcdir)"/../revpi-factory-reset
 	atf_check -s exit:0 \
@@ -167,7 +167,7 @@ factory_reset_state_file_created_body() {
 	echo "127.0.1.1 localhost" > etc/hosts
 
 	# directory for state file
-	mkdir -p etc/revpi
+	mkdir -p usr/share/revpi
 
 	export LIBDIR="$(atf_get_srcdir)"/../revpi-factory-reset
 	# only care about if state file is created
@@ -176,7 +176,7 @@ factory_reset_state_file_created_body() {
 		revpi-factory-reset -r "$ROOT"
 
 	atf_check -s exit:0 \
-		test -f etc/revpi/factory-reset
+		test -f usr/share/revpi/factory-reset
 	atf_check -s exit:1 \
 		test -f home/pi/.revpi-factory-reset
 }
@@ -196,7 +196,7 @@ factory_reset_remove_sudoers_file_body() {
 	mkdir -p etc
 	echo "127.0.1.1 localhost" > etc/hosts
 
-	mkdir -p etc/revpi
+	mkdir -p usr/share/revpi
 
 	export SYSCONFIG="$ROOT/etc"
 
@@ -231,7 +231,7 @@ factory_reset_remove_missing_sudoers_file_body() {
 	mkdir -p etc
 	echo "127.0.1.1 localhost" > etc/hosts
 
-	mkdir -p etc/revpi
+	mkdir -p usr/share/revpi
 
 	export SYSCONFIG="$ROOT/etc"
 	# don't write the sudoers file which will be removed by revpi-factory-reset

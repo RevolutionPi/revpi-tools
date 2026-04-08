@@ -2,7 +2,7 @@
 #
 # SPDX-License-Identifier: GPL-2.0-or-later
 #
-# SPDX-FileCopyrightText: 2017-2025 KUNBUS GmbH
+# SPDX-FileCopyrightText: 2017-2026 KUNBUS GmbH
 #
 # reset dtoverlay, password of user pi, machine-id, hostname, FQDN and
 # MAC address of a RevPi to factory defaults
@@ -38,8 +38,7 @@ while getopts "r:h" opt; do
 	esac
 done
 
-if [ -r  "$SYSCONFDIR"/revpi/factory-reset ] \
-	|| [ -r "$ROOT"/home/pi/.revpi-factory-reset ]; then
+if [ -r "$DATADIR"/revpi/factory-reset ]; then
 	echo "revpi-factory-reset was already run on this device. Skipping."
 
 	exit 0
@@ -168,7 +167,7 @@ echo "Be sure to write down the password if you have lost the sticker"
 echo "on your RevPi!"
 
 # skip /etc/profile.d/revpi-factory-reset.sh on future logins
-true > "$SYSCONFDIR/revpi/factory-reset"
+true > "$DATADIR/revpi/factory-reset"
 
 # Remove sudoers rule for revpi-factory-reset.
 # Allows passwordless execution only on first boot.

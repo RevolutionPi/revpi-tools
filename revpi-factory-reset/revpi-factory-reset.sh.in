@@ -2,18 +2,18 @@
 #
 # SPDX-License-Identifier: GPL-2.0-or-later
 #
-# SPDX-FileCopyrightText: 2021-2024 KUNBUS GmbH
+# SPDX-FileCopyrightText: 2021-2026 KUNBUS GmbH
 
 . @DATADIR@/revpi/revpi-functions
 
-SYSCONFDIR='@SYSCONFDIR@'
+DATADIR='@DATADIR@'
 SBINDIR='@SBINDIR@'
 
 # Environment variable for whiptail to set the color palette as the black color
 # for the background and grey color for the boxes.
 export NEWT_COLORS='root=,black entry=white,black'
 
-while [ ! -r "$SYSCONFDIR/revpi/factory-reset" ] && [  ! -r /home/pi/.revpi-factory-reset  ]; do
+while [ ! -r "$DATADIR/revpi/factory-reset" ]; do
 	clear
 	if has_hat_eeprom; then
 		# The device is equipped with HAT EEPROM

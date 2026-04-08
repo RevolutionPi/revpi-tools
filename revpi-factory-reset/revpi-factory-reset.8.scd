@@ -70,7 +70,7 @@ labelled as "MAC ADD". Only the first address listed here is required.
 - _/etc/shadow_
 - _/etc/hosts_
 - _/etc/hostname_
-- _/etc/revpi/factory-reset_
+- _/usr/share/revpi/factory-reset_
 
 # EXAMPLES
 
