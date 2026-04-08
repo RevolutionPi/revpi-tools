@@ -14,6 +14,7 @@ atf_test_case factory_reset_default_hostname
 atf_test_case factory_reset_state_file_created
 atf_test_case factory_reset_remove_sudoers_file
 atf_test_case factory_reset_remove_missing_sudoers_file
+atf_test_case factory_reset_no_hat_eeprom_eth0_configtxt
 
 factory_reset_hat_eeprom_body() {
 	init_env
@@ -246,6 +247,51 @@ factory_reset_remove_missing_sudoers_file_body() {
 		revpi-factory-reset -r "$ROOT"
 }
 
+factory_reset_no_hat_eeprom_eth0_configtxt_body() {
+	init_env
+
+	export PI_EXISTS=true
+	export TEST_UID=0
+
+	mkdir -p boot/firmware/overlays
+	echo -e "dtparam=eth0_mac_\ndtparam=eth1_mac_" > boot/firmware/config.txt
+	touch boot/firmware/overlays/revpi-core-dt-blob.dtbo
+
+	mkdir -p etc
+	echo "127.0.1.1 localhost" > etc/hosts
+
+	mkdir -p usr/share/revpi
+
+	export SYSCONFIG="$ROOT/etc"
+
+	# Simulate the sudoers file
+	mkdir -p "$SYSCONFIG/sudoers.d"
+	echo "pi ALL = (root) NOPASSWD: /usr/sbin/revpi-factory-reset *" > "$SYSCONFIG/sudoers.d/051_revpi-factory-reset"
+
+	export LIBDIR="$(atf_get_srcdir)"/../revpi-factory-reset
+	atf_check -s exit:0 \
+		-o match:"Password:.*pass" \
+		-o match:"chpasswd pi:pass" \
+		-o match:"Hostname:.*RevPi1" \
+		-o match:"hostname RevPi1" \
+		-e empty \
+		revpi-factory-reset -r "$ROOT" \
+			core \
+			1 \
+			12:34:56:78:9A:BC
+
+	atf_check -s exit:0 \
+		-o match:"dtparam=eth0_mac_hi=0x12345678" \
+		-o match:"dtparam=eth0_mac_lo=0x9abc" \
+		-e empty \
+		cat boot/firmware/config.txt
+
+	atf_check -s exit:1 \
+		-o empty \
+		-e empty \
+		grep -qE 'dtparam=eth1_mac_(hi|lo)' boot/firmware/config.txt
+}
+
 atf_init_test_cases() {
 	atf_add_test_case factory_reset_hat_eeprom
 	atf_add_test_case factory_reset_custom_hostname_prefix
@@ -255,4 +301,5 @@ atf_init_test_cases() {
 	atf_add_test_case factory_reset_state_file_created
 	atf_add_test_case factory_reset_remove_sudoers_file
 	atf_add_test_case factory_reset_remove_missing_sudoers_file
+	atf_add_test_case factory_reset_no_hat_eeprom_eth0_configtxt
 }
