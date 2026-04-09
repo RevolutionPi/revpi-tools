@@ -63,6 +63,10 @@ log_err() {
 	_log err "$*"
 }
 
+log_warn() {
+	_log warn "$*"
+}
+
 log_info() {
 	_log info "$*"
 }
@@ -177,14 +181,16 @@ if user_pi_exists; then
 	echo -e "Password:\t$pw"
 	echo "pi:${pw}" | chpasswd
 else
-	echo 1>&2 "WARNING: Cannot restore the default password, because the default user 'pi' is absent."
+	log_warn "Cannot restore the default password, because the default user 'pi' is absent."
 fi
 
 hostname="$HOSTNAME_PREFIX$ser"
 echo -e "Hostname:\t$hostname"
 sed --follow-symlinks -r -i -e "s/^(127\.0\.1\.1[[:blank:]]+).*/\1$hostname/" "$ROOT"/etc/hosts
 echo "$hostname" > "$ROOT"/etc/hostname
-$MOCK hostname "$hostname"
+if ! $MOCK hostname "$hostname"; then
+	log_warn "Cannot activate hostname. A reboot is required."
+fi
 
 log_info "revpi-factory-reset successful!"
 echo "Be sure to write down the password if you have lost the sticker"
