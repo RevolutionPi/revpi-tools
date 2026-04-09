@@ -15,6 +15,7 @@ atf_test_case factory_reset_state_file_created
 atf_test_case factory_reset_remove_sudoers_file
 atf_test_case factory_reset_remove_missing_sudoers_file
 atf_test_case factory_reset_no_hat_eeprom_eth0_configtxt
+atf_test_case factory_reset_force_state_file
 
 setup_hat_eeprom() {
 	mkdir -p proc/device-tree/hat
@@ -262,6 +263,26 @@ factory_reset_no_hat_eeprom_eth0_configtxt_body() {
 		grep -qE 'dtparam=eth1_mac_(hi|lo)' boot/firmware/config.txt
 }
 
+factory_reset_force_state_file_body() {
+	init_env
+
+	export PI_EXISTS=true
+	export TEST_UID=0
+
+	setup_hat_eeprom
+	setup_configtxt
+	setup_hosts_file
+
+	mkdir -p usr/share/revpi
+	touch usr/share/revpi/factory-reset
+
+	export LIBDIR="$(atf_get_srcdir)"/../revpi-factory-reset
+	atf_check -s exit:0 \
+		-o match:"Password:.*" \
+		-o match:"Hostname:.*" \
+		revpi-factory-reset -r "$ROOT" -f
+}
+
 atf_init_test_cases() {
 	atf_add_test_case factory_reset_hat_eeprom
 	atf_add_test_case factory_reset_custom_hostname_prefix
@@ -272,4 +293,5 @@ atf_init_test_cases() {
 	atf_add_test_case factory_reset_remove_sudoers_file
 	atf_add_test_case factory_reset_remove_missing_sudoers_file
 	atf_add_test_case factory_reset_no_hat_eeprom_eth0_configtxt
+	atf_add_test_case factory_reset_force_state_file
 }
