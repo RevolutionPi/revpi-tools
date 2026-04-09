@@ -16,6 +16,7 @@ atf_test_case factory_reset_remove_sudoers_file
 atf_test_case factory_reset_remove_missing_sudoers_file
 atf_test_case factory_reset_no_hat_eeprom_eth0_configtxt
 atf_test_case factory_reset_force_state_file
+atf_test_case factory_reset_quirky_mac_format
 
 setup_hat_eeprom() {
 	mkdir -p proc/device-tree/hat
@@ -283,6 +284,33 @@ factory_reset_force_state_file_body() {
 		revpi-factory-reset -r "$ROOT" -f
 }
 
+factory_reset_quirky_mac_format_body() {
+	init_env
+
+	export PI_EXISTS=true
+	export TEST_UID=0
+
+	setup_configtxt
+	touch boot/firmware/overlays/revpi-core-dt-blob.dtbo
+	setup_hosts_file
+
+	mkdir -p usr/share/revpi
+
+	export LIBDIR="$(atf_get_srcdir)"/../revpi-factory-reset
+	atf_check -s exit:0 \
+		-o ignore \
+		revpi-factory-reset -r "$ROOT" \
+			core \
+			1 \
+			ab-Cd--ef::12:a8-ff
+
+	atf_check -s exit:0 \
+		-o match:"dtparam=eth0_mac_hi=0xabcdef12" \
+		-o match:"dtparam=eth0_mac_lo=0xa8ff" \
+		-e empty \
+		cat boot/firmware/config.txt
+}
+
 atf_init_test_cases() {
 	atf_add_test_case factory_reset_hat_eeprom
 	atf_add_test_case factory_reset_custom_hostname_prefix
@@ -294,4 +322,5 @@ atf_init_test_cases() {
 	atf_add_test_case factory_reset_remove_missing_sudoers_file
 	atf_add_test_case factory_reset_no_hat_eeprom_eth0_configtxt
 	atf_add_test_case factory_reset_force_state_file
+	atf_add_test_case factory_reset_quirky_mac_format
 }
