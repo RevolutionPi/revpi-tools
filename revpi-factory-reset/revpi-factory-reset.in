@@ -63,6 +63,10 @@ log_err() {
 	_log err "$*"
 }
 
+log_info() {
+	_log info "$*"
+}
+
 normalise_mac() {
 	tr -d ':-' | tr 'A-F' 'a-f'
 }
@@ -79,7 +83,7 @@ shift $((OPTIND-1))
 
 if [ -z "$FORCE" ] \
 	&& [ -r "$DATADIR"/revpi/factory-reset ]; then
-	echo "revpi-factory-reset was already run on this device. Skipping."
+	log_info "revpi-factory-reset was already run on this device. Skipping."
 
 	exit 0
 fi
@@ -103,7 +107,7 @@ else
 fi
 
 if [ -f "$HOSTNAME_PREFIX_FILE" ]; then
-	echo "Using custom hostname prefix from $HOSTNAME_PREFIX_FILE"
+	log_info "Using custom hostname prefix from $HOSTNAME_PREFIX_FILE"
 	HOSTNAME_PREFIX="$(head -n1 "$HOSTNAME_PREFIX_FILE")"
 
 	if echo "$HOSTNAME_PREFIX" | grep -Eq "[[:space:]]"; then
@@ -112,7 +116,7 @@ if [ -f "$HOSTNAME_PREFIX_FILE" ]; then
 	fi
 fi
 
-echo "Using hostname prefix '$HOSTNAME_PREFIX'"
+log_info "Using hostname prefix '$HOSTNAME_PREFIX'"
 
 if [ "$(id -u)" != 0 ] ; then
 	log_err "This program requires root access"
@@ -165,7 +169,7 @@ if ! has_hat_eeprom; then
 		fi
 	fi
 
-	echo "Reboot to activate the MAC Address"
+	log_info "Reboot to activate the MAC Address"
 fi
 
 if user_pi_exists; then
@@ -182,6 +186,7 @@ sed --follow-symlinks -r -i -e "s/^(127\.0\.1\.1[[:blank:]]+).*/\1$hostname/" "$
 echo "$hostname" > "$ROOT"/etc/hostname
 $MOCK hostname "$hostname"
 
+log_info "revpi-factory-reset successful!"
 echo "Be sure to write down the password if you have lost the sticker"
 echo "on your RevPi!"
 
