@@ -35,6 +35,34 @@ usage() {
 	exit "$1"
 }
 
+_log() {
+	typ="${1:-info}"
+	shift
+
+	msg=""
+	prefix=""
+	output=1
+
+	case "$typ" in
+		warn)
+			output=2
+			prefix="WARNING: "
+			;;
+		err)
+			output=2
+			prefix="ERROR: "
+			;;
+	esac
+
+	msg="$(printf "%s%s\n" "$prefix" "$*")"
+	printf "%s\n" "$msg" >&"$output"
+	$MOCK logger --id=$$ -t "$(basename "$0")" -p local0."$typ" "$msg"
+}
+
+log_err() {
+	_log err "$*"
+}
+
 normalise_mac() {
 	tr -d ':-' | tr 'A-F' 'a-f'
 }
@@ -69,7 +97,7 @@ else
 		! [[ "$ovl" =~ ^($FULL_DEVICETYPE_LIST)$ ]] ||
 		! [[ "$ser" =~ ^[0-9]+$ ]] ||
 		! [[ "$mac" =~ ^[0-9a-f]{12}$ ]] ; then
-		echo >&2 "$(basename "$0") must be called with all arguments because no HAT EEPROM is present"
+		log_err "$(basename "$0") must be called with all arguments because no HAT EEPROM is present"
 		usage 1 >&2
 	fi
 fi
@@ -79,7 +107,7 @@ if [ -f "$HOSTNAME_PREFIX_FILE" ]; then
 	HOSTNAME_PREFIX="$(head -n1 "$HOSTNAME_PREFIX_FILE")"
 
 	if echo "$HOSTNAME_PREFIX" | grep -Eq "[[:space:]]"; then
-		echo 1>&2 "Hostname prefix '$HOSTNAME_PREFIX' contains invalid characters"
+		log_err "Hostname prefix '$HOSTNAME_PREFIX' contains invalid characters"
 		exit 1
 	fi
 fi
@@ -87,7 +115,7 @@ fi
 echo "Using hostname prefix '$HOSTNAME_PREFIX'"
 
 if [ "$(id -u)" != 0 ] ; then
-	echo 1>&2 "This program requires root access"
+	log_err "This program requires root access"
 	exit 1
 fi
 
@@ -109,8 +137,8 @@ if ! has_hat_eeprom; then
 		for (( i=1; i<=wait_time; i++ ))
 		do
 			if [ "$i" = "$wait_time" ]; then
-				echo 1>&2 "Timeout while waiting for the TPM chip to become ready"
-				echo 1>&2 "The factory reset is stopped here!"
+				log_err "Timeout while waiting for the TPM chip to become ready"
+				log_err "The factory reset is stopped here!"
 				exit 1
 			fi
 			if [ -c /dev/tpm0 ]; then
