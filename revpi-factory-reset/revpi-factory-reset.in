@@ -107,9 +107,9 @@ if has_hat_eeprom; then
 	ser=$(cat "$ROOT"/proc/device-tree/hat/custom_1)
 else
 	if [ "$#" != 3 ] ||
-		! [[ "$ovl" =~ ^($FULL_DEVICETYPE_LIST)$ ]] ||
-		! [[ "$ser" =~ ^[0-9]+$ ]] ||
-		! [[ "$mac" =~ ^[0-9a-f]{12}$ ]] ; then
+		! echo "$ovl" | grep -qEx "($FULL_DEVICETYPE_LIST)" ||
+		! echo "$ser" | grep -qEx "[[:digit:]]+" ||
+		! echo "$mac" | grep -qEx "[[:xdigit:]]{12}"; then
 		log_err "$(basename "$0") must be called with all arguments because no HAT EEPROM is present"
 		usage 1 >&2
 	fi
@@ -150,42 +150,45 @@ if ! has_hat_eeprom; then
 		die "Cannot initialise device tree blob. Aborting."
 	fi
 
-	if [ "$ovl" == flat ]; then
+	if [ "$ovl" = flat ]; then
 		# wait for dtoverlay revpi-flat, and tpm modules get probed
 		wait_time=60
-		echo -n "Wait for tpm chip to become ready. Fail if the chip is not available after $wait_time seconds"
-		for (( i=1; i<=wait_time; i++ ))
-		do
+		i=0
+		printf "Wait for tpm chip to become ready. Fail if the chip is not available after %d seconds" "$wait_time"
+		while [ "$i" -le "$wait_time" ]; do
 			if [ "$i" = "$wait_time" ]; then
 				log_err "Timeout while waiting for the TPM chip to become ready"
 				die "The factory reset is stopped here!"
 			fi
 			if [ -c /dev/tpm0 ]; then
-				echo " ok"
+				printf " ok\n"
 				break
 			fi
-			echo -n "."
+			printf "."
 			sleep 1
+			i=$((i+1))
 		done
 	fi
 
-	mac_hi="${mac:0:2}${mac:2:2}${mac:4:2}${mac:6:2}"
-	mac_lo="${mac:8:2}${mac:10:2}"
-	if ! echo -e \
-		"dtparam=eth0_mac_hi=0x${mac_hi}\ndtparam=eth0_mac_lo=0x${mac_lo}" \
+	mac_hi="$(echo "$mac" | cut -c1-8)"
+	mac_lo="$(echo "$mac" | cut -c9-12)"
+	if ! printf \
+		"dtparam=eth0_mac_hi=0x%s\ndtparam=eth0_mac_lo=0x%s\n" \
+		"$mac_hi" "$mac_lo" \
 		>> "$RPI_FW_MOUNT/config.txt"; then
 		die "Unable to write MAC address for eth0 to $RPI_FW_MOUNT/config.txt. Aborting."
 	fi
 
-	if [[ "$ovl" =~ ^($WITHETH1_DEVICETYPE_LIST)$ ]] ; then
+	if echo "$ovl" | grep -qEx "($WITHETH1_DEVICETYPE_LIST)"; then
 		mac_lo1=$(( 0x${mac_lo} + 1))
-		mac_lo1=$(printf "%.4hx" "${mac_lo1}")
-		if ! echo -e \
-			"dtparam=eth1_mac_hi=0x${mac_hi}\ndtparam=eth1_mac_lo=0x${mac_lo1}" \
+		mac_lo1=$(printf "%.4x" "${mac_lo1}")
+		if ! printf \
+			"dtparam=eth1_mac_hi=0x%s\ndtparam=eth1_mac_lo=0x%s\n" \
+			"$mac_hi" "$mac_lo1" \
 			>> "$RPI_FW_MOUNT/config.txt"; then
 			die "Unable to write MAC address for eth1 to $RPI_FW_MOUNT/config.txt. Aborting."
 		fi
-		if [[ "$ovl" =~ ^compact$ ]] ; then
+		if [ "$ovl" = compact ] ; then
 			ks8851-set-mac eth1 "$mac_hi$mac_lo1"
 		fi
 	fi
@@ -198,7 +201,7 @@ if user_pi_exists; then
 	if ! echo "pi:${pw}" | chpasswd; then
 		die "Unable to change password for user 'pi'. Aborting."
 	fi
-	echo -e "Password:\t$pw"
+	printf "Password:\t%s\n" "$pw"
 else
 	log_warn "Cannot restore the default password, because the default user 'pi' is absent."
 fi
@@ -215,7 +218,7 @@ fi
 if ! $MOCK hostname "$hostname"; then
 	log_warn "Cannot activate hostname. A reboot is required."
 fi
-echo -e "Hostname:\t$hostname"
+printf "Hostname:\t%s\n" "$hostname"
 
 log_info "revpi-factory-reset successful!"
 echo "Be sure to write down the password if you have lost the sticker"
