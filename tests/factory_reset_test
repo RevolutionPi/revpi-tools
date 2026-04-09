@@ -15,6 +15,7 @@ atf_test_case factory_reset_state_file_created
 atf_test_case factory_reset_remove_sudoers_file
 atf_test_case factory_reset_remove_missing_sudoers_file
 atf_test_case factory_reset_no_hat_eeprom_eth0_configtxt
+atf_test_case factory_reset_no_hat_eeprom_eth1_configtxt
 atf_test_case factory_reset_force_state_file
 atf_test_case factory_reset_quirky_mac_format
 
@@ -264,6 +265,37 @@ factory_reset_no_hat_eeprom_eth0_configtxt_body() {
 		grep -qE 'dtparam=eth1_mac_(hi|lo)' boot/firmware/config.txt
 }
 
+factory_reset_no_hat_eeprom_eth1_configtxt_body() {
+	init_env
+
+	export PI_EXISTS=true
+	export TEST_UID=0
+
+	setup_configtxt
+	touch boot/firmware/overlays/revpi-connect-dt-blob.dtbo
+	setup_hosts_file
+
+	mkdir -p usr/share/revpi
+
+	export SYSCONFIG="$ROOT/etc"
+	setup_sudoers_file
+
+	export LIBDIR="$(atf_get_srcdir)"/../revpi-factory-reset
+	atf_check -s exit:0 \
+		-o ignore \
+		-e empty \
+		revpi-factory-reset -r "$ROOT" \
+			connect \
+			1 \
+			12:34:56:78:9A:BF
+
+	atf_check -s exit:0 \
+		-o match:"dtparam=eth1_mac_hi=0x12345678" \
+		-o match:"dtparam=eth1_mac_lo=0x9ac0" \
+		-e empty \
+		cat boot/firmware/config.txt
+}
+
 factory_reset_force_state_file_body() {
 	init_env
 
@@ -321,6 +353,7 @@ atf_init_test_cases() {
 	atf_add_test_case factory_reset_remove_sudoers_file
 	atf_add_test_case factory_reset_remove_missing_sudoers_file
 	atf_add_test_case factory_reset_no_hat_eeprom_eth0_configtxt
+	atf_add_test_case factory_reset_no_hat_eeprom_eth1_configtxt
 	atf_add_test_case factory_reset_force_state_file
 	atf_add_test_case factory_reset_quirky_mac_format
 }
