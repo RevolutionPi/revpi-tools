@@ -71,6 +71,11 @@ log_info() {
 	_log info "$*"
 }
 
+die() {
+	_log err "$*"
+	exit 1
+}
+
 normalise_mac() {
 	tr -d ':-' | tr 'A-F' 'a-f'
 }
@@ -115,28 +120,35 @@ if [ -f "$HOSTNAME_PREFIX_FILE" ]; then
 	HOSTNAME_PREFIX="$(head -n1 "$HOSTNAME_PREFIX_FILE")"
 
 	if echo "$HOSTNAME_PREFIX" | grep -Eq "[[:space:]]"; then
-		log_err "Hostname prefix '$HOSTNAME_PREFIX' contains invalid characters"
-		exit 1
+		die "Hostname prefix '$HOSTNAME_PREFIX' contains invalid characters"
 	fi
 fi
 
 log_info "Using hostname prefix '$HOSTNAME_PREFIX'"
 
 if [ "$(id -u)" != 0 ] ; then
-	log_err "This program requires root access"
-	exit 1
+	die "This program requires root access"
 fi
 
 # clean up config.txt before doing anything else
-sed --follow-symlinks -ri \
+if ! sed --follow-symlinks -ri \
 	-e "/^dtoverlay=revpi-($FULL_DEVICETYPE_LIST)/d" \
 	-e "/^dtparam=eth[0-9]_mac_/d" \
-	"$RPI_FW_MOUNT/config.txt"
+	"$RPI_FW_MOUNT/config.txt"; then
+	die "Unable to clean up $RPI_FW_MOUNT/config.txt. Aborting."
+fi
 
 if ! has_hat_eeprom; then
-	echo "dtoverlay=revpi-$ovl" >> "$RPI_FW_MOUNT/config.txt"
-	dtoverlay "revpi-$ovl"
-	cp "$RPI_FW_MOUNT/overlays/revpi-$ovl-dt-blob.dtbo" "$RPI_FW_MOUNT/dt-blob.bin" 2>/dev/null
+	if ! echo "dtoverlay=revpi-$ovl" >> "$RPI_FW_MOUNT/config.txt"; then
+		die "Unable to write device tree overlay to $RPI_FW_MOUNT/config.txt. Aborting."
+	fi
+	if ! dtoverlay "revpi-$ovl"; then
+		die "Unable to load device tree overlay. Aborting."
+	fi
+	if ! cp "$RPI_FW_MOUNT/overlays/revpi-$ovl-dt-blob.dtbo" \
+		"$RPI_FW_MOUNT/dt-blob.bin"; then
+		die "Cannot initialise device tree blob. Aborting."
+	fi
 
 	if [ "$ovl" == flat ]; then
 		# wait for dtoverlay revpi-flat, and tpm modules get probed
@@ -146,8 +158,7 @@ if ! has_hat_eeprom; then
 		do
 			if [ "$i" = "$wait_time" ]; then
 				log_err "Timeout while waiting for the TPM chip to become ready"
-				log_err "The factory reset is stopped here!"
-				exit 1
+				die "The factory reset is stopped here!"
 			fi
 			if [ -c /dev/tpm0 ]; then
 				echo " ok"
@@ -160,14 +171,20 @@ if ! has_hat_eeprom; then
 
 	mac_hi="${mac:0:2}${mac:2:2}${mac:4:2}${mac:6:2}"
 	mac_lo="${mac:8:2}${mac:10:2}"
-	echo "dtparam=eth0_mac_hi=0x${mac_hi}" >> "$RPI_FW_MOUNT/config.txt"
-	echo "dtparam=eth0_mac_lo=0x${mac_lo}" >> "$RPI_FW_MOUNT/config.txt"
+	if ! echo -e \
+		"dtparam=eth0_mac_hi=0x${mac_hi}\ndtparam=eth0_mac_lo=0x${mac_lo}" \
+		>> "$RPI_FW_MOUNT/config.txt"; then
+		die "Unable to write MAC address for eth0 to $RPI_FW_MOUNT/config.txt. Aborting."
+	fi
 
 	if [[ "$ovl" =~ ^($WITHETH1_DEVICETYPE_LIST)$ ]] ; then
 		mac_lo1=$(( 0x${mac_lo} + 1))
 		mac_lo1=$(printf "%.4hx" "${mac_lo1}")
-		echo "dtparam=eth1_mac_hi=0x${mac_hi}" >> "$RPI_FW_MOUNT/config.txt"
-		echo "dtparam=eth1_mac_lo=0x${mac_lo1}" >> "$RPI_FW_MOUNT/config.txt"
+		if ! echo -e \
+			"dtparam=eth1_mac_hi=0x${mac_hi}\ndtparam=eth1_mac_lo=0x${mac_lo1}" \
+			>> "$RPI_FW_MOUNT/config.txt"; then
+			die "Unable to write MAC address for eth1 to $RPI_FW_MOUNT/config.txt. Aborting."
+		fi
 		if [[ "$ovl" =~ ^compact$ ]] ; then
 			ks8851-set-mac eth1 "$mac_hi$mac_lo1"
 		fi
@@ -178,19 +195,27 @@ fi
 
 if user_pi_exists; then
 	pw="$(piSerial -p)"
+	if ! echo "pi:${pw}" | chpasswd; then
+		die "Unable to change password for user 'pi'. Aborting."
+	fi
 	echo -e "Password:\t$pw"
-	echo "pi:${pw}" | chpasswd
 else
 	log_warn "Cannot restore the default password, because the default user 'pi' is absent."
 fi
 
 hostname="$HOSTNAME_PREFIX$ser"
-echo -e "Hostname:\t$hostname"
-sed --follow-symlinks -r -i -e "s/^(127\.0\.1\.1[[:blank:]]+).*/\1$hostname/" "$ROOT"/etc/hosts
-echo "$hostname" > "$ROOT"/etc/hostname
+if ! sed --follow-symlinks -r -i \
+	-e "s/^(127\.0\.1\.1[[:blank:]]+).*/\1$hostname/" \
+	"$ROOT"/etc/hosts; then
+	die "Unable to write to /etc/hosts. Aborting."
+fi
+if ! echo "$hostname" > "$ROOT"/etc/hostname; then
+	die "Unable to change hostname. Aborting."
+fi
 if ! $MOCK hostname "$hostname"; then
 	log_warn "Cannot activate hostname. A reboot is required."
 fi
+echo -e "Hostname:\t$hostname"
 
 log_info "revpi-factory-reset successful!"
 echo "Be sure to write down the password if you have lost the sticker"
