@@ -281,6 +281,10 @@ factory_reset_no_hat_eeprom_eth0_configtxt_body() {
 	touch boot/firmware/overlays/revpi-core-dt-blob.dtbo
 	setup_hosts_file
 
+	mkdir -p proc/device-tree
+	printf "kunbus,revpi-core\0revpi-core\0brcm,bcm2837" \
+		> proc/device-tree/compatible
+
 	mkdir -p usr/share/revpi
 
 	export SYSCONFIG="$ROOT/etc"
@@ -321,6 +325,10 @@ factory_reset_no_hat_eeprom_eth1_configtxt_body() {
 	setup_hosts_file
 
 	mkdir -p usr/share/revpi
+
+	mkdir -p proc/device-tree
+	printf "kunbus,revpi-connect\0revpi-connect\0brcm,bcm2837" \
+		> proc/device-tree/compatible
 
 	export SYSCONFIG="$ROOT/etc"
 	setup_sudoers_file
@@ -370,6 +378,10 @@ factory_reset_quirky_mac_format_body() {
 	setup_configtxt
 	touch boot/firmware/overlays/revpi-core-dt-blob.dtbo
 	setup_hosts_file
+
+	mkdir -p proc/device-tree
+	printf "kunbus,revpi-core\0revpi-core\0brcm,bcm2837" \
+		> proc/device-tree/compatible
 
 	mkdir -p usr/share/revpi
 
