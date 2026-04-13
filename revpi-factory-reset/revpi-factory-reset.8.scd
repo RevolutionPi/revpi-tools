@@ -69,6 +69,9 @@ labelled as "MAC ADD". Only the first address listed here is required.
 
 *revpi-factory-reset* returns _0_ on success and _1_ when an error occurs.
 
+If the file _/usr/share/revpi/factory-reset_ exists and *revpi-factory-reset* is
+run it is a no-op and returns _0_.
+
 # FILES
 
 - _/proc/device-tree/hat/custom_1_
