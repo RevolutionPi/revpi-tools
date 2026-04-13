@@ -7,6 +7,8 @@
 . $(atf_get_srcdir)/test_env.sh
 
 atf_test_case factory_reset_hat_eeprom
+atf_test_case factory_reset_hat_eeprom_write_serial_number
+atf_test_case factory_reset_hat_eeprom_write_mac_address
 atf_test_case factory_reset_custom_hostname_prefix
 atf_test_case factory_reset_no_hostname_output_already_ran
 atf_test_case factory_reset_state_file
@@ -69,6 +71,47 @@ factory_reset_hat_eeprom_body() {
 
 	atf_check_equal "127.0.1.1 RevPi1" "$(cat etc/hosts)"
 	atf_check_equal "" "$(cat boot/firmware/config.txt)"
+}
+
+factory_reset_hat_eeprom_write_serial_number_body() {
+	init_env
+
+	export PI_EXISTS=true
+	export TEST_UID=0
+
+	setup_hat_eeprom
+	setup_configtxt
+	setup_hosts_file
+
+	mkdir -p usr/share/revpi
+
+	export LIBDIR="$(atf_get_srcdir)"/../revpi-factory-reset
+	atf_check -s exit:0 \
+		-o ignore \
+		revpi-factory-reset -r "$ROOT"
+
+	atf_check_equal "1" "$(cat usr/share/revpi/devinfo/serial-number)"
+}
+
+factory_reset_hat_eeprom_write_mac_address_body() {
+	init_env
+
+	export PI_EXISTS=true
+	export TEST_UID=0
+
+	setup_hat_eeprom
+	setup_configtxt
+	setup_hosts_file
+
+	mkdir -p usr/share/revpi
+
+	export LIBDIR="$(atf_get_srcdir)"/../revpi-factory-reset
+	atf_check -s exit:0 \
+		-o ignore \
+		revpi-factory-reset -r "$ROOT"
+
+	atf_check_equal "12:34:56:78:9A:BC" \
+		"$(cat usr/share/revpi/devinfo/base-mac-address)"
 }
 
 factory_reset_default_hostname_body() {
@@ -366,6 +409,8 @@ factory_reset_default_user_absent_body() {
 
 atf_init_test_cases() {
 	atf_add_test_case factory_reset_hat_eeprom
+	atf_add_test_case factory_reset_hat_eeprom_write_serial_number
+	atf_add_test_case factory_reset_hat_eeprom_write_mac_address
 	atf_add_test_case factory_reset_custom_hostname_prefix
 	atf_add_test_case factory_reset_no_hostname_output_already_ran
 	atf_add_test_case factory_reset_state_file
