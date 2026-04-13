@@ -8,13 +8,14 @@
 # MAC address of a RevPi to factory defaults
 
 : ${DATADIR='@DATADIR@'}
+: ${REVPI_DATADIR="$DATADIR"/revpi}
 : ${SYSCONFDIR='@SYSCONFDIR@'}
-: ${LIBDIR="$DATADIR"/revpi}
+: ${LIBDIR="$REVPI_DATADIR"}
 
 . "$LIBDIR"/revpi-functions
 
 RPI_FW_MOUNT="$ROOT"/boot/firmware
-HOSTNAME_PREFIX_FILE="$DATADIR/revpi/hostname"
+HOSTNAME_PREFIX_FILE="$REVPI_DATADIR/hostname"
 FULL_DEVICETYPE_LIST="compact|connect|core|flat|connect-se"	# all suported devices
 WITHETH1_DEVICETYPE_LIST="compact|connect|flat|connect-se"	# devices with "eth1"
 
@@ -91,7 +92,7 @@ done
 shift $((OPTIND-1))
 
 if [ -z "$FORCE" ] \
-	&& [ -r "$DATADIR"/revpi/factory-reset ]; then
+	&& [ -r "$REVPI_DATADIR"/factory-reset ]; then
 	log_info "revpi-factory-reset was already run on this device. Skipping."
 
 	exit 0
@@ -225,7 +226,7 @@ echo "Be sure to write down the password if you have lost the sticker"
 echo "on your RevPi!"
 
 # skip /etc/profile.d/revpi-factory-reset.sh on future logins
-true > "$DATADIR/revpi/factory-reset"
+true > "$REVPI_DATADIR/factory-reset"
 
 # Remove sudoers rule for revpi-factory-reset.
 # Allows passwordless execution only on first boot.
