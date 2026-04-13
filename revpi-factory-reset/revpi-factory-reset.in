@@ -147,7 +147,7 @@ if ! has_hat_eeprom; then
 	fi
 	# load device tree overlay if it is not already loaded
 	if ! grep -qz revpi-"$ovl" "$ROOT"/proc/device-tree/compatible \
-		&& ! dtoverlay "revpi-$ovl"; then
+		&& ! $MOCK dtoverlay "revpi-$ovl"; then
 		die "Unable to load device tree overlay. Aborting."
 	fi
 	if ! cp "$RPI_FW_MOUNT/overlays/revpi-$ovl-dt-blob.dtbo" \

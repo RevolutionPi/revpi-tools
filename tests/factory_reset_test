@@ -21,6 +21,8 @@ atf_test_case factory_reset_no_hat_eeprom_eth1_configtxt
 atf_test_case factory_reset_force_state_file
 atf_test_case factory_reset_quirky_mac_format
 atf_test_case factory_reset_default_user_absent
+atf_test_case factory_reset_no_hat_eeprom_dtoverlay
+atf_test_case factory_reset_no_hat_eeprom_no_dtoverlay
 
 setup_hat_eeprom() {
 	mkdir -p proc/device-tree/hat
@@ -419,6 +421,63 @@ factory_reset_default_user_absent_body() {
 		revpi-factory-reset -r "$ROOT"
 }
 
+factory_reset_no_hat_eeprom_dtoverlay_body() {
+	init_env
+
+	export PI_EXISTS=true
+	export TEST_UID=0
+
+	setup_configtxt
+	touch boot/firmware/overlays/revpi-connect-dt-blob.dtbo
+	setup_hosts_file
+
+	mkdir -p usr/share/revpi
+
+	mkdir -p proc/device-tree
+	touch proc/device-tree/compatible
+
+	export SYSCONFIG="$ROOT/etc"
+	setup_sudoers_file
+
+	export LIBDIR="$(atf_get_srcdir)"/../revpi-factory-reset
+	atf_check -s exit:0 \
+		-o match:"^dtoverlay revpi-connect$" \
+		-e empty \
+		revpi-factory-reset -r "$ROOT" \
+			connect \
+			1 \
+			12:34:56:78:9A:BF
+}
+
+factory_reset_no_hat_eeprom_no_dtoverlay_body() {
+	init_env
+
+	export PI_EXISTS=true
+	export TEST_UID=0
+
+	setup_configtxt
+	touch boot/firmware/overlays/revpi-connect-dt-blob.dtbo
+	setup_hosts_file
+
+	mkdir -p usr/share/revpi
+
+	mkdir -p proc/device-tree
+	printf "kunbus,revpi-connect\0revpi-connect\0brcm,bcm2837" \
+		> proc/device-tree/compatible
+
+	export SYSCONFIG="$ROOT/etc"
+	setup_sudoers_file
+
+	export LIBDIR="$(atf_get_srcdir)"/../revpi-factory-reset
+	atf_check -s exit:0 \
+		-o not-match:"^dtoverlay revpi-connect$" \
+		-e empty \
+		revpi-factory-reset -r "$ROOT" \
+			connect \
+			1 \
+			12:34:56:78:9A:BF
+}
+
 atf_init_test_cases() {
 	atf_add_test_case factory_reset_hat_eeprom
 	atf_add_test_case factory_reset_hat_eeprom_write_serial_number
@@ -435,4 +494,6 @@ atf_init_test_cases() {
 	atf_add_test_case factory_reset_force_state_file
 	atf_add_test_case factory_reset_quirky_mac_format
 	atf_add_test_case factory_reset_default_user_absent
+	atf_add_test_case factory_reset_no_hat_eeprom_dtoverlay
+	atf_add_test_case factory_reset_no_hat_eeprom_no_dtoverlay
 }

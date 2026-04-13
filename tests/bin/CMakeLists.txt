@@ -4,7 +4,6 @@
 
 set(copy_files
 	chpasswd
-	dtoverlay
 	getent
 	id
 	piSerial
