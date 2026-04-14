@@ -49,7 +49,7 @@ do_gui() {
 		return
 		;;
 	available)
-		if [ -e /usr/bin/startx ]; then
+		if [ -e /usr/bin/startx ] || [ -e /usr/bin/labwc ]; then
 			return 1
 		else
 			return 0
