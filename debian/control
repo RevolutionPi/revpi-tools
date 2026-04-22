@@ -26,7 +26,7 @@ Depends:
   e2fsprogs,
   ethtool,
   iproute2,
-  raspi-utils,
+  raspi-utils-dt,
   piserial (>= 3.0.0),
   python3-ftdi1,
   sudo,
