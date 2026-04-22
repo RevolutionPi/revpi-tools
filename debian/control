@@ -47,8 +47,7 @@ Description: Revolution Pi tools
  Assorted tools and support files for Revolution Pi products:
  .
   * scripts to enable/disable the relay watchdog on the RevPi Connect
-  * revpi-factory-reset is used to finalize a RevPi after the factory end
-    of line test
+  * revpi-factory-reset is used to initialize a RevPi during initial operation
  .
  Revolution Pi is a set of IoT products based on the Raspberry Pi and
  geared towards industrial usage.
