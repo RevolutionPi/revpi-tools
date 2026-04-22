@@ -47,8 +47,6 @@ Description: Revolution Pi tools
  Assorted tools and support files for Revolution Pi products:
  .
   * scripts to enable/disable the relay watchdog on the RevPi Connect
-  * sosreport plugin to collect Revolution Pi related system information
-    which can be submitted to Kunbus as part of a support request
   * revpi-factory-reset is used to finalize a RevPi after the factory end
     of line test
  .
