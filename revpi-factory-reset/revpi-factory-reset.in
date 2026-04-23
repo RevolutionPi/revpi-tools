@@ -18,7 +18,6 @@
 RPI_FW_MOUNT="$ROOT"/boot/firmware
 HOSTNAME_PREFIX_FILE="$REVPI_DATADIR/hostname"
 FULL_DEVICETYPE_LIST="compact|connect|core|flat|connect-se"	# all suported devices
-WITHETH1_DEVICETYPE_LIST="compact|connect|flat|connect-se"	# devices with "eth1"
 
 HOSTNAME_PREFIX="RevPi"
 
@@ -173,29 +172,6 @@ if ! has_hat_eeprom; then
 			sleep 1
 			i=$((i+1))
 		done
-	fi
-
-	mac_hi="$(echo "$mac" | cut -c1-8)"
-	mac_lo="$(echo "$mac" | cut -c9-12)"
-	if ! printf \
-		"dtparam=eth0_mac_hi=0x%s\ndtparam=eth0_mac_lo=0x%s\n" \
-		"$mac_hi" "$mac_lo" \
-		>> "$RPI_FW_MOUNT/config.txt"; then
-		die "Unable to write MAC address for eth0 to $RPI_FW_MOUNT/config.txt. Aborting."
-	fi
-
-	if echo "$ovl" | grep -qEx "($WITHETH1_DEVICETYPE_LIST)"; then
-		mac_lo1=$(( 0x${mac_lo} + 1))
-		mac_lo1=$(printf "%.4x" "${mac_lo1}")
-		if ! printf \
-			"dtparam=eth1_mac_hi=0x%s\ndtparam=eth1_mac_lo=0x%s\n" \
-			"$mac_hi" "$mac_lo1" \
-			>> "$RPI_FW_MOUNT/config.txt"; then
-			die "Unable to write MAC address for eth1 to $RPI_FW_MOUNT/config.txt. Aborting."
-		fi
-		if [ "$ovl" = compact ] ; then
-			ks8851-set-mac eth1 "$mac_hi$mac_lo1"
-		fi
 	fi
 
 	log_info "Reboot to activate the MAC Address"

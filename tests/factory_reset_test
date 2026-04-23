@@ -16,8 +16,6 @@ atf_test_case factory_reset_default_hostname
 atf_test_case factory_reset_state_file_created
 atf_test_case factory_reset_remove_sudoers_file
 atf_test_case factory_reset_remove_missing_sudoers_file
-atf_test_case factory_reset_no_hat_eeprom_eth0_configtxt
-atf_test_case factory_reset_no_hat_eeprom_eth1_configtxt
 atf_test_case factory_reset_force_state_file
 atf_test_case factory_reset_quirky_mac_format
 atf_test_case factory_reset_default_user_absent
@@ -273,84 +271,6 @@ factory_reset_remove_missing_sudoers_file_body() {
 		revpi-factory-reset -r "$ROOT"
 }
 
-factory_reset_no_hat_eeprom_eth0_configtxt_body() {
-	init_env
-
-	export PI_EXISTS=true
-	export TEST_UID=0
-
-	setup_configtxt
-	touch boot/firmware/overlays/revpi-core-dt-blob.dtbo
-	setup_hosts_file
-
-	mkdir -p proc/device-tree
-	printf "kunbus,revpi-core\0revpi-core\0brcm,bcm2837" \
-		> proc/device-tree/compatible
-
-	mkdir -p usr/share/revpi
-
-	export SYSCONFIG="$ROOT/etc"
-	setup_sudoers_file
-
-	export LIBDIR="$(atf_get_srcdir)"/../revpi-factory-reset
-	atf_check -s exit:0 \
-		-o match:"Password:.*pass" \
-		-o match:"chpasswd pi:pass" \
-		-o match:"Hostname:.*RevPi1" \
-		-o match:"hostname RevPi1" \
-		-e empty \
-		revpi-factory-reset -r "$ROOT" \
-			core \
-			1 \
-			12:34:56:78:9A:BC
-
-	atf_check -s exit:0 \
-		-o match:"dtparam=eth0_mac_hi=0x12345678" \
-		-o match:"dtparam=eth0_mac_lo=0x9abc" \
-		-e empty \
-		cat boot/firmware/config.txt
-
-	atf_check -s exit:1 \
-		-o empty \
-		-e empty \
-		grep -qE 'dtparam=eth1_mac_(hi|lo)' boot/firmware/config.txt
-}
-
-factory_reset_no_hat_eeprom_eth1_configtxt_body() {
-	init_env
-
-	export PI_EXISTS=true
-	export TEST_UID=0
-
-	setup_configtxt
-	touch boot/firmware/overlays/revpi-connect-dt-blob.dtbo
-	setup_hosts_file
-
-	mkdir -p usr/share/revpi
-
-	mkdir -p proc/device-tree
-	printf "kunbus,revpi-connect\0revpi-connect\0brcm,bcm2837" \
-		> proc/device-tree/compatible
-
-	export SYSCONFIG="$ROOT/etc"
-	setup_sudoers_file
-
-	export LIBDIR="$(atf_get_srcdir)"/../revpi-factory-reset
-	atf_check -s exit:0 \
-		-o ignore \
-		-e empty \
-		revpi-factory-reset -r "$ROOT" \
-			connect \
-			1 \
-			12:34:56:78:9A:BF
-
-	atf_check -s exit:0 \
-		-o match:"dtparam=eth1_mac_hi=0x12345678" \
-		-o match:"dtparam=eth1_mac_lo=0x9ac0" \
-		-e empty \
-		cat boot/firmware/config.txt
-}
-
 factory_reset_force_state_file_body() {
 	init_env
 
@@ -396,10 +316,9 @@ factory_reset_quirky_mac_format_body() {
 			ab-Cd--ef::12:a8-ff
 
 	atf_check -s exit:0 \
-		-o match:"dtparam=eth0_mac_hi=0xabcdef12" \
-		-o match:"dtparam=eth0_mac_lo=0xa8ff" \
+		-o inline:"AB:CD:EF:12:A8:FF" \
 		-e empty \
-		cat boot/firmware/config.txt
+		cat usr/share/revpi/devinfo/base-mac-address
 }
 
 factory_reset_default_user_absent_body() {
@@ -489,8 +408,6 @@ atf_init_test_cases() {
 	atf_add_test_case factory_reset_state_file_created
 	atf_add_test_case factory_reset_remove_sudoers_file
 	atf_add_test_case factory_reset_remove_missing_sudoers_file
-	atf_add_test_case factory_reset_no_hat_eeprom_eth0_configtxt
-	atf_add_test_case factory_reset_no_hat_eeprom_eth1_configtxt
 	atf_add_test_case factory_reset_force_state_file
 	atf_add_test_case factory_reset_quirky_mac_format
 	atf_add_test_case factory_reset_default_user_absent
