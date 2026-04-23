@@ -5,16 +5,45 @@ set -e
 BOOKWORM_FACTORY_RESET_FLAG_FILE=/etc/revpi/factory-reset
 FACTORY_RESET_FLAG_FILE=/usr/share/revpi/factory-reset
 
+HAT_EEPROM_MAC_FILE=/proc/device-tree/hat/custom_5
+DEVINFO_MAC_FILE=/usr/share/revpi/devinfo/base-mac-address
+CONFIGTXT=/boot/firmware/config.txt
+
 if [ "$1" = configure ]; then
 	# move the factory reset file from the old location to the new one if:
 	# - the package has been configured before
 	# - the package has last been configured with a version smaller than 5.0.0
 	# - the flag file is in the old location
 	# - the flag file isn't in the new location
-	if dpkg --compare-versions "$2" lt-nl 5.0.0 \
-		&& [ ! -e "$FACTORY_RESET_FLAG_FILE" ] \
-		&& [ -e "$BOOKWORM_FACTORY_RESET_FLAG_FILE" ]; then
-		mv "$BOOKWORM_FACTORY_RESET_FLAG_FILE" "$FACTORY_RESET_FLAG_FILE"
+	if dpkg --compare-versions "$2" lt-nl 5.0.0; then
+		if [ ! -e "$FACTORY_RESET_FLAG_FILE" ] \
+			&& [ -e "$BOOKWORM_FACTORY_RESET_FLAG_FILE" ]; then
+			mv "$BOOKWORM_FACTORY_RESET_FLAG_FILE" "$FACTORY_RESET_FLAG_FILE"
+		fi
+
+		if [ ! -e "$DEVINFO_MAC_FILE" ]; then
+			if [ -e "$HAT_EEPROM_MAC_FILE" ]; then
+				mkdir -p $(dirname $DEVINFO_MAC_FILE)
+				cp "$HAT_EEPROM_MAC_FILE" "$DEVINFO_MAC_FILE"
+			else
+				# variables are empty on error with sed
+				mac_hi="$(sed -n '/^dtparam=eth0_mac_hi=0x/ s/.*=0x\(.*\)$/\1/p' "$CONFIGTXT")"
+				mac_lo="$(sed -n '/^dtparam=eth0_mac_lo=0x/ s/.*=0x\(.*\)$/\1/p' "$CONFIGTXT")"
+
+				if [ -n "$mac_hi" ] && [ -n "$mac_lo" ]; then
+					mkdir -p $(dirname $DEVINFO_MAC_FILE)
+					printf "%s%s" "$mac_hi" "$mac_lo" \
+						| tr '[:lower:]' '[:upper:]' \
+						| sed 's/../&:/g' \
+						| cut -c1-17 > "$DEVINFO_MAC_FILE"
+
+					sed -Ei '/^dtparam=eth[[:digit:]]_mac_(hi|lo)=0x.*$/d' "$CONFIGTXT" || true
+				else
+					printf "MAC address not found in file '%s'. Not writing MAC address to '%s'" \
+						"$CONFIGTXT" "$DEVINFO_MAC_FILE" >&2
+				fi
+			fi
+		fi
 	fi
 fi
 
