@@ -1,0 +1,21 @@
+#!/bin/sh
+
+set -e
+
+BOOKWORM_FACTORY_RESET_FLAG_FILE=/etc/revpi/factory-reset
+FACTORY_RESET_FLAG_FILE=/usr/share/revpi/factory-reset
+
+if [ "$1" = configure ]; then
+	# move the factory reset file from the old location to the new one if:
+	# - the package has been configured before
+	# - the package has last been configured with a version smaller than 5.0.0
+	# - the flag file is in the old location
+	# - the flag file isn't in the new location
+	if dpkg --compare-versions "$2" lt-nl 5.0.0 \
+		&& [ ! -e "$FACTORY_RESET_FLAG_FILE" ] \
+		&& [ -e "$BOOKWORM_FACTORY_RESET_FLAG_FILE" ]; then
+		mv "$BOOKWORM_FACTORY_RESET_FLAG_FILE" "$FACTORY_RESET_FLAG_FILE"
+	fi
+fi
+
+exit 0
