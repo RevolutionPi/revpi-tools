@@ -1,3 +1,59 @@
+revpi-tools (5.0.0-1+deb13+1) trixie; urgency=medium
+
+  [ Sven Sager ]
+  * fix(revpi-config): Add support for detecting labwc
+
+  [ Thomas Böhler ]
+  * feat!(factory-reset): set flag in datadir
+  * feat!(factory-reset): remove CM1 handling
+  * feat(factory-reset): don't clear screen
+  * refactor(factory-reset): verify before running
+  * refactor(factory-reset): clean up config.txt first
+  * refactor(factory-reset): simplify HAT EEPROM logic
+  * feat!(factory-reset): don't print MAC address
+  * refactor(factory-reset): remove unneeded var
+  * feat(factory-reset): add flag -f
+  * test(factory-reset): check config.txt eth0 conf
+  * refactor(factory-reset): remove superfluous var
+  * refactor(revpi-functions): simplify has_hat_eeprom
+  * feat(factory-reset): log to syslog
+  * feat(factory-reset): add log_info function
+  * feat(factory-reset): add log_warn function
+  * feat(factory-reset): die on error
+  * test: confine tests only to build directory
+  * test(factory-reset): put setups into functions
+  * test(factory-reset): add test for -f flag
+  * test(factory-reset): allow quirky MAC addresses
+  * test(factory-reset): check config.txt eth1 conf
+  * test(factory-reset): allow pi user to be missing
+  * test(factory-reset): add pi user absent test
+  * refactor(factory-reset): remove bashisms
+  * feat(factory-reset): use sh, not bash
+  * refactor(factory-reset): introduce REVPI_DATADIR
+
+  [ Marc Kittner ]
+  * feat: Persist Serial Number and Mac Address
+
+  [ Thomas Böhler ]
+  * test(factory-reset): add tests for devinfo dir
+  * fix(factory-reset): load dtoverlay if not loaded
+  * test(factory-reset): add device-tree compatible
+  * test(factory-reset): dtoverlay if not loaded
+  * ci: increase GIT_DEPTH to 35
+  * doc(factory-reset): add note about reruns
+  * feat!(factory-reset): don't put MAC into configtxt
+  * fix(factory-reset): use character classes for tr
+  * fix(deb): remove sosreport mention in description
+  * fix(deb): mention factory-reset initialize in descr
+  * fix(deb): depend on raspi-utils-dt specifically
+  * feat(deb): move flag file to new location
+  * feat(deb): install base MAC address to devinfo
+
+  [ Ramiro Gsponer ]
+  * fix(deb): break on revpi-base-files << 3.0.0
+
+ -- Ramiro Gsponer <r.gsponer@kunbus.com>  Fri, 24 Apr 2026 12:40:53 +0200
+
 revpi-tools (4.5.4-1+deb13+1) trixie; urgency=medium
 
   * Initial release for trixie
