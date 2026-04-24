@@ -6,8 +6,8 @@ revpi-factory-reset(8)
 
 # SYNOPSIS
 
-*revpi-factory-reset*++
-*revpi-factory-reset* _core|connect|connect-se|flat|compact_ _serial_nr_ _mac_address_
+*revpi-factory-reset* [-f]++
+*revpi-factory-reset* [-f] _core|connect|connect-se|flat|compact_ _serial_nr_ _mac_address_
 
 # DESCRIPTION
 
@@ -20,6 +20,8 @@ encompasses the following tasks:
 - resetting the default password of the user _pi_ *if the user exists*
 - setting the hostname
 - setting the MAC address of the Ethernet interfaces
+- saving the base MAC address and serial number of the device in
+_/usr/share/revpi/devinfo/_ for later use
 
 The first form, without arguments, can be used when a HAT EEPROM is present, as
 it already contains all the information that would otherwise be required from
@@ -37,6 +39,13 @@ INFORMATION*.
 The default hostname prefix for the hostname is _RevPi_. If this should be
 changed to something else the file _/usr/share/revpi/hostname_ can be filled
 with the content being only the desired prefix on the first line of the file.
+
+# OPTIONS
+
+revpi-factory-reset accepts the following options.
+
+*-f*
+	Force running revpi-factory-reset even if it already ran before.
 
 # FINDING REQUIRED INFORMATION
 
@@ -60,9 +69,13 @@ labelled as "MAC ADD". Only the first address listed here is required.
 
 *revpi-factory-reset* returns _0_ on success and _1_ when an error occurs.
 
+If the file _/usr/share/revpi/factory-reset_ exists and *revpi-factory-reset* is
+run it is a no-op and returns _0_.
+
 # FILES
 
 - _/proc/device-tree/hat/custom_1_
+- _/proc/device-tree/hat/custom_5_
 - _/boot/firmware/config.txt_
 - _/boot/firmware/dt-blob.bin_
 - _/dev/tpm0_
@@ -70,7 +83,9 @@ labelled as "MAC ADD". Only the first address listed here is required.
 - _/etc/shadow_
 - _/etc/hosts_
 - _/etc/hostname_
-- _/etc/revpi/factory-reset_
+- _/usr/share/revpi/factory-reset_
+- _/usr/share/revpi/devinfo/base-mac-address_
+- _/usr/share/revpi/devinfo/serial-number_
 
 # EXAMPLES
 

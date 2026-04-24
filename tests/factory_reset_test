@@ -1,12 +1,14 @@
 #!/usr/bin/env atf-sh
 
-# SPDX-FileCopyrightText: 2025 KUNBUS GmbH
+# SPDX-FileCopyrightText: 2025-2026 KUNBUS GmbH
 #
 # SPDX-License-Identifier: GPL-2.0-or-later
 
 . $(atf_get_srcdir)/test_env.sh
 
 atf_test_case factory_reset_hat_eeprom
+atf_test_case factory_reset_hat_eeprom_write_serial_number
+atf_test_case factory_reset_hat_eeprom_write_mac_address
 atf_test_case factory_reset_custom_hostname_prefix
 atf_test_case factory_reset_no_hostname_output_already_ran
 atf_test_case factory_reset_state_file
@@ -14,6 +16,37 @@ atf_test_case factory_reset_default_hostname
 atf_test_case factory_reset_state_file_created
 atf_test_case factory_reset_remove_sudoers_file
 atf_test_case factory_reset_remove_missing_sudoers_file
+atf_test_case factory_reset_force_state_file
+atf_test_case factory_reset_quirky_mac_format
+atf_test_case factory_reset_default_user_absent
+atf_test_case factory_reset_no_hat_eeprom_dtoverlay
+atf_test_case factory_reset_no_hat_eeprom_no_dtoverlay
+
+setup_hat_eeprom() {
+	mkdir -p proc/device-tree/hat
+	# HAT EEPROM present on device and serial number is "1"
+	echo "1" > proc/device-tree/hat/custom_1
+	echo "12:34:56:78:9A:BC" > proc/device-tree/hat/custom_5
+}
+
+setup_configtxt() {
+	mkdir -p boot/firmware/overlays
+	# fill config.txt with bogus mac addresses that will just be removed on
+	# devices with HAT EEPROM
+	echo -e "dtparam=eth0_mac_\ndtparam=eth1_mac_" > boot/firmware/config.txt
+}
+
+setup_hosts_file() {
+	mkdir -p etc
+	# standard hosts file, hostname will be updated
+	echo "127.0.1.1 localhost" > etc/hosts
+}
+
+setup_sudoers_file() {
+	# Simulate the sudoers file
+	mkdir -p "$SYSCONFIG/sudoers.d"
+	echo "pi ALL = (root) NOPASSWD: /usr/sbin/revpi-factory-reset *" > "$SYSCONFIG/sudoers.d/051_revpi-factory-reset"
+}
 
 factory_reset_hat_eeprom_body() {
 	init_env
@@ -21,21 +54,12 @@ factory_reset_hat_eeprom_body() {
 	export PI_EXISTS=true
 	export TEST_UID=0
 
-	mkdir -p proc/device-tree/hat
-	# HAT EEPROM present on device and serial number is "1"
-	echo "1" > proc/device-tree/hat/custom_1
-
-	mkdir -p boot/firmware
-	# fill config.txt with bogus mac addresses that will just be removed on
-	# devices with HAT EEPROM
-	echo -e "dtparam=eth0_mac_\ndtparam=eth1_mac_" > boot/firmware/config.txt
-
-	mkdir -p etc
-	# standard hosts file, hostname will be updated
-	echo "127.0.1.1 localhost" > etc/hosts
+	setup_hat_eeprom
+	setup_configtxt
+	setup_hosts_file
 
 	# directory for state file
-	mkdir -p etc/revpi
+	mkdir -p usr/share/revpi
 
 	export LIBDIR="$(atf_get_srcdir)"/../revpi-factory-reset
 	atf_check -s exit:0 \
@@ -49,27 +73,59 @@ factory_reset_hat_eeprom_body() {
 	atf_check_equal "" "$(cat boot/firmware/config.txt)"
 }
 
+factory_reset_hat_eeprom_write_serial_number_body() {
+	init_env
+
+	export PI_EXISTS=true
+	export TEST_UID=0
+
+	setup_hat_eeprom
+	setup_configtxt
+	setup_hosts_file
+
+	mkdir -p usr/share/revpi
+
+	export LIBDIR="$(atf_get_srcdir)"/../revpi-factory-reset
+	atf_check -s exit:0 \
+		-o ignore \
+		revpi-factory-reset -r "$ROOT"
+
+	atf_check_equal "1" "$(cat usr/share/revpi/devinfo/serial-number)"
+}
+
+factory_reset_hat_eeprom_write_mac_address_body() {
+	init_env
+
+	export PI_EXISTS=true
+	export TEST_UID=0
+
+	setup_hat_eeprom
+	setup_configtxt
+	setup_hosts_file
+
+	mkdir -p usr/share/revpi
+
+	export LIBDIR="$(atf_get_srcdir)"/../revpi-factory-reset
+	atf_check -s exit:0 \
+		-o ignore \
+		revpi-factory-reset -r "$ROOT"
+
+	atf_check_equal "12:34:56:78:9A:BC" \
+		"$(cat usr/share/revpi/devinfo/base-mac-address)"
+}
+
 factory_reset_default_hostname_body() {
 	init_env
 
 	export PI_EXISTS=true
 	export TEST_UID=0
 
-	mkdir -p proc/device-tree/hat
-	# HAT EEPROM present on device and serial number is "1"
-	echo "1" > proc/device-tree/hat/custom_1
-
-	mkdir -p boot/firmware
-	# fill config.txt with bogus mac addresses that will just be removed on
-	# devices with HAT EEPROM
-	echo -e "dtparam=eth0_mac_\ndtparam=eth1_mac_" > boot/firmware/config.txt
-
-	mkdir -p etc
-	# standard hosts file, hostname will be updated
-	echo "127.0.1.1 localhost" > etc/hosts
+	setup_hat_eeprom
+	setup_configtxt
+	setup_hosts_file
 
 	# directory for state file
-	mkdir -p etc/revpi
+	mkdir -p usr/share/revpi
 
 	export LIBDIR="$(atf_get_srcdir)"/../revpi-factory-reset
 	atf_check -s exit:0 \
@@ -87,21 +143,12 @@ factory_reset_custom_hostname_prefix_body() {
 	export PI_EXISTS=true
 	export TEST_UID=0
 
-	mkdir -p proc/device-tree/hat
-	# HAT EEPROM present on device and serial number is "1"
-	echo "1" > proc/device-tree/hat/custom_1
-
-	mkdir -p boot/firmware
-	# fill config.txt with bogus mac addresses that will just be removed on
-	# devices with HAT EEPROM
-	echo -e "dtparam=eth0_mac_\ndtparam=eth1_mac_" > boot/firmware/config.txt
-
-	mkdir -p etc
-	# standard hosts file, hostname will be updated
-	echo "127.0.1.1 localhost" > etc/hosts
+	setup_hat_eeprom
+	setup_configtxt
+	setup_hosts_file
 
 	# directory for state file
-	mkdir -p etc/revpi
+	mkdir -p usr/share/revpi
 
 	mkdir -p usr/share/revpi
 	echo "custom-prefix" > usr/share/revpi/hostname
@@ -125,8 +172,8 @@ factory_reset_no_hostname_output_already_ran_body() {
 	export TEST_UID=0
 
 	# directory for state file
-	mkdir -p etc/revpi
-	touch etc/revpi/factory-reset
+	mkdir -p usr/share/revpi
+	touch usr/share/revpi/factory-reset
 
 	export LIBDIR="$(atf_get_srcdir)"/../revpi-factory-reset
 	atf_check -s exit:0 \
@@ -138,8 +185,8 @@ factory_reset_state_file_body() {
 	init_env
 
 	# create state file
-	mkdir -p etc/revpi
-	touch etc/revpi/factory-reset
+	mkdir -p usr/share/revpi
+	touch usr/share/revpi/factory-reset
 
 	export LIBDIR="$(atf_get_srcdir)"/../revpi-factory-reset
 	atf_check -s exit:0 \
@@ -153,21 +200,12 @@ factory_reset_state_file_created_body() {
 	export PI_EXISTS=true
 	export TEST_UID=0
 
-	mkdir -p proc/device-tree/hat
-	# HAT EEPROM present on device and serial number is "1"
-	echo "1" > proc/device-tree/hat/custom_1
-
-	mkdir -p boot/firmware
-	# fill config.txt with bogus mac addresses that will just be removed on
-	# devices with HAT EEPROM
-	echo -e "dtparam=eth0_mac_\ndtparam=eth1_mac_" > boot/firmware/config.txt
-
-	mkdir -p etc
-	# standard hosts file, hostname will be updated
-	echo "127.0.1.1 localhost" > etc/hosts
+	setup_hat_eeprom
+	setup_configtxt
+	setup_hosts_file
 
 	# directory for state file
-	mkdir -p etc/revpi
+	mkdir -p usr/share/revpi
 
 	export LIBDIR="$(atf_get_srcdir)"/../revpi-factory-reset
 	# only care about if state file is created
@@ -176,7 +214,7 @@ factory_reset_state_file_created_body() {
 		revpi-factory-reset -r "$ROOT"
 
 	atf_check -s exit:0 \
-		test -f etc/revpi/factory-reset
+		test -f usr/share/revpi/factory-reset
 	atf_check -s exit:1 \
 		test -f home/pi/.revpi-factory-reset
 }
@@ -187,22 +225,14 @@ factory_reset_remove_sudoers_file_body() {
 	export PI_EXISTS=true
 	export TEST_UID=0
 
-	mkdir -p proc/device-tree/hat
-	echo "1" > proc/device-tree/hat/custom_1
+	setup_hat_eeprom
+	setup_configtxt
+	setup_hosts_file
 
-	mkdir -p boot/firmware
-	echo -e "dtparam=eth0_mac_\ndtparam=eth1_mac_" > boot/firmware/config.txt
-
-	mkdir -p etc
-	echo "127.0.1.1 localhost" > etc/hosts
-
-	mkdir -p etc/revpi
+	mkdir -p usr/share/revpi
 
 	export SYSCONFIG="$ROOT/etc"
-
-	# Simulate the sudoers file
-	mkdir -p "$SYSCONFIG/sudoers.d"
-	echo "pi ALL = (root) NOPASSWD: /usr/sbin/revpi-factory-reset *" > "$SYSCONFIG/sudoers.d/051_revpi-factory-reset"
+	setup_sudoers_file
 
 	# Sanity check: file exists before running
 	atf_check -s exit:0 test -f "$SYSCONFIG/sudoers.d/051_revpi-factory-reset"
@@ -222,16 +252,11 @@ factory_reset_remove_missing_sudoers_file_body() {
 	export PI_EXISTS=true
 	export TEST_UID=0
 
-	mkdir -p proc/device-tree/hat
-	echo "1" > proc/device-tree/hat/custom_1
+	setup_hat_eeprom
+	setup_configtxt
+	setup_hosts_file
 
-	mkdir -p boot/firmware
-	echo -e "dtparam=eth0_mac_\ndtparam=eth1_mac_" > boot/firmware/config.txt
-
-	mkdir -p etc
-	echo "127.0.1.1 localhost" > etc/hosts
-
-	mkdir -p etc/revpi
+	mkdir -p usr/share/revpi
 
 	export SYSCONFIG="$ROOT/etc"
 	# don't write the sudoers file which will be removed by revpi-factory-reset
@@ -246,8 +271,136 @@ factory_reset_remove_missing_sudoers_file_body() {
 		revpi-factory-reset -r "$ROOT"
 }
 
+factory_reset_force_state_file_body() {
+	init_env
+
+	export PI_EXISTS=true
+	export TEST_UID=0
+
+	setup_hat_eeprom
+	setup_configtxt
+	setup_hosts_file
+
+	mkdir -p usr/share/revpi
+	touch usr/share/revpi/factory-reset
+
+	export LIBDIR="$(atf_get_srcdir)"/../revpi-factory-reset
+	atf_check -s exit:0 \
+		-o match:"Password:.*" \
+		-o match:"Hostname:.*" \
+		revpi-factory-reset -r "$ROOT" -f
+}
+
+factory_reset_quirky_mac_format_body() {
+	init_env
+
+	export PI_EXISTS=true
+	export TEST_UID=0
+
+	setup_configtxt
+	touch boot/firmware/overlays/revpi-core-dt-blob.dtbo
+	setup_hosts_file
+
+	mkdir -p proc/device-tree
+	printf "kunbus,revpi-core\0revpi-core\0brcm,bcm2837" \
+		> proc/device-tree/compatible
+
+	mkdir -p usr/share/revpi
+
+	export LIBDIR="$(atf_get_srcdir)"/../revpi-factory-reset
+	atf_check -s exit:0 \
+		-o ignore \
+		revpi-factory-reset -r "$ROOT" \
+			core \
+			1 \
+			ab-Cd--ef::12:a8-ff
+
+	atf_check -s exit:0 \
+		-o inline:"AB:CD:EF:12:A8:FF" \
+		-e empty \
+		cat usr/share/revpi/devinfo/base-mac-address
+}
+
+factory_reset_default_user_absent_body() {
+	init_env
+
+	export PI_EXISTS=false
+	export TEST_UID=0
+
+	setup_hat_eeprom
+	setup_configtxt
+	setup_hosts_file
+
+	mkdir -p usr/share/revpi
+
+	export LIBDIR="$(atf_get_srcdir)"/../revpi-factory-reset
+	atf_check -s exit:0 \
+		-o ignore \
+		-e match:".*default user 'pi' is absent." \
+		revpi-factory-reset -r "$ROOT"
+}
+
+factory_reset_no_hat_eeprom_dtoverlay_body() {
+	init_env
+
+	export PI_EXISTS=true
+	export TEST_UID=0
+
+	setup_configtxt
+	touch boot/firmware/overlays/revpi-connect-dt-blob.dtbo
+	setup_hosts_file
+
+	mkdir -p usr/share/revpi
+
+	mkdir -p proc/device-tree
+	touch proc/device-tree/compatible
+
+	export SYSCONFIG="$ROOT/etc"
+	setup_sudoers_file
+
+	export LIBDIR="$(atf_get_srcdir)"/../revpi-factory-reset
+	atf_check -s exit:0 \
+		-o match:"^dtoverlay revpi-connect$" \
+		-e empty \
+		revpi-factory-reset -r "$ROOT" \
+			connect \
+			1 \
+			12:34:56:78:9A:BF
+}
+
+factory_reset_no_hat_eeprom_no_dtoverlay_body() {
+	init_env
+
+	export PI_EXISTS=true
+	export TEST_UID=0
+
+	setup_configtxt
+	touch boot/firmware/overlays/revpi-connect-dt-blob.dtbo
+	setup_hosts_file
+
+	mkdir -p usr/share/revpi
+
+	mkdir -p proc/device-tree
+	printf "kunbus,revpi-connect\0revpi-connect\0brcm,bcm2837" \
+		> proc/device-tree/compatible
+
+	export SYSCONFIG="$ROOT/etc"
+	setup_sudoers_file
+
+	export LIBDIR="$(atf_get_srcdir)"/../revpi-factory-reset
+	atf_check -s exit:0 \
+		-o not-match:"^dtoverlay revpi-connect$" \
+		-e empty \
+		revpi-factory-reset -r "$ROOT" \
+			connect \
+			1 \
+			12:34:56:78:9A:BF
+}
+
 atf_init_test_cases() {
 	atf_add_test_case factory_reset_hat_eeprom
+	atf_add_test_case factory_reset_hat_eeprom_write_serial_number
+	atf_add_test_case factory_reset_hat_eeprom_write_mac_address
 	atf_add_test_case factory_reset_custom_hostname_prefix
 	atf_add_test_case factory_reset_no_hostname_output_already_ran
 	atf_add_test_case factory_reset_state_file
@@ -255,4 +408,9 @@ atf_init_test_cases() {
 	atf_add_test_case factory_reset_state_file_created
 	atf_add_test_case factory_reset_remove_sudoers_file
 	atf_add_test_case factory_reset_remove_missing_sudoers_file
+	atf_add_test_case factory_reset_force_state_file
+	atf_add_test_case factory_reset_quirky_mac_format
+	atf_add_test_case factory_reset_default_user_absent
+	atf_add_test_case factory_reset_no_hat_eeprom_dtoverlay
+	atf_add_test_case factory_reset_no_hat_eeprom_no_dtoverlay
 }

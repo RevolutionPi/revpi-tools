@@ -2,19 +2,18 @@
 #
 # SPDX-License-Identifier: GPL-2.0-or-later
 #
-# SPDX-FileCopyrightText: 2021-2024 KUNBUS GmbH
+# SPDX-FileCopyrightText: 2021-2026 KUNBUS GmbH
 
 . @DATADIR@/revpi/revpi-functions
 
-SYSCONFDIR='@SYSCONFDIR@'
+DATADIR='@DATADIR@'
 SBINDIR='@SBINDIR@'
 
 # Environment variable for whiptail to set the color palette as the black color
 # for the background and grey color for the boxes.
 export NEWT_COLORS='root=,black entry=white,black'
 
-while [ ! -r "$SYSCONFDIR/revpi/factory-reset" ] && [  ! -r /home/pi/.revpi-factory-reset  ]; do
-	clear
+while [ ! -r "$DATADIR/revpi/factory-reset" ]; do
 	if has_hat_eeprom; then
 		# The device is equipped with HAT EEPROM
 		whiptail --nocancel --title "INFO" --msgbox "The device configuration was detected automatically. Manual configuration is therefore not necessary." 0 0
@@ -23,24 +22,15 @@ while [ ! -r "$SYSCONFDIR/revpi/factory-reset" ] && [  ! -r /home/pi/.revpi-fact
 		return
 	fi
 	msg="Please select the Product Type:"
-	if cm1_detection; then
-		ovl=$(whiptail --notags --title "PRODUCT TYPE" --menu "$msg" 0 0 0 \
-			core "RevPi Core (autodetected)" \
-			3>&1 1>&2 2>&3)
-		if [ "$?" == "1" ]; then
-			return
-		fi
-	else
-		ovl=$(whiptail --notags --title "PRODUCT TYPE" --menu "$msg" 0 0 0 \
-			compact "RevPi Compact" \
-			connect "RevPi Connect(+) / Connect S" \
-			connect-se "RevPi Connect SE" \
-			core "RevPi Core 3(+) / Core S" \
-			flat "RevPi Flat" \
-			3>&1 1>&2 2>&3)
-		if [ "$?" == "1" ]; then
-			return
-		fi
+	ovl=$(whiptail --notags --title "PRODUCT TYPE" --menu "$msg" 0 0 0 \
+		compact "RevPi Compact" \
+		connect "RevPi Connect(+) / Connect S" \
+		connect-se "RevPi Connect SE" \
+		core "RevPi Core 3(+) / Core S" \
+		flat "RevPi Flat" \
+		3>&1 1>&2 2>&3)
+	if [ "$?" == "1" ]; then
+		return
 	fi
 
 	msg="Please enter the Serial Number on the front plate of your RevPi:"
