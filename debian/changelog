@@ -1,3 +1,9 @@
+revpi-tools (5.0.0-1+deb13+2) trixie; urgency=medium
+
+  * fix(deb): Add missing #DEBHELPER# tag
+
+ -- Sven Sager <s.sager@kunbus.com>  Wed, 29 Apr 2026 08:17:38 +0200
+
 revpi-tools (5.0.0-1+deb13+1) trixie; urgency=medium
 
   [ Sven Sager ]
