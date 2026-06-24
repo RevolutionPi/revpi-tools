@@ -349,7 +349,7 @@ do_wireless() {
 
 	case "$1" in
 	enable)
-		if ! _check_wlan_country_set; then
+		if [ "$2" = "ieee80211" ] && ! _check_wlan_country_set; then
 			return
 		fi
 		[ "$IDX" ] && rfkill unblock "$IDX"
