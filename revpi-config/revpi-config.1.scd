@@ -60,13 +60,13 @@ disabled.)
 
 Start TeamViewer remote access service. (Default is disabled.)
 
-## pimodbus-master
+## pimodbus-client
 
-Start Revolution Pi Modbus master. (Default is disabled.)
+Start Revolution Pi Modbus client. (Default is disabled.)
 
-## pimodbus-slave
+## pimodbus-server
 
-Start Revolution Pi Modbus slave. (Default is disabled.)
+Start Revolution Pi Modbus server. (Default is disabled.)
 
 ## systemd-timesyncd
 

@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
 #
-# SPDX-FileCopyrightText: 2023-2025 KUNBUS GmbH
+# SPDX-FileCopyrightText: 2023-2026 KUNBUS GmbH
 
 include(FindPkgConfig)
 pkg_check_modules(SYSTEMD REQUIRED "systemd")
@@ -21,5 +21,9 @@ install(PROGRAMS create-ssh-host-keys.sh
 )
 
 install(FILES revpi-firstboot-create-ssh-host-keys.service
+  DESTINATION ${SYSTEMD_SYSTEMUNITDIR}
+)
+
+install(FILES revpi-auto-configure.service
   DESTINATION ${SYSTEMD_SYSTEMUNITDIR}
 )
