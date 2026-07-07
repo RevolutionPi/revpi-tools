@@ -1,0 +1,42 @@
+revpi-tools (6.0.0-1+deb13+1) trixie; urgency=medium
+
+  The pimodbus systemd services have been renamed to match the
+  client/server terminology used by revpi-modbus:
+
+    pimodbus-master.service -> pimodbus-server.service
+    pimodbus-slave.service  -> pimodbus-client.service
+
+  `revpi-config enable|disable|status` uses the new names: pass
+  `pimodbus-client`/`pimodbus-server` instead of
+  `pimodbus-master`/`pimodbus-slave`.
+
+  On the first boot of an image, devices with a HAT EEPROM are now
+  automatically configured by running `revpi-factory-reset`. If an error
+  occurs, the automatic configuration is aborted.
+
+  To disable this automatic configuration (e.g. for debugging or
+  end-of-line testing), create an empty file at
+  `/boot/firmware/skip-autoconfigure` before the first boot.
+
+ -- Ramiro Gsponer <r.gsponer@kunbus.com>  Wed, 08 Jul 2026 11:43:30 +0200
+
+revpi-tools (5.0.0-1+deb13+1) trixie; urgency=medium
+
+  `revpi-factory-reset` has changed in several ways:
+
+    - Support for the RevPi Core with a CM1 has been dropped.
+    - The MAC address is no longer printed on stdout.
+    - The MAC address for ethernet interfaces on devices without a HAT
+      EEPROM is no longer written to config.txt. It's applied instead by
+      the udev rules shipped in revpi-base-files (>= 3.0.0), which read
+      it from /usr/share/revpi/devinfo/base-mac-address. Because of this,
+      revpi-tools now breaks on revpi-base-files versions older than
+      3.0.0.
+    - The flag file that marks a completed run has moved from
+      /etc/revpi/factory-reset to /usr/share/revpi/factory-reset, since
+      it is read-only, architecture-independent data rather than
+      configuration. The flag is migrated automatically on upgrade.
+    - A new "-f" flag allows forcing a rerun even if the flag file
+      already exists because revpi-factory-reset already ran.
+
+ -- Ramiro Gsponer <r.gsponer@kunbus.com>  Fri, 24 Apr 2026 12:40:53 +0200
