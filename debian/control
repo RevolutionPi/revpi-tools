@@ -43,6 +43,8 @@ Breaks:
   piserial (<< 3.0.0),
   revpi-webstatus (<< 1:2.1.0),
   revpi-base-files (<< 3.0.0),
+  revpi-modbus-client (<< 2.0.0),
+  revpi-modbus-server (<< 2.0.0),
 Description: Revolution Pi tools
  Assorted tools and support files for Revolution Pi products:
  .
