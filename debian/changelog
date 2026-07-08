@@ -1,3 +1,20 @@
+revpi-tools (6.0.0-1+deb13+1) trixie; urgency=medium
+
+  [ Thomas Böhler ]
+  * fix(revpi-config): check country only for WLAN
+
+  [ Erik Sallmann ]
+  * feat!: Change pimodbus services to new naming
+
+  [ Sven Sager ]
+  * feat(firstboot): Configure RevPi at first boot
+
+  [ Ramiro Gsponer ]
+  * feat(deb): break on revpi-modbus-client/server << 2.0.0
+  * feat(deb): add revpi-tools.NEWS file
+
+ -- Ramiro Gsponer <r.gsponer@kunbus.com>  Wed, 08 Jul 2026 11:43:30 +0200
+
 revpi-tools (5.0.0-1+deb13+2) trixie; urgency=medium
 
   * fix(deb): Add missing #DEBHELPER# tag
