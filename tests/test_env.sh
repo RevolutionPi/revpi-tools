@@ -10,4 +10,6 @@ init_env() {
 	export PATH="$(atf_get_srcdir)"/../tests/bin:"$(atf_get_srcdir)"/../revpi-factory-reset:"$(atf_get_srcdir)"/../firstboot:"$PATH"
 	export DATADIR=usr/share
 	export SYSCONFDIR=etc
+	export TMPDIR=tmp
+	mkdir "$TMPDIR"
 }
