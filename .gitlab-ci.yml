@@ -24,7 +24,7 @@ include:
           - debian/gitlab-ci.yml
 
 test:
-  image: registry.gitlab.com/revolutionpi/infrastructure/docker-images/build-container/build-container-bullseye:arm64-latest
+  image: registry.gitlab.com/revolutionpi/infrastructure/docker-images/build-container/build-container-trixie:arm64-latest
   tags:
     - docker
     - host-arm64
