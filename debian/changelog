@@ -1,3 +1,10 @@
+revpi-tools (6.0.1-1+deb13+1) trixie; urgency=medium
+
+  * test: define TMPDIR
+  * fix(factory-reset): avoid rename(2) for /etc/hosts
+
+ -- Thomas Böhler <t.boehler@kunbus.com>  Mon, 19 Oct 2026 13:19:02 +0200
+
 revpi-tools (6.0.0-1+deb13+1) trixie; urgency=medium
 
   [ Thomas Böhler ]
