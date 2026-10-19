@@ -24,7 +24,7 @@ include:
           - debian/gitlab-ci.yml
 
 test:
-  image: registry.gitlab.com/revolutionpi/infrastructure/docker-images/build-container/build-container-bullseye:arm64-latest
+  image: registry.gitlab.com/revolutionpi/infrastructure/docker-images/build-container/build-container-trixie:arm64-latest
   tags:
     - docker
     - host-arm64
@@ -33,7 +33,7 @@ test:
   script:
     - apt update
         && apt install -y
-          cmake pkg-config systemd libftdi1-dev xxd scdoc kyua atf-sh
+          cmake pkg-config systemd-dev libftdi1-dev xxd scdoc kyua atf-sh
     - mkdir build && cd build
     - cmake -G"Unix Makefiles" -DENABLE_TESTS=ON ..
     - cmake --build .

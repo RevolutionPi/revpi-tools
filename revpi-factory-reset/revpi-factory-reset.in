@@ -188,11 +188,16 @@ else
 fi
 
 hostname="$HOSTNAME_PREFIX$ser"
-if ! sed --follow-symlinks -r -i \
+hosts_path="$(realpath "$ROOT"/etc/hosts)"
+if ! hosts="$(sed -r \
 	-e "s/^(127\.0\.1\.1[[:blank:]]+).*/\1$hostname/" \
-	"$ROOT"/etc/hosts; then
-	die "Unable to write to /etc/hosts. Aborting."
+	"$hosts_path")"; then
+	die "Unable to transform $hosts_path. Aborting."
 fi
+if ! printf '%s' "$hosts" > "$hosts_path"; then
+	die "Unable to write to $hosts_path. Aborting."
+fi
+
 if ! echo "$hostname" > "$ROOT"/etc/hostname; then
 	die "Unable to change hostname. Aborting."
 fi
