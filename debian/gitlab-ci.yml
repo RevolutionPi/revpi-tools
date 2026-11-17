@@ -5,3 +5,5 @@
 include:
   - project: revolutionpi/infrastructure/ci-templates
     file: package-deb.yml
+  - project: revolutionpi/infrastructure/ci-templates
+    file: testing/package-deb.yml
