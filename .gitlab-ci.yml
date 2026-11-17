@@ -22,6 +22,8 @@ include:
     rules:
       - exists:
           - debian/gitlab-ci.yml
+  - project: "revolutionpi/infrastructure/ci-templates"
+    file: "testing/package-devel.yml"
 
 test:
   image: registry.gitlab.com/revolutionpi/infrastructure/docker-images/build-container/build-container-trixie:arm64-latest
